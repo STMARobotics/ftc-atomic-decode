@@ -27,7 +27,4 @@ dependencies {
     implementation project(':FtcRobotController')
     implementation 'com.rowanmcalpin.nextftc:core:0.6.2'
     implementation 'com.rowanmcalpin.nextftc:ftc:0.6.2'
-    implementation 'com.rowanmcalpin.nextftc:pedro:0.6.2'
-    implementation 'com.pedropathing:pedro:2.0.1'
-    implementation 'com.acmerobotics.dashboard:dashboard:0.4.16'
 }
