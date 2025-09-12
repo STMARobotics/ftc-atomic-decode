@@ -25,6 +25,9 @@ android {
 
 dependencies {
     implementation project(':FtcRobotController')
-    implementation 'com.rowanmcalpin.nextftc:core:0.6.2'
-    implementation 'com.rowanmcalpin.nextftc:ftc:0.6.2'
+    implementation 'com.rowanmcalpin.nextftc:core:0.5.5-beta2'
+    implementation 'com.rowanmcalpin.nextftc:ftc:0.5.5-beta2'
+    implementation 'com.rowanmcalpin.nextftc:pedro:0.5.5-beta2'
+    implementation 'com.pedropathing:pedro:1.0.3'
+    implementation 'com.acmerobotics.dashboard:dashboard:0.4.16'
 }
