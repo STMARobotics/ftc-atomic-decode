@@ -1,9 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.BezierLine;
-import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.RunCommand;
@@ -12,10 +8,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.commands.IntakeCommand;
 import org.firstinspires.ftc.teamcode.drivetrain.DrivetrainSubsystem;
-import org.firstinspires.ftc.teamcode.drivetrain.FollowPathCommand;
-import org.firstinspires.ftc.teamcode.led.LedSubsystem;
-import org.firstinspires.ftc.teamcode.vision.AprilTagSubsystem;
-import org.firstinspires.ftc.teamcode.vision.MotifIndicatorCommand;
+import org.firstinspires.ftc.teamcode.intake.IntakeSubsystem;
 
 // I copied andy so merek can sleep at night
 
@@ -23,16 +16,12 @@ import org.firstinspires.ftc.teamcode.vision.MotifIndicatorCommand;
 public class CoolOpMode extends CommandOpMode {
 
     private DrivetrainSubsystem drivetrainSubsystem;
-    private LedSubsystem ledSubsystem;
-    private AprilTagSubsystem aprilTagSubsystem;
-    private IntakeCommand intakeCommand;
+    private IntakeSubsystem intakeSubsystem;
 
     @Override
     public void initialize() {
         // Create subsystems
         drivetrainSubsystem = new DrivetrainSubsystem(hardwareMap);
-        ledSubsystem = new LedSubsystem(hardwareMap);
-        aprilTagSubsystem = new AprilTagSubsystem(hardwareMap);
 
         /*
         The origin is the field perimeter corner by the red loading zone.
@@ -54,14 +43,11 @@ public class CoolOpMode extends CommandOpMode {
             telemetry.update();
         });
 
-        // Intake register
-        intakeCommand = new IntakeCommand();
-
         // Schedule commands
         schedule(telemetryCommand);
 
         // Register subsystems
-        register(drivetrainSubsystem);
+        register(drivetrainSubsystem, intakeSubsystem);
 
         // Set default commands for subsystems
         drivetrainSubsystem.setDefaultCommand(teleopDriveCommand);
@@ -70,31 +56,26 @@ public class CoolOpMode extends CommandOpMode {
     }
 
     private void configureButtonBindings() {
-        // Test PedroPathing command
-        Follower follower = drivetrainSubsystem.createFollower();
-        Pose pose1 = new Pose(0,0, 0);
-        Pose pose2 = new Pose(12, 0, 90);
-        Pose pose3 = new Pose(12, 12, 90);
-        PathChain path = follower.pathBuilder()
-                .addPath(new BezierLine(pose1, pose2))
-                .setLinearHeadingInterpolation(pose1.getHeading(), pose2.getHeading())
-                .addPath(new BezierLine(pose2, pose3))
-                .setLinearHeadingInterpolation(pose2.getHeading(), pose3.getHeading())
-                .build();
-        FollowPathCommand followPathCommand =
-                new FollowPathCommand(pose1, follower, path, drivetrainSubsystem);
-
-        // Motif AprilTag
-        MotifIndicatorCommand motifIndicatorCommand =
-                new MotifIndicatorCommand(ledSubsystem, aprilTagSubsystem, telemetry);
-
         // Bind driver buttons
         GamepadEx gamepad = new GamepadEx(gamepad1);
-        gamepad.getGamepadButton(GamepadKeys.Button.B).toggleWhenPressed(motifIndicatorCommand);
-        gamepad.getGamepadButton(GamepadKeys.Button.A).whileHeld(followPathCommand);
         gamepad.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(drivetrainSubsystem::resetLocalization);
-        gamepad.getGamepadButton((GamepadKeys.Button.RIGHT_BUMPER)).whileHeld(intakeCommand);
-    }
 
+        // Right Bumper: When pressed, schedule a command to set the state to INTAKING.
+        gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(new IntakeCommand(intakeSubsystem, IntakeSubsystem.IntakeState.INTAKING));
+
+        // Right Bumper: When released, schedule a command to set the state to STOPPED.
+        gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenReleased(new IntakeCommand(intakeSubsystem, IntakeSubsystem.IntakeState.STOPPED));
+
+
+        // Left Bumper: When pressed, schedule a command to set the state to OUTTAKING.
+        gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(new IntakeCommand(intakeSubsystem, IntakeSubsystem.IntakeState.OUTTAKING));
+
+        // Left Bumper: When released, schedule a command to set the state to STOPPED.
+        gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenReleased(new IntakeCommand(intakeSubsystem, IntakeSubsystem.IntakeState.STOPPED));
+    }
 }
