@@ -10,6 +10,7 @@ import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
+import org.firstinspires.ftc.teamcode.commands.IntakeCommand;
 import org.firstinspires.ftc.teamcode.drivetrain.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.drivetrain.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.led.LedSubsystem;
@@ -24,6 +25,7 @@ public class CoolOpMode extends CommandOpMode {
     private DrivetrainSubsystem drivetrainSubsystem;
     private LedSubsystem ledSubsystem;
     private AprilTagSubsystem aprilTagSubsystem;
+    private IntakeCommand intakeCommand;
 
     @Override
     public void initialize() {
@@ -51,6 +53,9 @@ public class CoolOpMode extends CommandOpMode {
             drivetrainSubsystem.telemetrize(telemetry);
             telemetry.update();
         });
+
+        // Intake register
+        intakeCommand = new IntakeCommand();
 
         // Schedule commands
         schedule(telemetryCommand);
@@ -89,6 +94,7 @@ public class CoolOpMode extends CommandOpMode {
         gamepad.getGamepadButton(GamepadKeys.Button.A).whileHeld(followPathCommand);
         gamepad.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(drivetrainSubsystem::resetLocalization);
+        gamepad.getGamepadButton((GamepadKeys.Button.RIGHT_BUMPER)).whileHeld(intakeCommand);
     }
 
 }
