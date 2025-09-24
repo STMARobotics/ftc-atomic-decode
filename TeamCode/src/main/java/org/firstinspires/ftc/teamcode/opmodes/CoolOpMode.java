@@ -6,13 +6,13 @@ import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
-import org.firstinspires.ftc.teamcode.commands.IntakeCommand;
-import org.firstinspires.ftc.teamcode.drivetrain.DrivetrainSubsystem;
-import org.firstinspires.ftc.teamcode.intake.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.Commands.IntakeCommand;
+import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 
 // I copied andy so merek can sleep at night
 
-@TeleOp(name="Cool op mode from andy", group = "cool things")
+@TeleOp(name="cool op mode", group = "cool things")
 public class CoolOpMode extends CommandOpMode {
 
     private DrivetrainSubsystem drivetrainSubsystem;
@@ -22,6 +22,7 @@ public class CoolOpMode extends CommandOpMode {
     public void initialize() {
         // Create subsystems
         drivetrainSubsystem = new DrivetrainSubsystem(hardwareMap);
+        intakeSubsystem = new IntakeSubsystem(hardwareMap);
 
         /*
         The origin is the field perimeter corner by the red loading zone.

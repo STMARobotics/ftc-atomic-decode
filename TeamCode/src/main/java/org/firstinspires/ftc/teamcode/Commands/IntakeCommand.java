@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.teamcode.commands;
+package org.firstinspires.ftc.teamcode.Commands;
 
 import com.seattlesolvers.solverslib.command.CommandBase;
-import org.firstinspires.ftc.teamcode.intake.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 
-// This command sets the state of the intake and then immediately finishes.
 public class IntakeCommand extends CommandBase {
 
     private final IntakeSubsystem intakeSubsystem;
@@ -17,13 +16,11 @@ public class IntakeCommand extends CommandBase {
     public IntakeCommand(IntakeSubsystem intakeSubsystem, IntakeSubsystem.IntakeState stateToSet) {
         this.intakeSubsystem = intakeSubsystem;
         this.stateToSet = stateToSet;
-        // Declare that this command requires the intake subsystem.
         addRequirements(intakeSubsystem);
     }
 
     @Override
     public void initialize() {
-        // When the command starts, set the subsystem to the desired state.
         switch (stateToSet) {
             case INTAKING:
                 intakeSubsystem.intake();

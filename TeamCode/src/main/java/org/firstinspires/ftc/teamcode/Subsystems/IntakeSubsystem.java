@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.intake;
+package org.firstinspires.ftc.teamcode.Subsystems;
 
 import static org.firstinspires.ftc.teamcode.Constants.IntakeConstants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode.Constants.IntakeConstants.OUTTAKE_POWER;
@@ -51,10 +51,10 @@ public class IntakeSubsystem extends SubsystemBase {
         // 5. Implement the state machine
         switch (currentState) {
             case INTAKING:
-                intakeMotor.setPower(INTAKE_POWER); // Or your desired intake power
+                intakeMotor.setPower(INTAKE_POWER);
                 break;
             case OUTTAKING:
-                intakeMotor.setPower(OUTTAKE_POWER); // Or your desired outtake power
+                intakeMotor.setPower(OUTTAKE_POWER);
                 break;
             case STOPPED:
                 intakeMotor.setPower(0.0);

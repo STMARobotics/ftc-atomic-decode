@@ -13,29 +13,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Constants {
 
-    private static final String FRONT_LEFT_MOTOR_NAME = "front_left_motor";
-    private static final String BACK_LEFT_MOTOR_NAME = "back_left_motor";
-    private static final String FRONT_RIGHT_MOTOR_NAME = "front_right_motor";
-    private static final String BACK_RIGHT_MOTOR_NAME = "back_right_motor";
-    private static final String OTOS_NAME = "sensor_otos";
-
-    public static final OTOSConstants OTOS_CONSTANTS = new OTOSConstants()
-            .hardwareMapName(OTOS_NAME)
-            .linearUnit(DistanceUnit.INCH)
-            .angleUnit(AngleUnit.RADIANS)
-            .linearScalar(1.07)
-            .angularScalar(0.99)
-            .offset(new SparkFunOTOS.Pose2D(
-                    3.5, // +x forward
-                    0.5, // +y right
-                    Math.PI)); // π radians or 180°
-
-    public static final FollowerConstants FOLLOWER_CONSTANTS = new FollowerConstants()
-            .mass(5) // must be kg
-            .forwardZeroPowerAcceleration(-58.742)
-            .lateralZeroPowerAcceleration(-82.934)
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.0, 0))
-            .headingPIDFCoefficients(new PIDFCoefficients(0.8, 0, 0.0, 0));
+    private static final String FRONT_LEFT_MOTOR_NAME = "left1";
+    private static final String BACK_LEFT_MOTOR_NAME = "left2";
+    private static final String FRONT_RIGHT_MOTOR_NAME = "right1";
+    private static final String BACK_RIGHT_MOTOR_NAME = "right2";
 
     public static final MecanumConstants DRIVE_CONSTANTS = new MecanumConstants()
             .maxPower(1)
@@ -49,8 +30,4 @@ public class Constants {
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD);
-
-    public static final PathConstraints PATH_CONSTRAINTS =
-            new PathConstraints(0.99, 100, 1, 1);
-
 }
