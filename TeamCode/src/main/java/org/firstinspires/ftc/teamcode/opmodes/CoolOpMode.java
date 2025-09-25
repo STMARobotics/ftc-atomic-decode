@@ -70,29 +70,34 @@ public class CoolOpMode extends CommandOpMode {
         gamepad.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(drivetrainSubsystem::resetLocalization);
 
-        // Right Bumper: When pressed, schedule a command to set the state to INTAKING.
+        // Right Bumper: When pressed, startintaking
         gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(new IntakeCommand(intakeSubsystem, IntakeSubsystem.IntakeState.INTAKING));
 
-        // Right Bumper: When released, schedule a command to set the state to STOPPED.
+        // Right Bumper: When released, stop the intake
         gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenReleased(new IntakeCommand(intakeSubsystem, IntakeSubsystem.IntakeState.STOPPED));
 
 
-        // Left Bumper: When pressed, schedule a command to set the state to OUTTAKING.
+        // Left Bumper: When pressed, start outtaking
         gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(new IntakeCommand(intakeSubsystem, IntakeSubsystem.IntakeState.OUTTAKING));
 
-        // Left Bumper: When released, schedule a command to set the state to STOPPED.
+        // Left Bumper: When released, stop outtaking
         gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenReleased(new IntakeCommand(intakeSubsystem, IntakeSubsystem.IntakeState.STOPPED));
 
-        // A: When pressed, schedule a command to set the state to SHOOTING.
+        // A: When pressed start shooting
         gamepad.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(new TurretCommand(turretSubsystem, TurretSubsystem.TurretState.SHOOTING));
 
-        // A: When released, schedule a command to set the state to STOPPED.
+        // A: When released, stop shooting
         gamepad.getGamepadButton(GamepadKeys.Button.A)
                 .whenReleased(new TurretCommand(turretSubsystem, TurretSubsystem.TurretState.STOPPED));
+
+        // X: When pressed, set servo to 90 degrees
+        gamepad.getGamepadButton(GamepadKeys.Button.X).whenPressed(new RunCommand(() -> servoSubsystem.setPosition(90), servoSubsystem));
+        // X: When released, set servo to 0 degrees
+        gamepad.getGamepadButton(GamepadKeys.Button.X).whenReleased(new RunCommand(() -> servoSubsystem.setPosition(0), servoSubsystem));
     }
 }
