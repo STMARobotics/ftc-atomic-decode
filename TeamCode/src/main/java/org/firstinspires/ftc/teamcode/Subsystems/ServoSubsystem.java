@@ -13,6 +13,12 @@ public class ServoSubsystem extends SubsystemBase {
     }
 
     public void setPosition(double position){
+        servo.setPosition(mapDegrees(position));
+    }
+
+    public double mapDegrees(double degrees) {
+        double position = Math.max(-1.0, Math.min(1.0, degrees / 135.0));
         servo.setPosition(position);
+        return position;
     }
 }
