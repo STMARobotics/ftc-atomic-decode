@@ -7,8 +7,11 @@ import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.Commands.IntakeCommand;
+import org.firstinspires.ftc.teamcode.Commands.TurretCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.ServoSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
 // I copied andy so merek can sleep at night
 
@@ -17,12 +20,16 @@ public class CoolOpMode extends CommandOpMode {
 
     private DrivetrainSubsystem drivetrainSubsystem;
     private IntakeSubsystem intakeSubsystem;
+    private ServoSubsystem servoSubsystem;
+    private TurretSubsystem turretSubsystem;
 
     @Override
     public void initialize() {
         // Create subsystems
         drivetrainSubsystem = new DrivetrainSubsystem(hardwareMap);
         intakeSubsystem = new IntakeSubsystem(hardwareMap);
+        servoSubsystem = new ServoSubsystem(hardwareMap);
+        turretSubsystem = new TurretSubsystem(hardwareMap);
 
         /*
         The origin is the field perimeter corner by the red loading zone.
@@ -48,7 +55,7 @@ public class CoolOpMode extends CommandOpMode {
         schedule(telemetryCommand);
 
         // Register subsystems
-        register(drivetrainSubsystem, intakeSubsystem);
+        register(drivetrainSubsystem, intakeSubsystem, servoSubsystem);
 
         // Set default commands for subsystems
         drivetrainSubsystem.setDefaultCommand(teleopDriveCommand);
@@ -57,6 +64,7 @@ public class CoolOpMode extends CommandOpMode {
     }
 
     private void configureButtonBindings() {
+
         // Bind driver buttons
         GamepadEx gamepad = new GamepadEx(gamepad1);
         gamepad.getGamepadButton(GamepadKeys.Button.START)
@@ -78,5 +86,13 @@ public class CoolOpMode extends CommandOpMode {
         // Left Bumper: When released, schedule a command to set the state to STOPPED.
         gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenReleased(new IntakeCommand(intakeSubsystem, IntakeSubsystem.IntakeState.STOPPED));
+
+        // A: When pressed, schedule a command to set the state to SHOOTING.
+        gamepad.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(new TurretCommand(turretSubsystem, TurretSubsystem.TurretState.SHOOTING));
+
+        // A: When released, schedule a command to set the state to STOPPED.
+        gamepad.getGamepadButton(GamepadKeys.Button.A)
+                .whenReleased(new TurretCommand(turretSubsystem, TurretSubsystem.TurretState.STOPPED));
     }
 }

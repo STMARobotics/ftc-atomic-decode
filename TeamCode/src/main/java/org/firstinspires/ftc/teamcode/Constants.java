@@ -8,4 +8,9 @@ public class Constants {
         public static final double OUTTAKE_POWER = -0.6;
         public static final double STALL_CURRENT_AMPS = 9.2;
     }
+
+    // Define the nested static class for Turret constants
+    public static class TurretConstants {
+        public static final double TURRET_POWER = 1;
+    }
 }
