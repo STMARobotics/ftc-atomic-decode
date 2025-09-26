@@ -23,7 +23,7 @@ public class CoolOpMode extends CommandOpMode {
     private ServoSubsystem servoSubsystem;
     private TurretSubsystem turretSubsystem;
     
-    private double reductionFactor;
+    private double reductionFactor = 1;
 
     @Override
     public void initialize() {

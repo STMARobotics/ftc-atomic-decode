@@ -8,14 +8,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-// import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles; // Useful for more complex IMU interactions
 
 public class AutoDriveSubsystem {
 
-    private DcMotorEx frontLeft;
-    private DcMotorEx frontRight;
-    private DcMotorEx rearLeft;
-    private DcMotorEx rearRight;
+    private final DcMotor left1;
+    private final DcMotor left2;
+    private final DcMotor right1;
+    private final DcMotor right2;
     private IMU imu;
 
     // Constants - PLEASE VERIFY AND ADJUST THESE FOR YOUR ROBOT
@@ -30,10 +29,10 @@ public class AutoDriveSubsystem {
      * @param hardwareMap The hardware map from your OpMode.
      */
     public AutoDriveSubsystem(HardwareMap hardwareMap) {
-        frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
-        frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
-        rearLeft = hardwareMap.get(DcMotorEx.class, "rearLeft");
-        rearRight = hardwareMap.get(DcMotorEx.class, "rearRight");
+        left1 = hardwareMap.get(DcMotorEx.class, "left1");
+        right1 = hardwareMap.get(DcMotorEx.class, "right1");
+        left2 = hardwareMap.get(DcMotorEx.class, "left2");
+        right2 = hardwareMap.get(DcMotorEx.class, "right2");
 
         imu = hardwareMap.get(IMU.class, "imu");
         // IMPORTANT: Adjust the RevHubOrientationOnRobot parameters to match your robot's configuration.
@@ -47,19 +46,19 @@ public class AutoDriveSubsystem {
         // imu.resetYaw();
 
         // Set motor directions - IMPORTANT: Adjust these to match your robot's configuration.
-        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        rearLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        rearRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        left1.setDirection(DcMotorSimple.Direction.FORWARD);
+        left2.setDirection(DcMotorSimple.Direction.FORWARD);
+        right1.setDirection(DcMotorSimple.Direction.REVERSE);
+        right2.setDirection(DcMotorSimple.Direction.REVERSE);
 
         resetEncoders();
         setMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Set zero power behavior to BRAKE
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        left1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        right1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        left2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        right2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     /**
@@ -84,20 +83,20 @@ public class AutoDriveSubsystem {
         COUNTS_PER_INCH = COUNTS_PER_MOTOR_REV / (WHEEL_DIAMETER_INCHES * Math.PI);
         int targetTicks = (int) (inches * COUNTS_PER_INCH);
 
-        frontLeft.setTargetPosition(frontLeft.getCurrentPosition() + targetTicks);
-        frontRight.setTargetPosition(frontRight.getCurrentPosition() + targetTicks);
-        rearLeft.setTargetPosition(rearLeft.getCurrentPosition() + targetTicks);
-        rearRight.setTargetPosition(rearRight.getCurrentPosition() + targetTicks);
+        left1.setTargetPosition(left1.getCurrentPosition() + targetTicks);
+        right1.setTargetPosition(right1.getCurrentPosition() + targetTicks);
+        left2.setTargetPosition(left2.getCurrentPosition() + targetTicks);
+        right2.setTargetPosition(right2.getCurrentPosition() + targetTicks);
 
         setMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
         setMotorPower(Math.abs(power));
 
         while ((opMode == null || opMode.opModeIsActive()) &&
-               (frontLeft.isBusy() || frontRight.isBusy() || rearLeft.isBusy() || rearRight.isBusy())) {
+               (left1.isBusy() || right1.isBusy() || left2.isBusy() || right2.isBusy())) {
             if (opMode != null) {
                 opMode.telemetry.addData("Drivetrain", "Driving to %d inches", (int)inches);
-                opMode.telemetry.addData("FL", "Target: %d, Current: %d", frontLeft.getTargetPosition(), frontLeft.getCurrentPosition());
-                opMode.telemetry.addData("FR", "Target: %d, Current: %d", frontRight.getTargetPosition(), frontRight.getCurrentPosition());
+                opMode.telemetry.addData("FL", "Target: %d, Current: %d", left1.getTargetPosition(), left1.getCurrentPosition());
+                opMode.telemetry.addData("FR", "Target: %d, Current: %d", right1.getTargetPosition(), right1.getCurrentPosition());
                 // Add IMU heading to telemetry for debugging
                 // opMode.telemetry.addData("Heading", "%.2f degrees", getYaw());
                 opMode.telemetry.update();
@@ -128,17 +127,17 @@ public class AutoDriveSubsystem {
 
 
     public void setMotorMode(DcMotor.RunMode mode) {
-        frontLeft.setMode(mode);
-        frontRight.setMode(mode);
-        rearLeft.setMode(mode);
-        rearRight.setMode(mode);
+        left1.setMode(mode);
+        right1.setMode(mode);
+        left2.setMode(mode);
+        right2.setMode(mode);
     }
 
     public void setMotorPower(double power) {
-        frontLeft.setPower(power);
-        frontRight.setPower(power);
-        rearLeft.setPower(power);
-        rearRight.setPower(power);
+        left1.setPower(power);
+        right1.setPower(power);
+        left2.setPower(power);
+        right2.setPower(power);
     }
 
     public void stopMotors() {
