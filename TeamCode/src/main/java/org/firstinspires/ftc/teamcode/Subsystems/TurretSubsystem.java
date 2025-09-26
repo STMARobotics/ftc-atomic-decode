@@ -1,17 +1,20 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 import static org.firstinspires.ftc.teamcode.Constants.IntakeConstants.STALL_CURRENT_AMPS;
-import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.TURRET_POWER;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 public class TurretSubsystem extends SubsystemBase {
 
     private final DcMotorEx turretMotor;
+    private Telemetry telemetry;
 
     public enum TurretState {
         SHOOTING,
@@ -20,8 +23,10 @@ public class TurretSubsystem extends SubsystemBase {
 
     private TurretState currentState = TurretState.STOPPED;
 
-    public TurretSubsystem(HardwareMap hardwareMap) {
+    public TurretSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
         turretMotor = hardwareMap.get(DcMotorEx.class, "turret");
+        turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.telemetry = telemetry;
     }
 
     public void shoot() {
@@ -42,12 +47,14 @@ public class TurretSubsystem extends SubsystemBase {
      */
     @Override
     public void periodic() {
+        telemetry.addData("power", turretMotor.getPower());
+        telemetry.addData("velocity", turretMotor.getVelocity());
         switch (currentState) {
             case SHOOTING:
-                turretMotor.setPower(TURRET_POWER);
+                turretMotor.setVelocity(5000*360*60, AngleUnit.DEGREES);
                 break;
             case STOPPED:
-                turretMotor.setPower(0.0);
+                turretMotor.setVelocity(0);
                 break;
         }
     }

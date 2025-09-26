@@ -29,7 +29,7 @@ public class CoolOpMode extends CommandOpMode {
         drivetrainSubsystem = new DrivetrainSubsystem(hardwareMap);
         intakeSubsystem = new IntakeSubsystem(hardwareMap);
         servoSubsystem = new ServoSubsystem(hardwareMap);
-        turretSubsystem = new TurretSubsystem(hardwareMap);
+        turretSubsystem = new TurretSubsystem(hardwareMap, telemetry);
 
         /*
         The origin is the field perimeter corner by the red loading zone.
@@ -55,7 +55,7 @@ public class CoolOpMode extends CommandOpMode {
         schedule(telemetryCommand);
 
         // Register subsystems
-        register(drivetrainSubsystem, intakeSubsystem, servoSubsystem);
+        register(drivetrainSubsystem, intakeSubsystem, servoSubsystem, turretSubsystem);
 
         // Set default commands for subsystems
         drivetrainSubsystem.setDefaultCommand(teleopDriveCommand);

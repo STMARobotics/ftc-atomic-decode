@@ -64,7 +64,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
      * @param reductionFactor value to multiply the speed parameters by in range [0, 1]
      */
     public void drive(double translationX, double translationY, double rotation, double reductionFactor) {
-        double clampedReduction = MathUtils.clamp(reductionFactor, 0.0, 1.0);
+        double clampedReduction = MathUtils.clamp(reductionFactor, 0.0, 0.8);
 
         // Square and reduce the axes
         double modifiedY = square(translationY * clampedReduction);
