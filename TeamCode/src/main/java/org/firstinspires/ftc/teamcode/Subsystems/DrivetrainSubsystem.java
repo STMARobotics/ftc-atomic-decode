@@ -45,7 +45,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
+                RevHubOrientationOnRobot.UsbFacingDirection.LEFT
         );
 
         IMU.Parameters imuParams = new IMU.Parameters(orientationOnRobot);
