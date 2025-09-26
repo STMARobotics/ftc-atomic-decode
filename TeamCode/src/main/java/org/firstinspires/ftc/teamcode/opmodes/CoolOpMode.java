@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.RunCommand;
+import com.seattlesolvers.solverslib.command.button.Button;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
@@ -22,6 +23,8 @@ public class CoolOpMode extends CommandOpMode {
     private IntakeSubsystem intakeSubsystem;
     private ServoSubsystem servoSubsystem;
     private TurretSubsystem turretSubsystem;
+    
+    private double reductionFactor;
 
     @Override
     public void initialize() {
@@ -43,7 +46,7 @@ public class CoolOpMode extends CommandOpMode {
                 -gamepad1.left_stick_y, // Stick up is negative but moves +X, so invert
                 -gamepad1.left_stick_x, // Stick left is negative but moves +Y, so invert
                 -gamepad1.right_stick_x, // Stick left is negative but moves +rotation, so invert
-                1),
+                reductionFactor),
                 drivetrainSubsystem);
 
         RunCommand telemetryCommand = new RunCommand(() -> {
@@ -98,6 +101,13 @@ public class CoolOpMode extends CommandOpMode {
         // X: When pressed, set servo to 90 degrees
         gamepad.getGamepadButton(GamepadKeys.Button.X).whenPressed(new RunCommand(() -> servoSubsystem.setPosition(90), servoSubsystem));
         // X: When released, set servo to 0 degrees
-        gamepad.getGamepadButton(GamepadKeys.Button.X).whenReleased(new RunCommand(() -> servoSubsystem.setPosition(0), servoSubsystem));
+        gamepad.getGamepadButton(GamepadKeys.Button.Y).whenPressed(new RunCommand(() -> servoSubsystem.setPosition(0), servoSubsystem));
+        
+        // RS button: When pressed, set speed to half
+        gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
+                .whenPressed(this::slowMode);    }
+
+    private void slowMode() {
+        reductionFactor = (reductionFactor == 1.0) ? 0.5 : 1.0;
     }
 }
