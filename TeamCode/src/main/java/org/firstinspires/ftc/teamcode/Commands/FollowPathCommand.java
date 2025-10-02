@@ -5,7 +5,7 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.seattlesolvers.solverslib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive;
 
 /**
  * Allows you to run a PathChain or a Path (which is then converted into a PathChain) by scheduling it.
