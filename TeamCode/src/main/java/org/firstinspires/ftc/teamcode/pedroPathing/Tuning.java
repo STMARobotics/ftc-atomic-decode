@@ -81,22 +81,22 @@ public class Tuning extends SelectableOpMode {
         });
     }
 
-//    @Override
-//    public void onSelect() {
-//        DrivetrainSubsystem drivetrain = new DrivetrainSubsystem(hardwareMap);
-//        if (follower == null) {
-//            follower = drivetrain.createFollower();
-//            PanelsConfigurables.INSTANCE.refreshClass(this);
-//        } else {
-//            follower = drivetrain.createFollower();
-//        }
-//
-//        follower.setStartingPose(new Pose());
-//
-//        poseHistory = follower.getPoseHistory();
-//
-//        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
-//    }
+    @Override
+    public void onSelect() {
+        DrivetrainSubsystem drivetrain = new DrivetrainSubsystem(hardwareMap);
+        if (follower == null) {
+            follower = drivetrain.createFollower();
+            PanelsConfigurables.INSTANCE.refreshClass(this);
+        } else {
+            follower = drivetrain.createFollower();
+        }
+
+        follower.setStartingPose(new Pose());
+
+        poseHistory = follower.getPoseHistory();
+
+        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+    }
 
     @Override
     public void onLog(List<String> lines) {}

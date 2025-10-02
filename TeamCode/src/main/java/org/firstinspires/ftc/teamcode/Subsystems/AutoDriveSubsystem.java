@@ -20,21 +20,19 @@ public class AutoDriveSubsystem {
     private final DcMotorEx right2;
     private IMU imu;
 
-    // Constants - PLEASE VERIFY AND ADJUST THESE FOR YOUR ROBOT
-    public static final double COUNTS_PER_MOTOR_REV = 537.6; // For GoBILDA 5203 series, 312 RPM (19.2:1 ratio: 28 * 19.2)
-    public static double WHEEL_DIAMETER_INCHES = 4.09449;  // <<< IMPORTANT: Adjust this to your actual wheel diameter
+    public static final double COUNTS_PER_MOTOR_REV = 537.6;
+    public static double WHEEL_DIAMETER_INCHES = 4.09449;
     public static double COUNTS_PER_INCH = COUNTS_PER_MOTOR_REV / (WHEEL_DIAMETER_INCHES * Math.PI);
 
-    // PID Turn Constants - ***YOU MUST TUNE THESE***
     public static double KP_TURN = 0.01; // Proportional gain
     public static double KI_TURN = 0.0001; // Integral gain
     public static double KD_TURN = 0.001; // Derivative gain
-    public static double TURN_TOLERANCE_DEGREES = 1.0; // Allowed error in degrees
+    public static double TURN_TOLERANCE_DEGREES = 1.0;
     private ElapsedTime pidTimer = new ElapsedTime();
     private double integralSum = 0;
     private double lastError = 0;
 
-    private LinearOpMode opMode; // Optional: for opModeIsActive() and telemetry
+    private LinearOpMode opMode;
 
     public AutoDriveSubsystem(HardwareMap hardwareMap) {
         left1 = hardwareMap.get(DcMotorEx.class, "left1");
