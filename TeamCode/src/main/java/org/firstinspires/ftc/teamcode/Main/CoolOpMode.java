@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Main;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
+import com.seattlesolvers.solverslib.command.FunctionalCommand;
+import com.seattlesolvers.solverslib.command.ParallelCommandGroup;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
@@ -42,11 +44,14 @@ public class CoolOpMode extends CommandOpMode {
          - Pushing to the left on the right stick rotates the the positive direction,
          counterclockwise
          */
-        RunCommand teleopDriveCommand = new RunCommand(() -> drivetrainSubsystem.drive(
-                -gamepad1.left_stick_y, // Stick up is negative but moves +X, so invert
-                -gamepad1.left_stick_x, // Stick left is negative but moves +Y, so invert
-                -gamepad1.right_stick_x, // Stick left is negative but moves +rotation, so invert
-                reductionFactor),
+        FunctionalCommand teleopDriveCommand = new FunctionalCommand(drivetrainSubsystem::startTeleop,
+                () -> drivetrainSubsystem.drive(
+                        -gamepad1.left_stick_y, // Stick up is negative but moves +X, so invert
+                        -gamepad1.left_stick_x, // Stick left is negative but moves +Y, so invert
+                        -gamepad1.right_stick_x, // Stick left is negative but moves +rotation, so invert
+                        1),
+                (b) -> drivetrainSubsystem.stop(),
+                () -> false,
                 drivetrainSubsystem);
 
         RunCommand telemetryCommand = new RunCommand(() -> {
@@ -81,7 +86,6 @@ public class CoolOpMode extends CommandOpMode {
         gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenReleased(new IntakeCommand(intakeSubsystem, IntakeSubsystem.IntakeState.STOPPED));
 
-
         // Left Bumper: When pressed, start outtaking
         gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(new IntakeCommand(intakeSubsystem, IntakeSubsystem.IntakeState.OUTTAKING));
@@ -106,6 +110,10 @@ public class CoolOpMode extends CommandOpMode {
         // RS button: When pressed, set speed to half
         gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
                 .whenPressed(this::slowMode);
+
+//        gamepad.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
+//                .whenPressed(schedule(new ParallelCommandGroup(
+//                )));
     }
 
     private void slowMode() {

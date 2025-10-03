@@ -8,7 +8,7 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.util.MathUtils;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.PedroPathing.Constants;
 
 /**
  * Drivetrain subsystem. Encapsulates the details of <i>how</i> the drivetrain works.
