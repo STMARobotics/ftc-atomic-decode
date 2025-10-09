@@ -13,10 +13,10 @@ import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.ServoSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.DucShooterSubsystem;
 
-// I copied andy so merek can sleep at night
-
+// I copied Andy so Merek can sleep at night
+// I copied Owen who copied Andy so Merek can sleep at night
 @TeleOp(name="cool op mode", group = "cool things")
-public class CoolerOpMode extends CommandOpMode {
+public class CoolerestOpMode extends CommandOpMode {
 
     private DrivetrainSubsystem drivetrainSubsystem;
     private IntakeSubsystem intakeSubsystem;
