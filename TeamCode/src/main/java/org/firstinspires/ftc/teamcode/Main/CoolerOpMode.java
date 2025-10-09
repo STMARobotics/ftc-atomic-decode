@@ -7,22 +7,22 @@ import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.Commands.IntakeCommand;
-import org.firstinspires.ftc.teamcode.Commands.ScoringCommand;
+import org.firstinspires.ftc.teamcode.Commands.DucScoringCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.ServoSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.ShooterSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.DucShooterSubsystem;
 
 // I copied andy so merek can sleep at night
 
 @TeleOp(name="cool op mode", group = "cool things")
-public class CoolOpMode extends CommandOpMode {
+public class CoolerOpMode extends CommandOpMode {
 
     private DrivetrainSubsystem drivetrainSubsystem;
     private IntakeSubsystem intakeSubsystem;
     private ServoSubsystem servoSubsystem;
-    private ShooterSubsystem shooterSubsystem;
-    
+    private DucShooterSubsystem ducShooterSubsystem;
+
     private double reductionFactor = 1;
 
     @Override
@@ -31,7 +31,7 @@ public class CoolOpMode extends CommandOpMode {
         drivetrainSubsystem = new DrivetrainSubsystem(hardwareMap);
         intakeSubsystem = new IntakeSubsystem(hardwareMap);
         servoSubsystem = new ServoSubsystem(hardwareMap);
-        shooterSubsystem = new ShooterSubsystem(hardwareMap, telemetry);
+        ducShooterSubsystem = new DucShooterSubsystem(hardwareMap, telemetry);
 
         /*
         The origin is the field perimeter corner by the red loading zone.
@@ -57,7 +57,7 @@ public class CoolOpMode extends CommandOpMode {
         schedule(telemetryCommand);
 
         // Register subsystems
-        register(drivetrainSubsystem, intakeSubsystem, servoSubsystem, shooterSubsystem);
+        register(drivetrainSubsystem, intakeSubsystem, servoSubsystem, ducShooterSubsystem);
 
         // Set default commands for subsystems
         drivetrainSubsystem.setDefaultCommand(teleopDriveCommand);
@@ -91,20 +91,28 @@ public class CoolOpMode extends CommandOpMode {
 
         // A: When pressed start shooting
         gamepad.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(new ScoringCommand(shooterSubsystem, ShooterSubsystem.TurretState.SHOOTING));
+                .whenPressed(new DucScoringCommand(ducShooterSubsystem, DucShooterSubsystem.TurretState.SHOOTING));
 
         // A: When released, stop shooting
         gamepad.getGamepadButton(GamepadKeys.Button.A)
-                .whenReleased(new ScoringCommand(shooterSubsystem, ShooterSubsystem.TurretState.STOPPED));
+                .whenReleased(new DucScoringCommand(ducShooterSubsystem, DucShooterSubsystem.TurretState.STOPPED));
 
         // X: When pressed, set servo to 90 degrees
         gamepad.getGamepadButton(GamepadKeys.Button.X).whenPressed(new RunCommand(() -> servoSubsystem.setPosition(90), servoSubsystem));
         // X: When released, set servo to 0 degrees
         gamepad.getGamepadButton(GamepadKeys.Button.Y).whenPressed(new RunCommand(() -> servoSubsystem.setPosition(0), servoSubsystem));
-        
+
         // RS button: When pressed, set speed to half
         gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
-                .whenPressed(this::slowMode);    }
+                .whenPressed(this::slowMode);
+        //Dpad Up: When pressed move hood up
+        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(new RunCommand(() -> ducShooterSubsystem.moveHood(1), ducShooterSubsystem));
+        //
+        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(new RunCommand(() -> ducShooterSubsystem.moveHood(-1), ducShooterSubsystem));
+
+
+    }
+
 
     private void slowMode() {
         reductionFactor = (reductionFactor == 1.0) ? 0.5 : 1.0;

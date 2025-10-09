@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 
 import static org.firstinspires.ftc.teamcode.pedroPathing.Constants.DRIVE_CONSTANTS;
 
+import com.pedropathing.follower.Follower;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -114,5 +115,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     public void resetLocalization() {
         imu.resetYaw();
+    }
+
+    public Follower createFollower() {
+        return null;
     }
 }

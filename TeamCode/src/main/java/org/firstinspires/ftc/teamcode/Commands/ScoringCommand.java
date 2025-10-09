@@ -1,32 +1,32 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
 import com.seattlesolvers.solverslib.command.CommandBase;
-import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.ShooterSubsystem;
 
-public class TurretCommand extends CommandBase {
+public class ScoringCommand extends CommandBase {
 
-    private final TurretSubsystem TurretSubsystem;
-    private final TurretSubsystem.TurretState stateToSet;
+    private final ShooterSubsystem ShooterSubsystem;
+    private final ShooterSubsystem.TurretState stateToSet;
 
     /**
      * Creates a command to control the intake.
-     * @param TurretSubsystem The intake subsystem instance.
+     * @param ShooterSubsystem The intake subsystem instance.
      * @param stateToSet The state to put the intake in (INTAKING, OUTTAKING, or STOPPED).
      */
-    public TurretCommand(TurretSubsystem TurretSubsystem, TurretSubsystem.TurretState stateToSet) {
-        this.TurretSubsystem = TurretSubsystem;
+    public ScoringCommand(ShooterSubsystem ShooterSubsystem, ShooterSubsystem.TurretState stateToSet) {
+        this.ShooterSubsystem = ShooterSubsystem;
         this.stateToSet = stateToSet;
-        addRequirements(TurretSubsystem);
+        addRequirements(ShooterSubsystem);
     }
 
     @Override
     public void initialize() {
         switch (stateToSet) {
             case SHOOTING:
-                TurretSubsystem.shoot();
+                ShooterSubsystem.shoot(10,17);
                 break;
             case STOPPED:
-                TurretSubsystem.stop();
+                ShooterSubsystem.stop();
                 break;
         }
     }
