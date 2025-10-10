@@ -9,6 +9,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.teamcode.Commands.IntakeCommand;
 import org.firstinspires.ftc.teamcode.Commands.TurretCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.HoodSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.ServoSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
@@ -22,6 +23,7 @@ public class CoolOpMode extends CommandOpMode {
     private IntakeSubsystem intakeSubsystem;
     private ServoSubsystem servoSubsystem;
     private TurretSubsystem turretSubsystem;
+    private HoodSubsystem hoodSubsystem;
     
     private double reductionFactor = 1;
 
@@ -32,6 +34,7 @@ public class CoolOpMode extends CommandOpMode {
         intakeSubsystem = new IntakeSubsystem(hardwareMap);
         servoSubsystem = new ServoSubsystem(hardwareMap);
         turretSubsystem = new TurretSubsystem(hardwareMap, telemetry);
+        hoodSubsystem = new HoodSubsystem(hardwareMap);
 
         /*
         The origin is the field perimeter corner by the red loading zone.
@@ -66,45 +69,48 @@ public class CoolOpMode extends CommandOpMode {
     }
 
     private void configureButtonBindings() {
-
         // Bind driver buttons
-        GamepadEx gamepad = new GamepadEx(gamepad1);
-        gamepad.getGamepadButton(GamepadKeys.Button.START)
+        GamepadEx driverGamepad = new GamepadEx(gamepad1);
+        GamepadEx operatorGamepad = new GamepadEx(gamepad2);
+        driverGamepad.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(drivetrainSubsystem::resetLocalization);
 
-        // Right Bumper: When pressed, startintaking
-        gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+        // Right Bumper: When pressed, start intaking
+        driverGamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(new IntakeCommand(intakeSubsystem, IntakeSubsystem.IntakeState.INTAKING));
 
         // Right Bumper: When released, stop the intake
-        gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+        driverGamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenReleased(new IntakeCommand(intakeSubsystem, IntakeSubsystem.IntakeState.STOPPED));
 
-
         // Left Bumper: When pressed, start outtaking
-        gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+        driverGamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(new IntakeCommand(intakeSubsystem, IntakeSubsystem.IntakeState.OUTTAKING));
 
         // Left Bumper: When released, stop outtaking
-        gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+        driverGamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenReleased(new IntakeCommand(intakeSubsystem, IntakeSubsystem.IntakeState.STOPPED));
 
         // A: When pressed start shooting
-        gamepad.getGamepadButton(GamepadKeys.Button.A)
+        driverGamepad.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(new TurretCommand(turretSubsystem, TurretSubsystem.TurretState.SHOOTING));
 
         // A: When released, stop shooting
-        gamepad.getGamepadButton(GamepadKeys.Button.A)
+        driverGamepad.getGamepadButton(GamepadKeys.Button.A)
                 .whenReleased(new TurretCommand(turretSubsystem, TurretSubsystem.TurretState.STOPPED));
 
         // X: When pressed, set servo to 90 degrees
-        gamepad.getGamepadButton(GamepadKeys.Button.X).whenPressed(new RunCommand(() -> servoSubsystem.setPosition(90), servoSubsystem));
-        // X: When released, set servo to 0 degrees
-        gamepad.getGamepadButton(GamepadKeys.Button.Y).whenPressed(new RunCommand(() -> servoSubsystem.setPosition(0), servoSubsystem));
-        
+        driverGamepad.getGamepadButton(GamepadKeys.Button.X).whenPressed(new RunCommand(() -> servoSubsystem.setPosition(90), servoSubsystem));
+        // Y: When pressed, set servo to 0 degrees
+        driverGamepad.getGamepadButton(GamepadKeys.Button.Y).whenPressed(new RunCommand(() -> servoSubsystem.setPosition(0), servoSubsystem));
+
+        operatorGamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(hoodSubsystem::hoodAngleIncrease);
+        operatorGamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(hoodSubsystem::hoodAngleDecrease);
+
         // RS button: When pressed, set speed to half
-        gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
-                .whenPressed(this::slowMode);    }
+        driverGamepad.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
+                .whenPressed(this::slowMode);
+    }
 
     private void slowMode() {
         reductionFactor = (reductionFactor == 1.0) ? 0.5 : 1.0;
