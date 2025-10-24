@@ -17,8 +17,9 @@ public class TurretSubsystem extends SubsystemBase {
     private Telemetry telemetry;
 
     public enum TurretState {
-        SHOOTING,
-        STOPPED
+        FAR,
+        STOPPED,
+        CLOSE
     }
 
     private TurretState currentState = TurretState.STOPPED;
@@ -29,8 +30,12 @@ public class TurretSubsystem extends SubsystemBase {
         this.telemetry = telemetry;
     }
 
-    public void shoot() {
-        currentState = TurretState.SHOOTING;
+    public void far() {
+        currentState = TurretState.FAR;
+    }
+
+    public void close(){
+        currentState = TurretState.CLOSE;
     }
 
     public void stop() {
@@ -50,12 +55,14 @@ public class TurretSubsystem extends SubsystemBase {
         telemetry.addData("power", turretMotor.getPower());
         telemetry.addData("velocity", turretMotor.getVelocity());
         switch (currentState) {
-            case SHOOTING:
-                turretMotor.setVelocity(5000*360*60, AngleUnit.DEGREES);
+            case FAR:
+                turretMotor.setVelocity(4500*360*60, AngleUnit.DEGREES);
                 break;
             case STOPPED:
                 turretMotor.setVelocity(0);
                 break;
+            case CLOSE:
+                turretMotor.setVelocity(3000*360*60, AngleUnit.DEGREES);
         }
     }
 }

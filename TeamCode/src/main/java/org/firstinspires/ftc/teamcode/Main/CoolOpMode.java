@@ -75,6 +75,8 @@ public class CoolOpMode extends CommandOpMode {
         driverGamepad.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(drivetrainSubsystem::resetLocalization);
 
+
+
         // Right Bumper: When pressed, start intaking
         driverGamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(new IntakeCommand(intakeSubsystem, IntakeSubsystem.IntakeState.INTAKING));
@@ -82,6 +84,8 @@ public class CoolOpMode extends CommandOpMode {
         // Right Bumper: When released, stop the intake
         driverGamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenReleased(new IntakeCommand(intakeSubsystem, IntakeSubsystem.IntakeState.STOPPED));
+
+
 
         // Left Bumper: When pressed, start outtaking
         driverGamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
@@ -91,21 +95,29 @@ public class CoolOpMode extends CommandOpMode {
         driverGamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenReleased(new IntakeCommand(intakeSubsystem, IntakeSubsystem.IntakeState.STOPPED));
 
+
+
         // A: When pressed start shooting
-        driverGamepad.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(new TurretCommand(turretSubsystem, TurretSubsystem.TurretState.SHOOTING));
+        operatorGamepad.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(new TurretCommand(turretSubsystem, TurretSubsystem.TurretState.FAR));
 
         // A: When released, stop shooting
-        driverGamepad.getGamepadButton(GamepadKeys.Button.A)
+        operatorGamepad.getGamepadButton(GamepadKeys.Button.A)
                 .whenReleased(new TurretCommand(turretSubsystem, TurretSubsystem.TurretState.STOPPED));
 
-        // X: When pressed, set servo to 90 degrees
-        driverGamepad.getGamepadButton(GamepadKeys.Button.X).whenPressed(new RunCommand(() -> servoSubsystem.setPosition(90), servoSubsystem));
-        // Y: When pressed, set servo to 0 degrees
-        driverGamepad.getGamepadButton(GamepadKeys.Button.Y).whenPressed(new RunCommand(() -> servoSubsystem.setPosition(0), servoSubsystem));
 
-        operatorGamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(hoodSubsystem::hoodAngleIncrease);
-        operatorGamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(hoodSubsystem::hoodAngleDecrease);
+
+        operatorGamepad.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(new TurretCommand(turretSubsystem, TurretSubsystem.TurretState.CLOSE));
+        operatorGamepad.getGamepadButton(GamepadKeys.Button.B)
+                .whenReleased(new TurretCommand(turretSubsystem, TurretSubsystem.TurretState.STOPPED));
+
+
+        //Left and right bumpers make hood go up and down
+        operatorGamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenPressed(hoodSubsystem::hoodAngleIncrease);
+        operatorGamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(hoodSubsystem::hoodStop);
+        operatorGamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(hoodSubsystem::hoodAngleDecrease);
+        operatorGamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(hoodSubsystem::hoodStop);
 
         // RS button: When pressed, set speed to half
         driverGamepad.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)

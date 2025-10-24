@@ -22,11 +22,14 @@ public class TurretCommand extends CommandBase {
     @Override
     public void initialize() {
         switch (stateToSet) {
-            case SHOOTING:
-                TurretSubsystem.shoot();
+            case FAR:
+                TurretSubsystem.far();
                 break;
             case STOPPED:
                 TurretSubsystem.stop();
+                break;
+            case CLOSE:
+                TurretSubsystem.close();
                 break;
         }
     }
