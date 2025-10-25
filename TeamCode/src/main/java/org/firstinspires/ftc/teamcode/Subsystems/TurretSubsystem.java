@@ -16,6 +16,9 @@ public class TurretSubsystem extends SubsystemBase {
     private final DcMotorEx turretMotor;
     private Telemetry telemetry;
 
+    private final double farRPM = 4200;
+    private final double closeRPM = 2500;
+
     public enum TurretState {
         FAR,
         STOPPED,
@@ -56,13 +59,13 @@ public class TurretSubsystem extends SubsystemBase {
         telemetry.addData("velocity", turretMotor.getVelocity());
         switch (currentState) {
             case FAR:
-                turretMotor.setVelocity(4500*360*60, AngleUnit.DEGREES);
+                turretMotor.setVelocity(farRPM*360*60, AngleUnit.DEGREES);
                 break;
             case STOPPED:
                 turretMotor.setVelocity(0);
                 break;
             case CLOSE:
-                turretMotor.setVelocity(3000*360*60, AngleUnit.DEGREES);
+                turretMotor.setVelocity(closeRPM*360*60, AngleUnit.DEGREES);
         }
     }
 }
