@@ -17,7 +17,7 @@ public class TurretSubsystem extends SubsystemBase {
     private Telemetry telemetry;
 
     private final double farRPM = 4200;
-    private final double closeRPM = 2500;
+    private final double closeRPM = 1000;
 
     public enum TurretState {
         FAR,
