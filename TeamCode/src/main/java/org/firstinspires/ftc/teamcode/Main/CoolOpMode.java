@@ -7,12 +7,7 @@ import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
-import org.firstinspires.ftc.teamcode.Commands.IntakeCommand;
-import org.firstinspires.ftc.teamcode.Commands.ShootCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.ServoSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.ShooterSubsystem;
 
 // I copied andy so merek can sleep at night
 
@@ -20,9 +15,6 @@ import org.firstinspires.ftc.teamcode.Subsystems.ShooterSubsystem;
 public class CoolOpMode extends CommandOpMode {
 
     private DrivetrainSubsystem drivetrainSubsystem;
-    private IntakeSubsystem intakeSubsystem;
-    private ServoSubsystem servoSubsystem;
-    private ShooterSubsystem shooterSubsystem;
 
     private double reductionFactor = 1;
 
@@ -30,9 +22,6 @@ public class CoolOpMode extends CommandOpMode {
     public void initialize() {
         // Create subsystems
         drivetrainSubsystem = new DrivetrainSubsystem(hardwareMap);
-        intakeSubsystem = new IntakeSubsystem(hardwareMap);
-        servoSubsystem = new ServoSubsystem(hardwareMap);
-        shooterSubsystem = new ShooterSubsystem(hardwareMap, telemetry);
 
         /*
         The origin is the field perimeter corner by the red loading zone.
@@ -61,7 +50,7 @@ public class CoolOpMode extends CommandOpMode {
         schedule(telemetryCommand);
 
         // Register subsystems
-        register(drivetrainSubsystem, intakeSubsystem, servoSubsystem, shooterSubsystem);
+        register(drivetrainSubsystem);
 
         // Set default commands for subsystems
         drivetrainSubsystem.setDefaultCommand(teleopDriveCommand);
@@ -76,26 +65,7 @@ public class CoolOpMode extends CommandOpMode {
         gamepad.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(drivetrainSubsystem::resetLocalization);
 
-        // Right Bumper: When pressed, startintaking
-        gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                        .whileHeld(new IntakeCommand(intakeSubsystem));
-
-        // A: When pressed start shooting
-        gamepad.getGamepadButton(GamepadKeys.Button.A)
-                .whileHeld(new ShootCommand(shooterSubsystem));
-
-        // X: When pressed, set servo to 90 degrees
-        gamepad.getGamepadButton(GamepadKeys.Button.X).whenPressed(new RunCommand(() -> servoSubsystem.setPosition(90), servoSubsystem));
-        // X: When released, set servo to 0 degrees
-        gamepad.getGamepadButton(GamepadKeys.Button.Y).whenPressed(new RunCommand(() -> servoSubsystem.setPosition(0), servoSubsystem));
-
-        // RS button: When pressed, set speed to half
-        gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
-                .whenPressed(this::slowMode);
-
-//        gamepad.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
-//                .whenPressed(schedule(new ParallelCommandGroup(
-//                )));
+        // All the stuff here
     }
 
     private void slowMode() {

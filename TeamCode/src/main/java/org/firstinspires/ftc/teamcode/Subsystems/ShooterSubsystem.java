@@ -1,46 +1,70 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import static org.firstinspires.ftc.teamcode.Constants.IntakeConstants.STALL_CURRENT_AMPS;
-
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+
 
 public class ShooterSubsystem extends SubsystemBase {
 
-    private final DcMotorEx turretMotor;
-    private final Telemetry telemetry;
+    public final DcMotorEx flywheelMotor;
+    public final Servo hoodServo;
+    public double targetAngle;
+    public double targetRPM;
 
-    public ShooterSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
-        turretMotor = hardwareMap.get(DcMotorEx.class, "turret");
-        turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        this.telemetry = telemetry;
-    }
-
-    public void shoot() {
-        turretMotor.setVelocity(5000*360*60, AngleUnit.DEGREES);
-    }
-
-    public void stop() {
-        turretMotor.setVelocity(0);
-    }
-
-    public boolean isStalling() {
-        return turretMotor.getCurrent(CurrentUnit.AMPS) > STALL_CURRENT_AMPS;
+    public ShooterSubsystem(HardwareMap hardwareMap) {
+        flywheelMotor = hardwareMap.get(DcMotorEx.class, "flywheelMotor");
+        hoodServo = hardwareMap.get(Servo.class, "hoodServo");
     }
 
     /**
-     * This method is called repeatedly by the scheduler. It reads the
-     * current state and sets the motor power accordingly.
+     * Sets the flywheel to a desired rpm
+     * @param RPM the rpm that we want the flywheel to run at
      */
-    @Override
-    public void periodic() {
-        telemetry.addData("power", turretMotor.getPower());
-        telemetry.addData("velocity", turretMotor.getVelocity());
+    public void setRPM(double RPM) {
+        flywheelMotor.setVelocity(RPM*360/60, AngleUnit.DEGREES);
+        targetRPM = RPM;
+    }
+
+    /**
+     * Sets the flywheel motor power to 0
+     */
+    public void stop() {
+        flywheelMotor.setPower(0);
+        targetRPM = 0;
+    }
+
+    /**
+     * Sets the hood servo to desired angle
+     * @param angle the angle we want the hood to be set at
+     */
+    public void setHoodAngle(double angle) {
+        hoodServo.setPosition(angle);
+        targetAngle = angle;
+        // TODO: map the servo angle to the actual angle of the shot
+    }
+
+    /**
+     * Returns t/f if the shooter and the hood are ready for shooting
+     */
+    public boolean shootReady() {
+        return flywheelReady() && hoodReady();
+    }
+
+    /**
+     * Returns t/f if the hood is ready for shooting
+     */
+    public boolean hoodReady() {
+        return hoodServo.getPosition() == targetAngle;
+    }
+
+    /**
+     * Returns t/f if the flywheel is ready for shooting
+     */
+    public boolean flywheelReady() {
+        return flywheelMotor.getVelocity() == targetRPM;
     }
 }

@@ -4,8 +4,8 @@ public class Constants {
 
     // Define the nested static class for Intake constants
     public static class IntakeConstants {
-        public static final double INTAKE_POWER = 0.8;
-        public static final double OUTTAKE_POWER = -0.6;
+        public static final double INTAKE_POWER = 1;
+        public static final double OUTTAKE_POWER = -1;
         public static final double STALL_CURRENT_AMPS = 9.2;
     }
 

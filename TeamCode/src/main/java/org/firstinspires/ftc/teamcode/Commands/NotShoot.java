@@ -1,4 +1,4 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
-public class ShootCommand {
+public class NotShoot {
 }
