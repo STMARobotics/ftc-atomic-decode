@@ -11,7 +11,6 @@ public class Constants {
 
     public static class limelightConstants {
         public static final int LIMELIGHT_POLL_HZ = 100;
-        public static final double MAX_TURRET_POWER = 0.5;
     }
 
     public static class TurretConstants {
@@ -20,5 +19,12 @@ public class Constants {
         public static final double TURRET_MAX_ANGLE_DEG = 135.0;
         public static final double TURRET_HOME_ANGLE_DEG = 0.0;
         public static final double MIN_TURRET_POWER = 0.05;
+    }
+
+    public static class ClimbConstants {
+        public static final double CLIMB_POWER = 1.0;
+        public static final double STALL_CURRENT_AMPS = 9.2;
+        public static final double CLUTCH_ENGAGED_POS = 0.8; // placeholder
+        public static final double CLUTCH_DISENGAGED_POS = 0; // placeholder
     }
 }

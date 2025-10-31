@@ -44,7 +44,8 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     /**
-     * Automatically aims the turret at the target using proportional control (kP only).
+     * Automatically aims the turret at the target using pid.
+     * (PLEASE WORK FIRST TRY I DONT WANT TO DEBUG THIS)
      */
     public void autolockTurret() {
         double error = getTargetOffset();
