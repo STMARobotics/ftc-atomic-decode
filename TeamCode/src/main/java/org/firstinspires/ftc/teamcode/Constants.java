@@ -9,25 +9,16 @@ public class Constants {
         public static final double STALL_CURRENT_AMPS = 9.2;
     }
 
-    // Define the nested static class for Turret constants
+    public static class limelightConstants {
+        public static final int LIMELIGHT_POLL_HZ = 100;
+        public static final double MAX_TURRET_POWER = 0.5;
+    }
+
     public static class TurretConstants {
-        public static final double TURRET_POWER = 0.8;
-    }
-
-    // Vision-related constants for Limelight and geometry
-    public static class VisionConstants {
-        // Mounting geometry (meters and degrees). Measure on your robot and update.
-        public static final double CAMERA_HEIGHT_M = 0.30; // height of camera lens from floor
-        public static final double CAMERA_PITCH_DEG = 15.0; // camera tilt up (+) relative to horizontal
-        public static final double CAMERA_YAW_OFFSET_DEG = 0.0; // yaw misalignment relative to turret/robot forward
-
-        // Target geometry (meters). Set for the tag you’re aiming at (center of tag).
-        public static final double TARGET_HEIGHT_M = 0.20; // example tag center height from floor
-    }
-
-    // Shooter geometry and kinematics (for hood calculation)
-    public static class ShooterConstants {
-        public static final double SHOOTER_HEIGHT_M = 0.28; // height of ball exit/flywheel center from floor
-        public static final double LAUNCH_SPEED_MPS = 12.0; // measured projectile exit speed
+        public static final double DEAD_BAND_DEG = 1.0;
+        public static final double TURRET_MIN_ANGLE_DEG = -135.0;
+        public static final double TURRET_MAX_ANGLE_DEG = 135.0;
+        public static final double TURRET_HOME_ANGLE_DEG = 0.0;
+        public static final double MIN_TURRET_POWER = 0.05;
     }
 }
