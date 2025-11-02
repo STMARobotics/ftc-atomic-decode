@@ -28,8 +28,8 @@ public class CoolOpMode extends CommandOpMode {
     public void initialize() {
         // Create subsystems
         drivetrainSubsystem = new DrivetrainSubsystem(hardwareMap);
-        notShootCommand = new NotShootCommand(hardwareMap);
-        autoLockTurretCommand = new AutoLockTurretCommand(hardwareMap);
+        notShootCommand = new NotShootCommand();
+        autoLockTurretCommand = new AutoLockTurretCommand();
         shooterSubsystem = new ShooterSubsystem(hardwareMap);
 
         /*
