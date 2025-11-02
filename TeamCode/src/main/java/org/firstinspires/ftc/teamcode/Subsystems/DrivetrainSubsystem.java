@@ -102,7 +102,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
      * @param telemetry telemetry object
      */
     public void telemetrize(Telemetry telemetry) {
-        // Log the position to the telemetry
         telemetry.addData("X coordinate (meters)", currentPose.getX());
         telemetry.addData("Y coordinate (meters)", currentPose.getY());
         telemetry.addData("Heading angle (radians)", currentPose.getHeading());

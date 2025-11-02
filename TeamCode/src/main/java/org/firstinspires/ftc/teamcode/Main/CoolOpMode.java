@@ -2,15 +2,17 @@ package org.firstinspires.ftc.teamcode.Main;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
-import com.seattlesolvers.solverslib.command.FunctionalCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
-import org.firstinspires.ftc.teamcode.Commands.SubCommands.AutoLockTurretCommand;
+import org.firstinspires.ftc.teamcode.Commands.AutoLockTurretCommand;
 import org.firstinspires.ftc.teamcode.Commands.NotShootCommand;
+import org.firstinspires.ftc.teamcode.Commands.Drive;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.ShooterSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.PlatterSubsystem;
 
 // I copied andy so merek can sleep at night
 
@@ -21,6 +23,8 @@ public class CoolOpMode extends CommandOpMode {
     private NotShootCommand notShootCommand;
     private AutoLockTurretCommand autoLockTurretCommand;
     private ShooterSubsystem shooterSubsystem;
+    private TurretSubsystem turretSubsystem;
+    private PlatterSubsystem platterSubsystem;
 
     private double reductionFactor = 1;
 
@@ -28,9 +32,12 @@ public class CoolOpMode extends CommandOpMode {
     public void initialize() {
         // Create subsystems
         drivetrainSubsystem = new DrivetrainSubsystem(hardwareMap);
-        notShootCommand = new NotShootCommand();
-        autoLockTurretCommand = new AutoLockTurretCommand();
         shooterSubsystem = new ShooterSubsystem(hardwareMap);
+        turretSubsystem = new TurretSubsystem(hardwareMap);
+        platterSubsystem = new PlatterSubsystem(hardwareMap);
+
+        notShootCommand = new NotShootCommand(platterSubsystem);
+        autoLockTurretCommand = new AutoLockTurretCommand(turretSubsystem);
 
         /*
         The origin is the field perimeter corner by the red loading zone.
@@ -40,15 +47,13 @@ public class CoolOpMode extends CommandOpMode {
          - Pushing to the left on the right stick rotates the the positive direction,
          counterclockwise
          */
-        FunctionalCommand teleopDriveCommand = new FunctionalCommand(drivetrainSubsystem::startTeleop,
-                () -> drivetrainSubsystem.drive(
-                        -gamepad1.left_stick_y, // Stick up is negative but moves +X, so invert
-                        -gamepad1.left_stick_x, // Stick left is negative but moves +Y, so invert
-                        -gamepad1.right_stick_x, // Stick left is negative but moves +rotation, so invert
-                        1),
-                (b) -> drivetrainSubsystem.stop(),
-                () -> false,
-                drivetrainSubsystem);
+        Drive teleopDriveCommand = new Drive(
+                drivetrainSubsystem,
+                () -> -gamepad1.left_stick_y,  // Stick up is negative but moves +X, so invert
+                () -> -gamepad1.left_stick_x,  // Stick left is negative but moves +Y, so invert
+                () -> -gamepad1.right_stick_x, // Stick left is negative but moves +rotation, so invert
+                () -> reductionFactor
+        );
 
         RunCommand telemetryCommand = new RunCommand(() -> {
             drivetrainSubsystem.telemetrize(telemetry);
@@ -60,9 +65,8 @@ public class CoolOpMode extends CommandOpMode {
 
         register(drivetrainSubsystem);
 
-        shooterSubsystem.setDefaultCommand(notShootCommand);
-
         // Set default commands for subsystems
+        platterSubsystem.setDefaultCommand(notShootCommand);
         drivetrainSubsystem.setDefaultCommand(teleopDriveCommand);
 
         configureButtonBindings();
