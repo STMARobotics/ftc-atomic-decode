@@ -5,6 +5,7 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathBuilder;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.seattlesolvers.solverslib.controller.PIDController;
 import com.seattlesolvers.solverslib.util.MathUtils;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -16,8 +17,11 @@ import org.firstinspires.ftc.teamcode.PedroPathing.Constants;
 public class DrivetrainSubsystem extends SubsystemBase {
 
     private final Follower follower;
-
     private Pose currentPose = new Pose();
+
+    private final PIDController xController = new PIDController(3.0, 0.0, 0.2);
+    private final PIDController yController = new PIDController(3.0, 0.0, 0.2);
+    private final PIDController headingController = new PIDController(4.0, 0.0, 0.3);
 
     public DrivetrainSubsystem(HardwareMap hardwareMap) {
         follower = Constants.createFollower(hardwareMap);
@@ -111,4 +115,29 @@ public class DrivetrainSubsystem extends SubsystemBase {
         return Math.copySign(value * value, value);
     }
 
+    /**
+     * Returns the current estimated pose of the robot.
+     * @return current pose
+     */
+    public Pose getCurrentPose() {
+        return currentPose;
+    }
+
+    /**
+     * Holds the robot at a specific position using probably pid or something i guess
+     * @param targetPose the target position to hold, use Pose2d targetPosition = new Pose2d(currentPose); to get correct format
+     */
+    public void holdPosition(Pose targetPose) {
+        Pose cur = getCurrentPose();
+
+        double xError = targetPose.getX() - cur.getX();
+        double yError = targetPose.getY() - cur.getY();
+        double headingError = MathUtils.angleWrap(targetPose.getHeading() - cur.getHeading());
+
+        double xPower = xController.calculate(cur.getX(), targetPose.getX());
+        double yPower = yController.calculate(cur.getY(), targetPose.getY());
+        double turnPower = headingController.calculate(cur.getHeading(), targetPose.getHeading());
+
+        follower.setTeleOpDrive(xPower, yPower, turnPower, true);
+    }
 }

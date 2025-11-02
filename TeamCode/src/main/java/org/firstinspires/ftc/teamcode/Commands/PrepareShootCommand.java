@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.ShooterSubsystem;
 public class PrepareShootCommand extends CommandBase {
 
     private ShooterSubsystem shooterSubsystem;
-    private LookupTable lookupTable
+    private LookupTable lookupTable;
 
 
     public PrepareShootCommand(ShooterSubsystem shooterSubsystem, LookupTable lookupTable) {
