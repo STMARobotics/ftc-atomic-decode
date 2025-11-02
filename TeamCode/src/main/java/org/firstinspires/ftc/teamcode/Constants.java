@@ -15,8 +15,8 @@ public class Constants {
 
     public static class TurretConstants {
         public static final double DEAD_BAND_DEG = 1.0;
-        public static final double TURRET_MIN_ANGLE_DEG = -135.0;
-        public static final double TURRET_MAX_ANGLE_DEG = 135.0;
+        public static final double SOFT_MIN_DEG = -133.0;
+        public static final double SOFT_MAX_DEG = 133.0;
         public static final double TURRET_HOME_ANGLE_DEG = 0.0;
         public static final double MIN_TURRET_POWER = 0.05;
     }
@@ -26,5 +26,16 @@ public class Constants {
         public static final double STALL_CURRENT_AMPS = 9.2;
         public static final double CLUTCH_ENGAGED_POS = 0.8; // placeholder
         public static final double CLUTCH_DISENGAGED_POS = 0; // placeholder
+    }
+
+    public static enum AllianceColor {
+        RED,
+        BLUE
+    }
+
+    public static enum ArtifactColor {
+        PURPLE,
+        GREEN,
+        ALL
     }
 }

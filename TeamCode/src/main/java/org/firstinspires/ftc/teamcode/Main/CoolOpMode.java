@@ -7,7 +7,10 @@ import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
+import org.firstinspires.ftc.teamcode.Commands.SubCommands.AutoLockTurretCommand;
+import org.firstinspires.ftc.teamcode.Commands.NotShootCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.ShooterSubsystem;
 
 // I copied andy so merek can sleep at night
 
@@ -15,6 +18,9 @@ import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
 public class CoolOpMode extends CommandOpMode {
 
     private DrivetrainSubsystem drivetrainSubsystem;
+    private NotShootCommand notShootCommand;
+    private AutoLockTurretCommand autoLockTurretCommand;
+    private ShooterSubsystem shooterSubsystem;
 
     private double reductionFactor = 1;
 
@@ -22,6 +28,9 @@ public class CoolOpMode extends CommandOpMode {
     public void initialize() {
         // Create subsystems
         drivetrainSubsystem = new DrivetrainSubsystem(hardwareMap);
+        notShootCommand = new NotShootCommand(hardwareMap);
+        autoLockTurretCommand = new AutoLockTurretCommand(hardwareMap);
+        shooterSubsystem = new ShooterSubsystem(hardwareMap);
 
         /*
         The origin is the field perimeter corner by the red loading zone.
@@ -45,12 +54,13 @@ public class CoolOpMode extends CommandOpMode {
             drivetrainSubsystem.telemetrize(telemetry);
             telemetry.update();
         });
-
-        // Schedule commands
         schedule(telemetryCommand);
 
-        // Register subsystems
+        schedule(autoLockTurretCommand);
+
         register(drivetrainSubsystem);
+
+        shooterSubsystem.setDefaultCommand(notShootCommand);
 
         // Set default commands for subsystems
         drivetrainSubsystem.setDefaultCommand(teleopDriveCommand);
@@ -64,8 +74,6 @@ public class CoolOpMode extends CommandOpMode {
         GamepadEx gamepad = new GamepadEx(gamepad1);
         gamepad.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(drivetrainSubsystem::resetLocalization);
-
-        // All the stuff here
     }
 
     private void slowMode() {

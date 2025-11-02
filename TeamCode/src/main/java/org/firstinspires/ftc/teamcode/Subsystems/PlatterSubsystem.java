@@ -5,8 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
-import java.util.Objects;
-
+import org.firstinspires.ftc.teamcode.Constants.ArtifactColor;
 
 public class PlatterSubsystem extends SubsystemBase {
 
@@ -14,6 +13,9 @@ public class PlatterSubsystem extends SubsystemBase {
     public final Servo launcherServo;
     public final CRServo launchableLeft; // artifact grabber rollers pls change this
     public final CRServo launchableRight;
+
+    // Stored target color
+    private ArtifactColor artifactColor;
 
     public PlatterSubsystem(HardwareMap hardwareMap) {
         platterServo = hardwareMap.get(CRServo.class, "hoodServo");
@@ -43,13 +45,6 @@ public class PlatterSubsystem extends SubsystemBase {
     }
 
     /**
-     * Spins the platter, probably used for shooting or wrong color
-     */
-    public void platterSpin() {
-        platterServo.setPower(0.8);
-    }
-
-    /**
      * Stops the platter from spinning
      */
     public void stopPlatter() {
@@ -58,20 +53,19 @@ public class PlatterSubsystem extends SubsystemBase {
 
     /**
      * Checks the color detected by the color sensor
-     * @return returns the color detected as a string
+     * @return returns the color detected as an enum
      */
-    public String checkColor() {
-        // TODO: implement color sensor logic
-        return "green"; // placeholder
+    public ArtifactColor checkColor() {
+        // TODO: implement color sensor logic later; placeholder for now
+        return ArtifactColor.GREEN; // placeholder
     }
 
     /**
-     * Checks if the detected color matches the target color
-     * @param targetColor the color we want to match
-     * @return true if the colors match, false otherwise
+     * Checks if the detected color matches the given target color.
+     * ALL is treated as a wildcard target that always matches.
      */
-    public boolean isCorrectColor(String targetColor) {
-        return Objects.equals(checkColor(), targetColor);
+    public boolean isCorrectColor(ArtifactColor target) {
+        return target == ArtifactColor.ALL || checkColor() == target;
     }
 
     /**

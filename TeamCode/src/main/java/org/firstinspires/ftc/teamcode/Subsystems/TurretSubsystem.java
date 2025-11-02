@@ -67,8 +67,6 @@ public class TurretSubsystem extends SubsystemBase {
         }
 
         // Soft limits so we dont snap a gear
-        final double SOFT_MIN_DEG = -134.0;
-        final double SOFT_MAX_DEG = 134.0;
         double position = getTurretPosition();
         if (!Double.isNaN(position)) {
             if (position <= SOFT_MIN_DEG && output < 0) {
