@@ -41,11 +41,17 @@ public class Drive extends CommandBase {
 
     @Override
     public void execute() {
-        drivetrain.drive(
-                txSupplier.getAsDouble(),
-                tySupplier.getAsDouble(),
-                tzSupplier.getAsDouble(),
-                reductionSupplier.getAsDouble());
+        if (txSupplier.getAsDouble() == 0 &&
+            tySupplier.getAsDouble() == 0 &&
+            tzSupplier.getAsDouble() == 0) {
+            drivetrain.holdPosition();
+        } else {
+            drivetrain.drive(
+                    txSupplier.getAsDouble(),
+                    tySupplier.getAsDouble(),
+                    tzSupplier.getAsDouble(),
+                    reductionSupplier.getAsDouble());
+        }
     }
 
     @Override
