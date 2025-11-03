@@ -132,7 +132,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         double xError = targetPose.getX() - cur.getX();
         double yError = targetPose.getY() - cur.getY();
-        double headingError = MathUtils.angleWrap(targetPose.getHeading() - cur.getHeading());
+        double headingError = angleWrap(targetPose.getHeading() - cur.getHeading());
 
         double xPower = xController.calculate(cur.getX(), targetPose.getX());
         double yPower = yController.calculate(cur.getY(), targetPose.getY());
@@ -140,4 +140,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         follower.setTeleOpDrive(xPower, yPower, turnPower, true);
     }
+
+    /**
+     * angleWrap is broken so were homebrewing our own
+     * @param angle angle in radians
+     * @return wrapped angle in radians between -PI and PI
+     */
+    public static double angleWrap(double angle) {
+        while (angle <= -Math.PI) angle += 2 * Math.PI;
+        while (angle > Math.PI) angle -= 2 * Math.PI;
+        return angle;
+    }
+
 }
