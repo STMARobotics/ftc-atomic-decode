@@ -26,6 +26,8 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeMotor.setPower(0.0);
     }
 
+    // TODO: turn it into set velocity
+
     public boolean isStalling() {
         return intakeMotor.getCurrent(CurrentUnit.AMPS) > STALL_CURRENT_AMPS;
     }

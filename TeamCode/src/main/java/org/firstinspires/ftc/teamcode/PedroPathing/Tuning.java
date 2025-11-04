@@ -28,8 +28,6 @@ import com.pedropathing.util.PoseHistory;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,12 +81,11 @@ public class Tuning extends SelectableOpMode {
 
     @Override
     public void onSelect() {
-        DrivetrainSubsystem drivetrain = new DrivetrainSubsystem(hardwareMap);
         if (follower == null) {
-            follower = drivetrain.createFollower();
+            follower = Constants.createFollower(hardwareMap);
             PanelsConfigurables.INSTANCE.refreshClass(this);
         } else {
-            follower = drivetrain.createFollower();
+            follower = Constants.createFollower(hardwareMap);
         }
 
         follower.setStartingPose(new Pose());

@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
+import com.pedropathing.geometry.Pose;
 import com.seattlesolvers.solverslib.command.CommandBase;
+import com.seattlesolvers.solverslib.geometry.Pose2d;
 
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
 
@@ -44,7 +46,8 @@ public class Drive extends CommandBase {
         if (txSupplier.getAsDouble() == 0 &&
             tySupplier.getAsDouble() == 0 &&
             tzSupplier.getAsDouble() == 0) {
-            drivetrain.holdPosition();
+            Pose targetPosition = new Pose();
+            drivetrain.holdPosition(targetPosition);
         } else {
             drivetrain.drive(
                     txSupplier.getAsDouble(),

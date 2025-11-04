@@ -1,22 +1,48 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.seattlesolvers.solverslib.command.SubsystemBase;
+import org.firstinspires.ftc.teamcode.Constants;
 
+import org.firstinspires.ftc.teamcode.Math.LookupTableMath.ShootingSettings;
+
+/**
+ * Subsystem wrapper that exposes lookup-table based shooter settings.
+ */
 public class LookupTable extends SubsystemBase {
 
+    private static final double DEFAULT_DISTANCE_M = 3.0;
+
     public LookupTable() {
-        // bruh idk
+        ShootingSettings settings = new ShootingSettings();
     }
 
-    public double getShooterRPM() {
-        // get position on field from pedro
-        // do math and stuff to figure out the in between stuff
-        return 123;
+    /**
+     * Get shooter RPM for a specific distance in meters.
+     *
+     * @param distanceMeters distance to target in meters
+     * @return shooter wheel speed in RPM
+     */
+    public double getShooterRPM(double distanceMeters) {
+        ShootingSettings settings = Constants.SHOOTER_INTERPOLATOR.calculate(distanceMeters);
+        // settings.getVelocity() returns rotations per second; convert to RPM
+        return settings.getVelocity() * 60.0;
     }
 
+    /**
+     * Get hood angle (degrees) for the default distance.
+     */
     public double getHoodAngle() {
-        // get position on field from pedro
-        // do math and stuff to figure out the in between stuff
-        return 45;
+        return getHoodAngle(DEFAULT_DISTANCE_M);
+    }
+
+    /**
+     * Get hood angle (degrees) for a specific distance in meters.
+     *
+     * @param distanceMeters distance to target in meters
+     * @return hood pitch in degrees
+     */
+    public double getHoodAngle(double distanceMeters) {
+        ShootingSettings settings = Constants.SHOOTER_INTERPOLATOR.calculate(distanceMeters);
+        return settings.getPitch();
     }
 }

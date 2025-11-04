@@ -142,7 +142,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
 
     /**
-     * angleWrap is broken so were homebrewing our own
+     * angleWrap is broken so were bringing our own
      * @param angle angle in radians
      * @return wrapped angle in radians between -PI and PI
      */
