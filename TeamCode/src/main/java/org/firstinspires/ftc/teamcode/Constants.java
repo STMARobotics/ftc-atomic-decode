@@ -31,6 +31,12 @@ public final class Constants {
         public static final double CLUTCH_DISENGAGED_POS = 0; // placeholder
     }
 
+    public static class IntakeConstants {
+        public static final double INTAKE_POWER = 1.0;
+        public static final double OUTTAKE_POWER = -1.0;
+        public static final double STALL_CURRENT_AMPS = 9.2;
+    }
+
     public static enum AllianceColor {
         RED,
         BLUE

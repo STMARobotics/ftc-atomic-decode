@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Commands;
 
 import com.seattlesolvers.solverslib.command.CommandBase;
 
+import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.LookupTable;
 import org.firstinspires.ftc.teamcode.Subsystems.ShooterSubsystem;
 
@@ -9,11 +10,13 @@ public class PrepareShootCommand extends CommandBase {
 
     private ShooterSubsystem shooterSubsystem;
     private LookupTable lookupTable;
+    private LimelightSubsystem limelightSubsystem;
 
 
-    public PrepareShootCommand(ShooterSubsystem shooterSubsystem, LookupTable lookupTable) {
+    public PrepareShootCommand(ShooterSubsystem shooterSubsystem, LookupTable lookupTable, LimelightSubsystem limelightSubsystem) {
         this.shooterSubsystem = shooterSubsystem;
         this.lookupTable = lookupTable;
+        this.limelightSubsystem = limelightSubsystem;
         addRequirements(shooterSubsystem, lookupTable);
     }
 
@@ -24,8 +27,8 @@ public class PrepareShootCommand extends CommandBase {
 
     @Override
     public void execute() {
-        double targetRPM = lookupTable.getShooterRPM();
-        double targetHoodAngle = lookupTable.getHoodAngle();
+        double targetRPM = lookupTable.getShooterRPM(limelightSubsystem.getDistance());
+        double targetHoodAngle = lookupTable.getHoodAngle(limelightSubsystem.getDistance());
 
         shooterSubsystem.setRPM(targetRPM);
         shooterSubsystem.setHoodAngle(targetHoodAngle);
@@ -33,6 +36,7 @@ public class PrepareShootCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
+        // TODO: figure out how we end this command
         return false;
     }
 }

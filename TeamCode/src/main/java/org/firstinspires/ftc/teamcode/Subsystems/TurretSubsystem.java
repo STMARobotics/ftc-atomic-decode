@@ -1,36 +1,32 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
-import static org.firstinspires.ftc.teamcode.Constants.limelightConstants.*;
 import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.*;
+
+import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
 
 public class TurretSubsystem {
 
-    // Remove external PID; use simple PD (default D=0 -> P-only)
     private double kP = 0.5;
     private double kD = 0.0;
     private double prevError = 0.0;
     private boolean hasPrevError = false;
 
     private final DcMotorEx turretMotor;
-    private final Limelight3A limelight;
     private final AnalogInput pot;
+
+    private LimelightSubsystem limelightSubsystem;
 
     public TurretSubsystem(HardwareMap hardwareMap) {
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
         pot = hardwareMap.get(AnalogInput.class, "turretPotentiometer");
 
-        limelight.setPollRateHz(LIMELIGHT_POLL_HZ);
-        limelight.start();
+        limelightSubsystem = new LimelightSubsystem(hardwareMap);
 
-        // Optional: motor safety defaults
         turretMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 
@@ -54,7 +50,7 @@ public class TurretSubsystem {
      * Automatically aims the turret at the target using simple PD (D optional).
      */
     public void autolockTurret() {
-        double error = getTargetOffset();
+        double error = limelightSubsystem.getTargetOffset();
 
         if (Double.isNaN(error)) {
             stopTurret();
@@ -97,27 +93,6 @@ public class TurretSubsystem {
     public void setGains(double kP, double kD) {
         this.kP = kP;
         this.kD = kD;
-    }
-
-    /**
-     * Switches the limelight pipeline
-     * @param pipeline the pipeline index to switch to
-     */
-    public void pipelineSwitcher(int pipeline) {
-        limelight.pipelineSwitch(pipeline); // 0 = blue, 1 = red
-    }
-
-    /**
-     * Returns the horizontal offset from crosshair to target
-     * Uses LLResult.getTx() per Limelight FTC API. Returns NaN if no valid result.
-     * @return the horizontal offset in degrees (NaN if unavailable)
-     */
-    public double getTargetOffset() {
-        LLResult result = limelight.getLatestResult();
-        if (result == null || !result.isValid()) {
-            return Double.NaN;
-        }
-        return result.getTx();
     }
 
     /**

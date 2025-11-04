@@ -29,13 +29,6 @@ public class LookupTable extends SubsystemBase {
     }
 
     /**
-     * Get hood angle (degrees) for the default distance.
-     */
-    public double getHoodAngle() {
-        return getHoodAngle(DEFAULT_DISTANCE_M);
-    }
-
-    /**
      * Get hood angle (degrees) for a specific distance in meters.
      *
      * @param distanceMeters distance to target in meters

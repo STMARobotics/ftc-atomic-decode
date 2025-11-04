@@ -1,16 +1,18 @@
 package org.firstinspires.ftc.teamcode.Main;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
+import com.seattlesolvers.solverslib.command.button.Button;
+import com.seattlesolvers.solverslib.gamepad.TriggerReader;
 
 import org.firstinspires.ftc.teamcode.Commands.AutoLockTurretCommand;
 import org.firstinspires.ftc.teamcode.Commands.NotShootCommand;
 import org.firstinspires.ftc.teamcode.Commands.Drive;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.PlatterSubsystem;
@@ -26,6 +28,10 @@ public class CoolOpMode extends CommandOpMode {
     private ShooterSubsystem shooterSubsystem;
     private TurretSubsystem turretSubsystem;
     private PlatterSubsystem platterSubsystem;
+    private IntakeSubsystem intakeSubsystem;
+
+    private GamepadEx gamepad;
+    private TriggerReader leftTriggerReader;
 
     private double reductionFactor = 1;
 
@@ -36,6 +42,7 @@ public class CoolOpMode extends CommandOpMode {
         shooterSubsystem = new ShooterSubsystem(hardwareMap);
         turretSubsystem = new TurretSubsystem(hardwareMap);
         platterSubsystem = new PlatterSubsystem(hardwareMap);
+        intakeSubsystem = new IntakeSubsystem(hardwareMap);
 
         notShootCommand = new NotShootCommand(platterSubsystem);
         autoLockTurretCommand = new AutoLockTurretCommand(turretSubsystem);
@@ -79,6 +86,11 @@ public class CoolOpMode extends CommandOpMode {
         GamepadEx gamepad = new GamepadEx(gamepad1);
         gamepad.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(drivetrainSubsystem::resetLocalization);
+
+        gamepad.getGamepadButton(GamepadKeys.Button.A).whenPressed(intakeSubsystem::intake);
+        gamepad.getGamepadButton(GamepadKeys.Button.A).whenReleased(intakeSubsystem::stop);
+        gamepad.getGamepadButton(GamepadKeys.Button.B).whileHeld(intakeSubsystem::outtake);
+        gamepad.getGamepadButton(GamepadKeys.Button.B).whenPressed(intakeSubsystem::stop);
     }
 
     private void slowMode() {

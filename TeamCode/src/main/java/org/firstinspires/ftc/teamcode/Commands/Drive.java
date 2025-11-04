@@ -43,18 +43,23 @@ public class Drive extends CommandBase {
 
     @Override
     public void execute() {
-        if (txSupplier.getAsDouble() == 0 &&
-            tySupplier.getAsDouble() == 0 &&
-            tzSupplier.getAsDouble() == 0) {
-            Pose targetPosition = new Pose();
-            drivetrain.holdPosition(targetPosition);
-        } else {
-            drivetrain.drive(
-                    txSupplier.getAsDouble(),
-                    tySupplier.getAsDouble(),
-                    tzSupplier.getAsDouble(),
-                    reductionSupplier.getAsDouble());
-        }
+//        if (txSupplier.getAsDouble() == 0 &&
+//            tySupplier.getAsDouble() == 0 &&
+//            tzSupplier.getAsDouble() == 0) {
+//            Pose targetPosition = new Pose(); // TODO: make targetPosition actually work
+//            drivetrain.holdPosition(targetPosition);
+//        } else {
+//            drivetrain.drive(
+//                    txSupplier.getAsDouble(),
+//                    tySupplier.getAsDouble(),
+//                    tzSupplier.getAsDouble(),
+//                    reductionSupplier.getAsDouble());
+//        }
+        drivetrain.drive(
+                txSupplier.getAsDouble(),
+                tySupplier.getAsDouble(),
+                tzSupplier.getAsDouble(),
+                reductionSupplier.getAsDouble());
     }
 
     @Override
