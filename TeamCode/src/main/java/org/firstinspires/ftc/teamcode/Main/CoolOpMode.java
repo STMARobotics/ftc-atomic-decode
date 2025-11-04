@@ -5,7 +5,6 @@ import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
-import com.seattlesolvers.solverslib.command.button.Button;
 import com.seattlesolvers.solverslib.gamepad.TriggerReader;
 
 import org.firstinspires.ftc.teamcode.Commands.AutoLockTurretCommand;
@@ -44,8 +43,8 @@ public class CoolOpMode extends CommandOpMode {
         platterSubsystem = new PlatterSubsystem(hardwareMap);
         intakeSubsystem = new IntakeSubsystem(hardwareMap);
 
-        notShootCommand = new NotShootCommand(platterSubsystem);
-        autoLockTurretCommand = new AutoLockTurretCommand(turretSubsystem);
+//        notShootCommand = new NotShootCommand(platterSubsystem);
+//        autoLockTurretCommand = new AutoLockTurretCommand(turretSubsystem);
 
         /*
         The origin is the field perimeter corner by the red loading zone.
@@ -71,7 +70,7 @@ public class CoolOpMode extends CommandOpMode {
 
 //        schedule(autoLockTurretCommand);
 
-        register(drivetrainSubsystem);
+        register(drivetrainSubsystem, shooterSubsystem, turretSubsystem, platterSubsystem, intakeSubsystem);
 
         // Set default commands for subsystems
 //        platterSubsystem.setDefaultCommand(notShootCommand);
@@ -86,6 +85,9 @@ public class CoolOpMode extends CommandOpMode {
         GamepadEx gamepad = new GamepadEx(gamepad1);
         gamepad.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(drivetrainSubsystem::resetLocalization);
+
+        gamepad.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
+                .whenPressed(this::slowMode);
 
         gamepad.getGamepadButton(GamepadKeys.Button.A).whenPressed(intakeSubsystem::intake);
         gamepad.getGamepadButton(GamepadKeys.Button.A).whenReleased(intakeSubsystem::stop);

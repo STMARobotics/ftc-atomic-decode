@@ -4,12 +4,13 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
+import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.*;
 
 import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
 
-public class TurretSubsystem {
+public class TurretSubsystem extends SubsystemBase {
 
     private double kP = 0.5;
     private double kD = 0.0;

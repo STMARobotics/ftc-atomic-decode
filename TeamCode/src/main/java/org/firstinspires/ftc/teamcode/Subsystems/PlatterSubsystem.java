@@ -18,7 +18,7 @@ public class PlatterSubsystem extends SubsystemBase {
     private ArtifactColor artifactColor;
 
     public PlatterSubsystem(HardwareMap hardwareMap) {
-        platterServo = hardwareMap.get(CRServo.class, "hoodServo");
+        platterServo = hardwareMap.get(CRServo.class, "platterServo");
         launcherServo = hardwareMap.get(Servo.class, "launcherServo");
         launchableLeft = hardwareMap.get(CRServo.class, "launchableLeft");
         launchableRight = hardwareMap.get(CRServo.class, "launchableRight");
