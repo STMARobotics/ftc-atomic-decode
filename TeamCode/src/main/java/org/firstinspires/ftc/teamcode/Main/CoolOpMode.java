@@ -69,12 +69,12 @@ public class CoolOpMode extends CommandOpMode {
         });
         schedule(telemetryCommand);
 
-        schedule(autoLockTurretCommand);
+//        schedule(autoLockTurretCommand);
 
         register(drivetrainSubsystem);
 
         // Set default commands for subsystems
-        platterSubsystem.setDefaultCommand(notShootCommand);
+//        platterSubsystem.setDefaultCommand(notShootCommand);
         drivetrainSubsystem.setDefaultCommand(teleopDriveCommand);
 
         configureButtonBindings();
