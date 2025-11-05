@@ -30,8 +30,8 @@ public class Constants {
             .angularScalar(0.99)
             .offset(new SparkFunOTOS.Pose2D(
                     47 / 25.4, // +x forward
-                    47 / 25.4, // +y left
-                    1.5 * Math.PI));
+                    47 / 25.4, // +y
+                    Math.PI));
 
     public static final FollowerConstants FOLLOWER_CONSTANTS = new FollowerConstants()
             .mass(5) // must be kg

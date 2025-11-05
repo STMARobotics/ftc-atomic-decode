@@ -106,9 +106,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
      * @param telemetry telemetry object
      */
     public void telemetrize(Telemetry telemetry) {
-        telemetry.addData("X coordinate (meters)", currentPose.getX());
-        telemetry.addData("Y coordinate (meters)", currentPose.getY());
-        telemetry.addData("Heading angle (radians)", currentPose.getHeading());
+        telemetry.addData("X coordinate (mm)", currentPose.getX());
+        telemetry.addData("Y coordinate (mm)", currentPose.getY());
+        telemetry.addData("Heading angle (degrees)", Math.toDegrees(currentPose.getHeading()));
     }
 
     public static double square(double value) {
@@ -138,7 +138,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         double yPower = yController.calculate(cur.getY(), targetPose.getY());
         double turnPower = headingController.calculate(cur.getHeading(), targetPose.getHeading());
 
-        follower.setTeleOpDrive(xPower, yPower, turnPower, true);
+        follower.setTeleOpDrive(xPower, yPower, turnPower, false);
     }
 
     /**
