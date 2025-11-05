@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Main;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
+import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
@@ -91,8 +92,13 @@ public class CoolOpMode extends CommandOpMode {
 
         gamepad.getGamepadButton(GamepadKeys.Button.A).whenPressed(intakeSubsystem::intake);
         gamepad.getGamepadButton(GamepadKeys.Button.A).whenReleased(intakeSubsystem::stop);
-        gamepad.getGamepadButton(GamepadKeys.Button.B).whileHeld(intakeSubsystem::outtake);
-        gamepad.getGamepadButton(GamepadKeys.Button.B).whenPressed(intakeSubsystem::stop);
+        gamepad.getGamepadButton(GamepadKeys.Button.B).whenPressed(intakeSubsystem::outtake);
+        gamepad.getGamepadButton(GamepadKeys.Button.B).whenReleased(intakeSubsystem::stop);
+
+        gamepad.getGamepadButton(GamepadKeys.Button.Y)
+                .whenPressed(new InstantCommand(() -> shooterSubsystem.setRPM(6000), shooterSubsystem));
+        gamepad.getGamepadButton(GamepadKeys.Button.Y)
+                .whenReleased(new InstantCommand(() -> shooterSubsystem.setRPM(0), shooterSubsystem));
     }
 
     private void slowMode() {
