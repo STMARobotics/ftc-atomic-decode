@@ -37,6 +37,10 @@ public final class Constants {
         public static final double STALL_CURRENT_AMPS = 9.2;
     }
 
+    public static class DriveCommandConstants {
+        public static final double JOYSTICK_DEADZONE = 0.05;
+    }
+
     public static enum AllianceColor {
         RED,
         BLUE
