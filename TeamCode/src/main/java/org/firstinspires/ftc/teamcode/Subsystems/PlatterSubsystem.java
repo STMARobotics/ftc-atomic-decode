@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.teamcode.Constants.ArtifactColor;
 
@@ -13,7 +14,7 @@ public class PlatterSubsystem extends SubsystemBase {
     public final Servo launcherServo;
     public final CRServo launchableLeft; // artifact grabber rollers pls change this
     public final CRServo launchableRight;
-
+    private ColorSensor colorSensor;
     // Stored target color
     private ArtifactColor artifactColor;
 
@@ -22,6 +23,7 @@ public class PlatterSubsystem extends SubsystemBase {
         launcherServo = hardwareMap.get(Servo.class, "launcherServo");
         launchableLeft = hardwareMap.get(CRServo.class, "launchableLeft");
         launchableRight = hardwareMap.get(CRServo.class, "launchableRight");
+        colorSensor = hardwareMap.get(ColorSensor.class, "cSensor");
     }
 
     // color sensor, magnet switch
