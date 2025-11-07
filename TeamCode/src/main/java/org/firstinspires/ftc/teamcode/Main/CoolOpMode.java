@@ -65,11 +65,10 @@ public class CoolOpMode extends CommandOpMode {
 
         RunCommand telemetryCommand = new RunCommand(() -> {
             drivetrainSubsystem.telemetrize(telemetry);
+            turretSubsystem.telemetrize(telemetry);
             telemetry.update();
         });
         schedule(telemetryCommand);
-
-//        schedule(autoLockTurretCommand);
 
         register(drivetrainSubsystem, shooterSubsystem, turretSubsystem, platterSubsystem, intakeSubsystem);
 
@@ -95,10 +94,18 @@ public class CoolOpMode extends CommandOpMode {
         gamepad.getGamepadButton(GamepadKeys.Button.B).whenPressed(intakeSubsystem::outtake);
         gamepad.getGamepadButton(GamepadKeys.Button.B).whenReleased(intakeSubsystem::stop);
 
+        gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(platterSubsystem::launchableActivate);
+        gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(platterSubsystem::launchableStop);
+
         gamepad.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(new InstantCommand(() -> shooterSubsystem.setRPM(6000), shooterSubsystem));
         gamepad.getGamepadButton(GamepadKeys.Button.Y)
                 .whenReleased(new InstantCommand(() -> shooterSubsystem.setRPM(0), shooterSubsystem));
+
+        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                .whenPressed(platterSubsystem::launcherDeactivate);
+        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                .whenPressed(platterSubsystem::launcherActivate);
     }
 
     private void slowMode() {

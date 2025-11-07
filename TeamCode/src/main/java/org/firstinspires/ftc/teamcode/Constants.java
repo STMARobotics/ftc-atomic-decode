@@ -20,9 +20,14 @@ public final class Constants {
         public static final double SOFT_MAX_DEG = 133.0;
         public static final double TURRET_HOME_ANGLE_DEG = 0.0;
         public static final double MIN_TURRET_POWER = 0.05;
-        public static final double POT_MIN_V = 0.2; // placeholder
-        public static final double POT_MAX_V = 3.0; // placeholder
+
+        public static final double POT_MIN_V = 0.3;   // example: turret at -180°
+        public static final double POT_MAX_V = 2.97;  // example: turret at +180°
+
+        public static final double TURRET_MIN_DEG = -150.0;
+        public static final double TURRET_MAX_DEG =  150.0;
     }
+
 
     public static class ClimbConstants {
         public static final double CLIMB_POWER = 1.0;

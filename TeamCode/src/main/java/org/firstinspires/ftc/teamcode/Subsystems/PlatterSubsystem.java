@@ -14,8 +14,8 @@ public class PlatterSubsystem extends SubsystemBase {
     public final Servo launcherServo;
     public final CRServo launchableLeft; // artifact grabber rollers pls change this
     public final CRServo launchableRight;
-    private ColorSensor colorSensor;
-    // Stored target color
+//    private ColorSensor colorSensor;
+
     private ArtifactColor artifactColor;
 
     public PlatterSubsystem(HardwareMap hardwareMap) {
@@ -23,7 +23,9 @@ public class PlatterSubsystem extends SubsystemBase {
         launcherServo = hardwareMap.get(Servo.class, "launcherServo");
         launchableLeft = hardwareMap.get(CRServo.class, "launchableLeft");
         launchableRight = hardwareMap.get(CRServo.class, "launchableRight");
-        colorSensor = hardwareMap.get(ColorSensor.class, "cSensor");
+
+        launchableRight.setDirection(CRServo.Direction.REVERSE);
+//        colorSensor = hardwareMap.get(ColorSensor.class, "cSensor");
     }
 
     // color sensor, magnet switch
@@ -83,7 +85,7 @@ public class PlatterSubsystem extends SubsystemBase {
      * Activates the spring loaded launcher with a servo
      */
     public void launcherActivate() {
-        launcherServo.setPosition(90); // placeholder
+        launcherServo.setPosition(0.6); // placeholder
     }
 
     /**

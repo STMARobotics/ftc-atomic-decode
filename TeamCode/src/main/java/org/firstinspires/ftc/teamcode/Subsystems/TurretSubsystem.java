@@ -8,6 +8,7 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.*;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
 
 public class TurretSubsystem extends SubsystemBase {
@@ -100,7 +101,11 @@ public class TurretSubsystem extends SubsystemBase {
      * Returns the turret position in degrees.
      */
     public double getTurretPosition() {
-         double v = pot.getVoltage(); // 0..3.3V
-         return Range.scale(v, POT_MIN_V, POT_MAX_V, SOFT_MIN_DEG, SOFT_MAX_DEG);
+        double v = pot.getVoltage();
+        return ((v - POT_MIN_V) / (POT_MAX_V - POT_MIN_V)) * (TURRET_MAX_DEG - TURRET_MIN_DEG) + TURRET_MIN_DEG;
+    }
+
+    public void telemetrize(Telemetry telemetry) {
+        telemetry.addData("voltage from pot", pot.getVoltage());
     }
 }

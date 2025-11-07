@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.PedroPathing.Constants;
 
 /**
- * Drivetrain subsystem. Encapsulates the details of <i>how</i> the drivetrain works.
+ * Drivetrain subsystem. Encapsulates the details of how the drivetrain works.
  */
 public class DrivetrainSubsystem extends SubsystemBase {
 
