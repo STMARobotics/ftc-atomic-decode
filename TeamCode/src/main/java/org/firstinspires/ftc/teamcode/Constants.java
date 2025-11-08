@@ -54,7 +54,8 @@ public final class Constants {
     public static enum ArtifactColor {
         PURPLE,
         GREEN,
-        ALL
+        ALL,
+        NONE
     }
 
     // Shooter interpolator values: distances are meters, velocities are rotations/sec, pitch is degrees

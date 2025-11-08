@@ -106,6 +106,8 @@ public class CoolOpMode extends CommandOpMode {
                 .whenPressed(platterSubsystem::launcherDeactivate);
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                 .whenPressed(platterSubsystem::launcherActivate);
+
+
     }
 
     private void slowMode() {
