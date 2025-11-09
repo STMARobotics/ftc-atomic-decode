@@ -16,16 +16,14 @@ public final class Constants {
     public static final class TurretConstants {
 
         public static final double DEAD_BAND_DEG = 1.0;
-        public static final double SOFT_MIN_DEG = -133.0;
-        public static final double SOFT_MAX_DEG = 133.0;
+        public static final double SOFT_MIN_DEG = -135.0;
+        public static final double SOFT_MAX_DEG = 135.0;
         public static final double TURRET_HOME_ANGLE_DEG = 0.0;
         public static final double MIN_TURRET_POWER = 0.05;
 
-        public static final double POT_MIN_V = 0.3;   // example: turret at -180°
-        public static final double POT_MAX_V = 2.97;  // example: turret at +180°
-
-        public static final double TURRET_MIN_DEG = -150.0;
-        public static final double TURRET_MAX_DEG =  150.0;
+        public static final double POT_MIN_V = 0.94;
+        public static final double POT_MAX_V = 1.739;
+        public static final double POT_HOME_V = 1.319;
     }
 
 

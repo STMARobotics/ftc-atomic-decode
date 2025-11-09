@@ -20,7 +20,7 @@ public class PlatterSubsystem extends SubsystemBase {
 
     private final NormalizedColorSensor colorSensorBottom;
     private final NormalizedColorSensor colorSensorWall;
-    private final TouchSensor magnetSwitch;
+//    private final TouchSensor magnetSwitch;
 
     private ArtifactColor artifactColor;
 
@@ -35,7 +35,7 @@ public class PlatterSubsystem extends SubsystemBase {
         colorSensorBottom = hardwareMap.get(NormalizedColorSensor.class, "cSensorBottom");
         colorSensorWall = hardwareMap.get(NormalizedColorSensor.class, "cSensorWall");
 
-        magnetSwitch = hardwareMap.get(TouchSensor.class, "magnetSwitch");
+//        magnetSwitch = hardwareMap.get(TouchSensor.class, "magnetSwitch");
     }
 
     /**
@@ -84,9 +84,9 @@ public class PlatterSubsystem extends SubsystemBase {
      * Checks if the magnet switch is tripped
      * @return true if the magnet switch is tripped, false otherwise
      */
-    public boolean isMagnetTripped() {
-        return magnetSwitch.isPressed();
-    }
+//    public boolean isMagnetTripped() {
+//        return magnetSwitch.isPressed();
+//    }
 
     /**
      * Activates the spring loaded launcher with a servo

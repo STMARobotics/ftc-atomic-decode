@@ -28,6 +28,8 @@ public class TestSystems extends CommandOpMode {
     private PlatterSubsystem platterSubsystem;
     private IntakeSubsystem intakeSubsystem;
 
+    private AutoLockTurretCommand autoLockTurretCommand;
+
     private GamepadEx gamepad;
 
     private double reductionFactor = 1;
@@ -41,6 +43,8 @@ public class TestSystems extends CommandOpMode {
         platterSubsystem = new PlatterSubsystem(hardwareMap);
         intakeSubsystem = new IntakeSubsystem(hardwareMap);
 
+        autoLockTurretCommand = new AutoLockTurretCommand(turretSubsystem);
+
         RunCommand telemetryCommand = new RunCommand(() -> {
             drivetrainSubsystem.telemetrize(telemetry);
             turretSubsystem.telemetrize(telemetry);
@@ -48,6 +52,8 @@ public class TestSystems extends CommandOpMode {
             telemetry.update();
         });
         schedule(telemetryCommand);
+
+        schedule(autoLockTurretCommand);
 
         register(drivetrainSubsystem, shooterSubsystem, turretSubsystem, platterSubsystem, intakeSubsystem);
 

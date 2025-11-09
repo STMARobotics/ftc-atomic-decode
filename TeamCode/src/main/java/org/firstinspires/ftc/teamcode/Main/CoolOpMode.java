@@ -45,7 +45,7 @@ public class CoolOpMode extends CommandOpMode {
         intakeSubsystem = new IntakeSubsystem(hardwareMap);
 
 //        notShootCommand = new NotShootCommand(platterSubsystem);
-//        autoLockTurretCommand = new AutoLockTurretCommand(turretSubsystem);
+        autoLockTurretCommand = new AutoLockTurretCommand(turretSubsystem);
 
         /*
         The origin is the field perimeter corner by the red loading zone.
@@ -69,6 +69,8 @@ public class CoolOpMode extends CommandOpMode {
             telemetry.update();
         });
         schedule(telemetryCommand);
+
+        schedule(autoLockTurretCommand);
 
         register(drivetrainSubsystem, shooterSubsystem, turretSubsystem, platterSubsystem, intakeSubsystem);
 
@@ -106,8 +108,6 @@ public class CoolOpMode extends CommandOpMode {
                 .whenPressed(platterSubsystem::launcherDeactivate);
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                 .whenPressed(platterSubsystem::launcherActivate);
-
-
     }
 
     private void slowMode() {
