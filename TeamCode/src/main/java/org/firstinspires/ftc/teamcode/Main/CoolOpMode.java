@@ -101,6 +101,11 @@ public class CoolOpMode extends CommandOpMode {
         gamepad.getGamepadButton(GamepadKeys.Button.Y)
                 .whenReleased(new InstantCommand(() -> shooterSubsystem.setRPM(0), shooterSubsystem));
 
+        gamepad.getGamepadButton(GamepadKeys.Button.X)
+                        .whenPressed(new InstantCommand(() -> shooterSubsystem.setRPM(4000), shooterSubsystem));
+        gamepad.getGamepadButton(GamepadKeys.Button.X)
+                .whenReleased(new InstantCommand(() -> shooterSubsystem.setRPM(0), shooterSubsystem));
+
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                 .whenPressed(platterSubsystem::launcherDeactivate);
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)

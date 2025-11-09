@@ -10,16 +10,19 @@ import org.firstinspires.ftc.teamcode.Math.LookupTableMath;
 public final class Constants {
 
     public static final class limelightConstants {
-        public static final int LIMELIGHT_POLL_HZ = 30;
+        public static final int LIMELIGHT_POLL_HZ = 90;
     }
 
     public static final class TurretConstants {
 
-        public static final double DEAD_BAND_DEG = 1.0;
+        public static final double DEAD_BAND_DEG = 2.0;
         public static final double SOFT_MIN_DEG = -135.0;
         public static final double SOFT_MAX_DEG = 135.0;
         public static final double TURRET_HOME_ANGLE_DEG = 0.0;
-        public static final double MIN_TURRET_POWER = 0.05;
+        public static final double MAX_POWER_DELTA_PER_LOOP = 0.1;
+
+
+        public static final double LIMELIGHT_ALPHA = 0.25;
 
         public static final double POT_MIN_V = 0.94;
         public static final double POT_MAX_V = 1.739;
