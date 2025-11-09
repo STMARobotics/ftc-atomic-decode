@@ -3,9 +3,7 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.Range;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
-import com.seattlesolvers.solverslib.controller.PIDController;
 import com.seattlesolvers.solverslib.util.MathUtils;
 
 import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.*;
@@ -19,15 +17,16 @@ public class TurretSubsystem extends SubsystemBase {
 
     private LimelightSubsystem limelightSubsystem;
 
-    private PIDController pidController;
-
     // PD gains (tune these)
-    private double kP = 0.028;
-    private double kD = 0.01;
+    private double kP = 0.03;
+    private double kD = 0.0;
+    private double kF = 0.01;
 
     // state for derivative calculation
     private double lastError = 0.0;
     private long lastTimeMs = 0;
+
+    private double lastAppliedPower = 0.0; // track for telemetry
 
     public TurretSubsystem(HardwareMap hardwareMap) {
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
@@ -39,8 +38,6 @@ public class TurretSubsystem extends SubsystemBase {
         turretMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         lastTimeMs = System.currentTimeMillis();
-
-        pidController = new PIDController(kP, 0.0, kD);
     }
 
     /**
@@ -48,13 +45,15 @@ public class TurretSubsystem extends SubsystemBase {
      * @param power the power to set the turret motor to (-1 to 1)
      */
     public void setTurretPower(double power) {
-        turretMotor.setPower(power);
+        lastAppliedPower = MathUtils.clamp(power, -1.0, 1.0);
+        turretMotor.setPower(lastAppliedPower);
     }
 
     /**
      * Stops the turret motor
      */
     public void stopTurret() {
+        lastAppliedPower = 0.0;
         turretMotor.setPower(0);
     }
 
@@ -62,10 +61,40 @@ public class TurretSubsystem extends SubsystemBase {
      * Automatically aims the turret at the target using a simple PD controller.
      */
     public void autoLockTurret() {
-        // idk fam its just annoying
+        double offsetDeg = limelightSubsystem.getTargetOffset();
+
+        if (Double.isNaN(offsetDeg)) {
+            stopTurret();
+            return;
+        }
+
+        if (Math.abs(offsetDeg) <= DEAD_BAND_DEG) {
+            stopTurret();
+            return;
+        }
+
+        long now = System.currentTimeMillis();
+        double dtSec = (now - lastTimeMs) / 1000.0;
+        if (dtSec <= 0) dtSec = 0.02; // fallback typical loop time
+
+        double error = offsetDeg; // want to drive error to 0
+        double dError = (error - lastError) / dtSec;
+
+        double pTerm = kP * error;
+        double dTerm = kD * dError;
+        double fTerm = kF * Math.signum(error); // simple static feedforward
+
+        double rawOutput = pTerm + dTerm + fTerm;
+
+        if (Math.abs(rawOutput) < MIN_TURRET_POWER) {
+            rawOutput = Math.signum(rawOutput) * MIN_TURRET_POWER;
+        }
+
+        setTurretPower(rawOutput);
+
+        lastError = error;
+        lastTimeMs = now;
     }
-
-
 
     /**
      * Returns the turret position in degrees.
@@ -89,6 +118,11 @@ public class TurretSubsystem extends SubsystemBase {
     public void telemetrize(Telemetry telemetry) {
         telemetry.addData("voltage from pot", pot.getVoltage());
         telemetry.addData("turret position (deg)", getTurretPosition());
-        telemetry.addData("limelight target offset (deg)", limelightSubsystem.getTargetOffset());
+        double offsetDeg = limelightSubsystem.getTargetOffset();
+        telemetry.addData("limelight target offset (deg)", offsetDeg);
+        telemetry.addData("limelight has target", limelightSubsystem.hasValidTarget());
+        telemetry.addData("turret commanded power", lastAppliedPower);
+        telemetry.addData("turret motor getPower()", turretMotor.getPower());
+        telemetry.addData("turret last error", lastError);
     }
 }

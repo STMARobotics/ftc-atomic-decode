@@ -50,4 +50,13 @@ public class LimelightSubsystem {
         }
         return result.getBotposeAvgDist();
     }
+
+    /**
+     * Returns whether the limelight has a valid target
+     * @return true if the target is valid, false otherwise
+     */
+    public boolean hasValidTarget() {
+        LLResult result = limelight.getLatestResult();
+        return result != null && result.isValid();
+    }
 }

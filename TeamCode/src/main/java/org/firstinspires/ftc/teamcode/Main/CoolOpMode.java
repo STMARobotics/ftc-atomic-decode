@@ -44,7 +44,6 @@ public class CoolOpMode extends CommandOpMode {
         platterSubsystem = new PlatterSubsystem(hardwareMap);
         intakeSubsystem = new IntakeSubsystem(hardwareMap);
 
-//        notShootCommand = new NotShootCommand(platterSubsystem);
         autoLockTurretCommand = new AutoLockTurretCommand(turretSubsystem);
 
         /*
@@ -70,13 +69,11 @@ public class CoolOpMode extends CommandOpMode {
         });
         schedule(telemetryCommand);
 
-        schedule(autoLockTurretCommand);
-
         register(drivetrainSubsystem, shooterSubsystem, turretSubsystem, platterSubsystem, intakeSubsystem);
 
         // Set default commands for subsystems
-//        platterSubsystem.setDefaultCommand(notShootCommand);
         drivetrainSubsystem.setDefaultCommand(teleopDriveCommand);
+        turretSubsystem.setDefaultCommand(autoLockTurretCommand);
 
         configureButtonBindings();
     }
