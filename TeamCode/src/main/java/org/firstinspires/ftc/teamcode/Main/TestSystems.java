@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Main;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
+import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
@@ -18,19 +19,18 @@ import org.firstinspires.ftc.teamcode.Subsystems.PlatterSubsystem;
 
 // I copied andy so merek can sleep at night
 
-@TeleOp(name="cool op mode", group = "cool things")
-public class CoolOpMode extends CommandOpMode {
+@TeleOp(name="test systems", group = "testing")
+public class TestSystems extends CommandOpMode {
 
     private DrivetrainSubsystem drivetrainSubsystem;
-    private NotShootCommand notShootCommand;
-    private AutoLockTurretCommand autoLockTurretCommand;
     private ShooterSubsystem shooterSubsystem;
     private TurretSubsystem turretSubsystem;
     private PlatterSubsystem platterSubsystem;
     private IntakeSubsystem intakeSubsystem;
 
+    private AutoLockTurretCommand autoLockTurretCommand;
+
     private GamepadEx gamepad;
-    private TriggerReader leftTriggerReader;
 
     private double reductionFactor = 1;
 
@@ -45,33 +45,17 @@ public class CoolOpMode extends CommandOpMode {
 
         autoLockTurretCommand = new AutoLockTurretCommand(turretSubsystem);
 
-        /*
-        The origin is the field perimeter corner by the red loading zone.
-        We'll drive from the perspective of the red alliance:
-         - Pushing up on the left stick moves toward the blue alliance wall, which is positive X.
-         - Pushing to the left on the left stick moves toward the obelisk wall, which is positive Y.
-         - Pushing to the left on the right stick rotates the the positive direction,
-         counterclockwise
-         */
-        Drive teleopDriveCommand = new Drive(
-                drivetrainSubsystem,
-                () -> -gamepad1.left_stick_y,  // Stick up is negative but moves +X, so invert
-                () -> -gamepad1.left_stick_x,  // Stick left is negative but moves +Y, so invert
-                () -> -gamepad1.right_stick_x, // Stick left is negative but moves +rotation, so invert
-                () -> reductionFactor
-        );
-
         RunCommand telemetryCommand = new RunCommand(() -> {
             drivetrainSubsystem.telemetrize(telemetry);
             turretSubsystem.telemetrize(telemetry);
+            platterSubsystem.telemetrize(telemetry);
             telemetry.update();
         });
         schedule(telemetryCommand);
 
-        register(drivetrainSubsystem, shooterSubsystem, turretSubsystem, platterSubsystem, intakeSubsystem);
+        schedule(autoLockTurretCommand);
 
-        // Set default commands for subsystems
-        drivetrainSubsystem.setDefaultCommand(teleopDriveCommand);
+        register(drivetrainSubsystem, shooterSubsystem, turretSubsystem, platterSubsystem, intakeSubsystem);
 
         configureButtonBindings();
     }
@@ -82,13 +66,6 @@ public class CoolOpMode extends CommandOpMode {
         GamepadEx gamepad = new GamepadEx(gamepad1);
         gamepad.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(drivetrainSubsystem::resetLocalization);
-
-        gamepad.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
-                .whenPressed(this::slowMode);
-
     }
 
-    private void slowMode() {
-        reductionFactor = (reductionFactor == 1.0) ? 0.5 : 1.0;
-    }
 }

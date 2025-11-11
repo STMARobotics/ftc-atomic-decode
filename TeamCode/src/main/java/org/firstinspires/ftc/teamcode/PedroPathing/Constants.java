@@ -29,10 +29,9 @@ public class Constants {
             .linearScalar(1.07)
             .angularScalar(0.99)
             .offset(new SparkFunOTOS.Pose2D(
-                    // TODO: tune these offsets
-                    3.5, // +x forward
-                    0.5, // +y right
-                    Math.PI)); // π radians or 180°
+                    47 / 25.4, // +x forward
+                    47 / 25.4, // +y
+                    Math.PI));
 
     public static final FollowerConstants FOLLOWER_CONSTANTS = new FollowerConstants()
             .mass(5) // must be kg
@@ -52,7 +51,8 @@ public class Constants {
             .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD);
+            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .useBrakeModeInTeleOp(true);
 
     public static final PathConstraints PATH_CONSTRAINTS =
             new PathConstraints(0.99, 100, 1, 1);

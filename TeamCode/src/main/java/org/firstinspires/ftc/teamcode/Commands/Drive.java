@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
+import static org.firstinspires.ftc.teamcode.Constants.DriveCommandConstants.JOYSTICK_DEADZONE;
+
 import com.pedropathing.geometry.Pose;
 import com.seattlesolvers.solverslib.command.CommandBase;
-import com.seattlesolvers.solverslib.geometry.Pose2d;
 
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
 
@@ -15,6 +16,9 @@ public class Drive extends CommandBase {
     private final DoubleSupplier tySupplier;
     private final DoubleSupplier tzSupplier;
     private final DoubleSupplier reductionSupplier;
+
+    private boolean holding = false;
+    private Pose heldPose = null;
 
     public Drive(DrivetrainSubsystem drivetrain,
                  DoubleSupplier txSupplier,
@@ -43,18 +47,28 @@ public class Drive extends CommandBase {
 
     @Override
     public void execute() {
-//        if (txSupplier.getAsDouble() == 0 &&
-//            tySupplier.getAsDouble() == 0 &&
-//            tzSupplier.getAsDouble() == 0) {
-//            Pose targetPosition = new Pose(); // TODO: make targetPosition actually work
-//            drivetrain.holdPosition(targetPosition);
+//        double tx = txSupplier.getAsDouble();
+//        double ty = tySupplier.getAsDouble();
+//        double tz = tzSupplier.getAsDouble();
+//
+//        boolean inputsZero = Math.abs(tx) <= JOYSTICK_DEADZONE
+//                && Math.abs(ty) <= JOYSTICK_DEADZONE
+//                && Math.abs(tz) <= JOYSTICK_DEADZONE;
+//
+//        if (inputsZero) {
+//            if (!holding) {
+//                heldPose = drivetrain.getCurrentPose();
+//                holding = true;
+//            }
+//            if (heldPose != null) {
+//                drivetrain.holdPosition(heldPose);
+//            }
 //        } else {
-//            drivetrain.drive(
-//                    txSupplier.getAsDouble(),
-//                    tySupplier.getAsDouble(),
-//                    tzSupplier.getAsDouble(),
-//                    reductionSupplier.getAsDouble());
+//            holding = false;
+//            drivetrain.drive(tx, ty, tz, reductionSupplier.getAsDouble());
 //        }
+
+        // backup simple drive
         drivetrain.drive(
                 txSupplier.getAsDouble(),
                 tySupplier.getAsDouble(),

@@ -12,16 +12,19 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.PedroPathing.Constants;
 
 /**
- * Drivetrain subsystem. Encapsulates the details of <i>how</i> the drivetrain works.
+ * Drivetrain subsystem. Encapsulates the details of how the drivetrain works.
  */
 public class DrivetrainSubsystem extends SubsystemBase {
 
     private final Follower follower;
     private Pose currentPose = new Pose();
 
-    private final PIDController xController = new PIDController(3.0, 0.0, 0.2);
-    private final PIDController yController = new PIDController(3.0, 0.0, 0.2);
-    private final PIDController headingController = new PIDController(4.0, 0.0, 0.3);
+    private final PIDController xController = new PIDController(0.07, 0.0, 0.0);
+    private final PIDController yController = new PIDController(0.07, 0.0, 0.0);
+    private final PIDController headingController = new PIDController(0.2, 0.0, 0.0);
+
+    private double positionDeadzoneMm = 10.0;
+    private double headingDeadzoneRad = Math.toRadians(2.0);
 
     public DrivetrainSubsystem(HardwareMap hardwareMap) {
         follower = Constants.createFollower(hardwareMap);
@@ -106,9 +109,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
      * @param telemetry telemetry object
      */
     public void telemetrize(Telemetry telemetry) {
-        telemetry.addData("X coordinate (meters)", currentPose.getX());
-        telemetry.addData("Y coordinate (meters)", currentPose.getY());
-        telemetry.addData("Heading angle (radians)", currentPose.getHeading());
+        telemetry.addData("X coordinate (mm)", currentPose.getX());
+        telemetry.addData("Y coordinate (mm)", currentPose.getY());
+        telemetry.addData("Heading angle (degrees)", Math.toDegrees(currentPose.getHeading()));
     }
 
     public static double square(double value) {
@@ -134,11 +137,18 @@ public class DrivetrainSubsystem extends SubsystemBase {
         double yError = targetPose.getY() - cur.getY();
         double headingError = angleWrap(targetPose.getHeading() - cur.getHeading());
 
+        double distanceError = Math.hypot(xError, yError);
+
+        if (distanceError <= positionDeadzoneMm && Math.abs(headingError) <= headingDeadzoneRad) {
+            follower.setTeleOpDrive(0.0, 0.0, 0.0, false);
+            return;
+        }
+
         double xPower = xController.calculate(cur.getX(), targetPose.getX());
         double yPower = yController.calculate(cur.getY(), targetPose.getY());
         double turnPower = headingController.calculate(cur.getHeading(), targetPose.getHeading());
 
-        follower.setTeleOpDrive(xPower, yPower, turnPower, true);
+        follower.setTeleOpDrive(xPower, yPower, turnPower, false);
     }
 
     /**

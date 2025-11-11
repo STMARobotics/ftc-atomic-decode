@@ -20,7 +20,7 @@ public class AutoLockTurretCommand extends CommandBase {
 
     @Override
     public void execute() {
-        turretSubsystem.autolockTurret();
+        turretSubsystem.autoLockTurret();
     }
 
     @Override

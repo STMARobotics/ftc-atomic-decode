@@ -50,7 +50,7 @@ public class ShooterSubsystem extends SubsystemBase {
     /**
      * Returns t/f if the shooter and the hood are ready for shooting
      */
-    public boolean shootReady() {
+    public boolean shooterIsReady() {
         return flywheelReady() && hoodReady();
     }
 
