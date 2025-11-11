@@ -12,7 +12,8 @@ Commands:
 Subsystems:
 - [ ] LEDSubsystem: code it i guess
 - [ ] PlatterSubsystem: figure out how to get the color sensor working
-- [ ] ShooterSubsystem: done?
+- [ ] ShooterSubsystem: done
+- 
 - [ ] IntakeSubsystem: done
 - [ ] DrivetrainSubsystem: done
 - [ ] ClimbSubsystem: figure out the servo positions, wire an instant command

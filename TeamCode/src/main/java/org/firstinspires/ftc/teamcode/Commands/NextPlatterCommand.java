@@ -19,15 +19,14 @@ public class NextPlatterCommand extends CommandBase {
 
     @Override
     public void execute() {
-//        if (platterSubsystem.isMagnetTripped()) {
-//            platterSubsystem.stopPlatter();
-//        }
+        if (platterSubsystem.isMagnetTripped()) {
+            platterSubsystem.stopPlatter();
+        }
     }
 
     @Override
     public boolean isFinished() {
-//        return platterSubsystem.isMagnetTripped();
-        return false;
+        return platterSubsystem.isMagnetTripped();
     }
 
     @Override

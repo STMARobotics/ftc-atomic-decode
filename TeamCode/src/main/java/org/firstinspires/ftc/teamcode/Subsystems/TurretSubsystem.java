@@ -153,6 +153,31 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     /**
+     * Returns true if the limelight has a valid target and the horizontal error (tx) is within the given threshold (degrees).
+     * This is a standalone helper you can call from commands (e.g., turretSubsystem.isLockedOn()).
+     *
+     * @param thresholdDeg allowed horizontal error in degrees to consider "locked"
+     * @return true when target is valid and abs(tx) <= thresholdDeg
+     */
+    public boolean isLockedOn(double thresholdDeg) {
+        double tx = limelightSubsystem.getTargetOffset();
+        if (Double.isNaN(tx)) {
+            return false;
+        }
+        return Math.abs(tx) <= thresholdDeg;
+    }
+
+    /**
+     * Convenience overload that uses the turret deadband as a default lock threshold.
+     * If you prefer a separate limelight-specific threshold, pass it to isLockedOn(double).
+     *
+     * @return true when locked using the default DEAD_BAND_DEG threshold
+     */
+    public boolean isLockedOn() {
+        return isLockedOn(DEAD_BAND_DEG);
+    }
+
+    /**
      * Returns the turret position in degrees based on the potentiometer.
      */
     public double getTurretPosition() {
