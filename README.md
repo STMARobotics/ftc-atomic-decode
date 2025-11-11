@@ -1,8 +1,6 @@
 hi andy
 
-TODO:
-- [ ] code the bot bro
-
+# everything i gotta do before competition:
 Commands:
 - [ ] NotShootCommand: wire it in cool op mode
 - [ ] ShootCommand:
