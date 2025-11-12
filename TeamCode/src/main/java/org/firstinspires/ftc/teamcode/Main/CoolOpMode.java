@@ -91,8 +91,10 @@ public class CoolOpMode extends CommandOpMode {
                 lookupTable
         );
 
-        // Default drive
+        // Default commands
         drivetrainSubsystem.setDefaultCommand(teleopDriveCommand);
+        platterSubsystem.setDefaultCommand(notShootCommand);
+        shooterSubsystem.setDefaultCommand(notShootCommand);
 
         configureButtonBindings();
     }

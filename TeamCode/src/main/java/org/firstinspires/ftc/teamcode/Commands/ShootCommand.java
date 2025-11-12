@@ -47,7 +47,6 @@ public class ShootCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        // You *can* keep this, since we’ll use the same `held` supplier
         return !held.getAsBoolean();
     }
 

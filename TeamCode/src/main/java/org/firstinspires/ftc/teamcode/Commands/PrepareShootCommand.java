@@ -23,6 +23,7 @@ public class PrepareShootCommand extends CommandBase {
     // purpose of this file is to spin shooter and set hood position according to lookuptable
     @Override
     public void initialize() {
+
     }
 
     @Override
@@ -36,12 +37,11 @@ public class PrepareShootCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return false;   // run until cancelled
+        return false;
     }
 
     @Override
     public void end(boolean interrupted) {
-        // whatever “stop shooter” and “reset hood” looks like for you
         shooterSubsystem.stop();
         shooterSubsystem.setHoodAngle(0);
     }
