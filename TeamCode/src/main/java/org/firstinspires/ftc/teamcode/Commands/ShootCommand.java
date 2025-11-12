@@ -13,15 +13,17 @@ public class ShootCommand extends CommandBase {
     private final ShooterSubsystem shooterSubsystem;
     private final TurretSubsystem turretSubsystem;
     private final BooleanSupplier held;
-    private NextPlatterCommand nextPlatterCommand;
+    private final NextPlatterCommand nextPlatterCommand;
 
-    /**
-     * @param platterSubsystem subsystem that controls the platter/launcher
-     * @param held a BooleanSupplier that returns true while the button is held
-     */
-    public ShootCommand(PlatterSubsystem platterSubsystem, BooleanSupplier held) {
+    public ShootCommand(PlatterSubsystem platterSubsystem,
+                        ShooterSubsystem shooterSubsystem,
+                        TurretSubsystem turretSubsystem,
+                        BooleanSupplier held) {
         this.platterSubsystem = platterSubsystem;
+        this.shooterSubsystem = shooterSubsystem;
+        this.turretSubsystem = turretSubsystem;
         this.held = held;
+
         addRequirements(platterSubsystem);
 
         nextPlatterCommand = new NextPlatterCommand(platterSubsystem);
@@ -36,7 +38,7 @@ public class ShootCommand extends CommandBase {
 
     @Override
     public void execute() {
-        if (turretSubsystem.isLockedOn() && shooterSubsystem.shooterIsReady()){
+        if (turretSubsystem.isLockedOn() && shooterSubsystem.shooterIsReady()) {
             platterSubsystem.launcherActivate();
             platterSubsystem.launchableActivate();
             nextPlatterCommand.schedule();
@@ -45,12 +47,12 @@ public class ShootCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
+        // You *can* keep this, since we’ll use the same `held` supplier
         return !held.getAsBoolean();
     }
 
     @Override
     public void end(boolean interrupted) {
-        // make sure launcher stops when the command ends or is interrupted
         platterSubsystem.launchableStop();
         platterSubsystem.launcherDeactivate();
     }

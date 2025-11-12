@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.Main;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.RunCommand;
+import com.seattlesolvers.solverslib.command.ParallelCommandGroup;
+import com.seattlesolvers.solverslib.command.button.Trigger;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import com.seattlesolvers.solverslib.gamepad.TriggerReader;
@@ -10,15 +13,19 @@ import com.seattlesolvers.solverslib.gamepad.TriggerReader;
 import org.firstinspires.ftc.teamcode.Commands.AutoLockTurretCommand;
 import org.firstinspires.ftc.teamcode.Commands.NotShootCommand;
 import org.firstinspires.ftc.teamcode.Commands.Drive;
+import org.firstinspires.ftc.teamcode.Commands.PrepareShootCommand;
+import org.firstinspires.ftc.teamcode.Commands.ShootCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.LookupTable;
 import org.firstinspires.ftc.teamcode.Subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.PlatterSubsystem;
 
-// I copied andy so merek can sleep at night
+import java.util.function.BooleanSupplier;
 
-@TeleOp(name="cool op mode", group = "cool things")
+@TeleOp(name="cool op mode")
 public class CoolOpMode extends CommandOpMode {
 
     private DrivetrainSubsystem drivetrainSubsystem;
@@ -28,39 +35,44 @@ public class CoolOpMode extends CommandOpMode {
     private TurretSubsystem turretSubsystem;
     private PlatterSubsystem platterSubsystem;
     private IntakeSubsystem intakeSubsystem;
+    private LimelightSubsystem limelightSubsystem;
+    private LookupTable lookupTable;
 
     private GamepadEx gamepad;
     private TriggerReader leftTriggerReader;
+    private TriggerReader rightTriggerReader;
 
-    private double reductionFactor = 1;
+    private double reductionFactor = 1.0;
 
     @Override
     public void initialize() {
-        // Create subsystems
+        // Subsystems
         drivetrainSubsystem = new DrivetrainSubsystem(hardwareMap);
-        shooterSubsystem = new ShooterSubsystem(hardwareMap);
-        turretSubsystem = new TurretSubsystem(hardwareMap);
-        platterSubsystem = new PlatterSubsystem(hardwareMap);
-        intakeSubsystem = new IntakeSubsystem(hardwareMap);
+        shooterSubsystem    = new ShooterSubsystem(hardwareMap);
+        turretSubsystem     = new TurretSubsystem(hardwareMap);
+        platterSubsystem    = new PlatterSubsystem(hardwareMap);
+        intakeSubsystem     = new IntakeSubsystem(hardwareMap);
+        limelightSubsystem  = new LimelightSubsystem(hardwareMap);
+        lookupTable         = new LookupTable();
 
         autoLockTurretCommand = new AutoLockTurretCommand(turretSubsystem);
+        notShootCommand       = new NotShootCommand(platterSubsystem);
 
-        /*
-        The origin is the field perimeter corner by the red loading zone.
-        We'll drive from the perspective of the red alliance:
-         - Pushing up on the left stick moves toward the blue alliance wall, which is positive X.
-         - Pushing to the left on the left stick moves toward the obelisk wall, which is positive Y.
-         - Pushing to the left on the right stick rotates the the positive direction,
-         counterclockwise
-         */
+        // Gamepad + triggers
+        gamepad = new GamepadEx(gamepad1);
+        leftTriggerReader  = new TriggerReader(gamepad, GamepadKeys.Trigger.LEFT_TRIGGER);
+        rightTriggerReader = new TriggerReader(gamepad, GamepadKeys.Trigger.RIGHT_TRIGGER);
+
+        // Drive command
         Drive teleopDriveCommand = new Drive(
                 drivetrainSubsystem,
-                () -> -gamepad1.left_stick_y,  // Stick up is negative but moves +X, so invert
-                () -> -gamepad1.left_stick_x,  // Stick left is negative but moves +Y, so invert
-                () -> -gamepad1.right_stick_x, // Stick left is negative but moves +rotation, so invert
+                () -> -gamepad1.left_stick_y,
+                () -> -gamepad1.left_stick_x,
+                () -> -gamepad1.right_stick_x,
                 () -> reductionFactor
         );
 
+        // Telemetry
         RunCommand telemetryCommand = new RunCommand(() -> {
             drivetrainSubsystem.telemetrize(telemetry);
             turretSubsystem.telemetrize(telemetry);
@@ -68,9 +80,18 @@ public class CoolOpMode extends CommandOpMode {
         });
         schedule(telemetryCommand);
 
-        register(drivetrainSubsystem, shooterSubsystem, turretSubsystem, platterSubsystem, intakeSubsystem);
+        // Register all subsystems
+        register(
+                drivetrainSubsystem,
+                shooterSubsystem,
+                turretSubsystem,
+                platterSubsystem,
+                intakeSubsystem,
+                limelightSubsystem,
+                lookupTable
+        );
 
-        // Set default commands for subsystems
+        // Default drive
         drivetrainSubsystem.setDefaultCommand(teleopDriveCommand);
 
         configureButtonBindings();
@@ -78,14 +99,38 @@ public class CoolOpMode extends CommandOpMode {
 
     private void configureButtonBindings() {
 
-        // Bind driver buttons
-        GamepadEx gamepad = new GamepadEx(gamepad1);
         gamepad.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(drivetrainSubsystem::resetLocalization);
 
         gamepad.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
                 .whenPressed(this::slowMode);
 
+        // Left trigger -> intake
+        Trigger intakeTrigger = new Trigger(() -> {
+            leftTriggerReader.readValue();
+            return leftTriggerReader.isDown();
+        });
+
+        intakeTrigger
+                .whileActiveContinuous(
+                        new RunCommand(intakeSubsystem::intake, intakeSubsystem)
+                )
+                .whenInactive(intakeSubsystem::stop);
+
+        // Right trigger -> shooter
+        BooleanSupplier rightTriggerHeld = () -> {
+            rightTriggerReader.readValue();
+            return rightTriggerReader.isDown();
+        };
+
+        Trigger shootTrigger = new Trigger(rightTriggerHeld);
+
+        shootTrigger.whileActiveContinuous(
+                new ParallelCommandGroup(
+                        new PrepareShootCommand(shooterSubsystem, lookupTable, limelightSubsystem),
+                        new ShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, rightTriggerHeld)
+                )
+        );
     }
 
     private void slowMode() {

@@ -5,8 +5,9 @@ import static org.firstinspires.ftc.teamcode.Constants.limelightConstants.LIMELI
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.seattlesolvers.solverslib.command.SubsystemBase;
 
-public class LimelightSubsystem {
+public class LimelightSubsystem extends SubsystemBase {
 
     private Limelight3A limelight;
 
