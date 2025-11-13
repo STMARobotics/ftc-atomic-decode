@@ -38,7 +38,7 @@ public class ShootCommand extends CommandBase {
     @Override
     public void initialize() {
         shooterSubsystem.setRPM(3000);
-//        platterSubsystem.idlePlatter();
+        platterSubsystem.idlePlatter();
     }
 
     @Override

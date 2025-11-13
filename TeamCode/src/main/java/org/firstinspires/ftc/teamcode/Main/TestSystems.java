@@ -47,7 +47,6 @@ public class TestSystems extends CommandOpMode {
 
         RunCommand telemetryCommand = new RunCommand(() -> {
             drivetrainSubsystem.telemetrize(telemetry);
-            turretSubsystem.telemetrize(telemetry);
             platterSubsystem.telemetrize(telemetry);
             telemetry.update();
         });

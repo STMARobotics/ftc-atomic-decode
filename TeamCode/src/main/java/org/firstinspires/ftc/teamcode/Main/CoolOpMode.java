@@ -62,7 +62,7 @@ public class CoolOpMode extends CommandOpMode {
         // Gamepad + triggers
         gamepad = new GamepadEx(gamepad1);
         leftTriggerReader  = new TriggerReader(gamepad, GamepadKeys.Trigger.LEFT_TRIGGER);
-//        rightTriggerReader = new TriggerReader(gamepad, GamepadKeys.Trigger.RIGHT_TRIGGER);
+        rightTriggerReader = new TriggerReader(gamepad, GamepadKeys.Trigger.RIGHT_TRIGGER);
 
         // Drive command
         Drive teleopDriveCommand = new Drive(
@@ -93,8 +93,7 @@ public class CoolOpMode extends CommandOpMode {
 
         // Default commands
         drivetrainSubsystem.setDefaultCommand(teleopDriveCommand);
-//        platterSubsystem.setDefaultCommand(notShootCommand);
-//        shooterSubsystem.setDefaultCommand(notShootCommand);
+        platterSubsystem.setDefaultCommand(notShootCommand);
 
         configureButtonBindings();
     }
@@ -106,6 +105,10 @@ public class CoolOpMode extends CommandOpMode {
 
         gamepad.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
                 .whenPressed(this::slowMode);
+
+        gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(intakeSubsystem::outtake)
+                .whenReleased(intakeSubsystem::stop);
 
         // Left trigger -> intake
         Trigger intakeTrigger = new Trigger(() -> {

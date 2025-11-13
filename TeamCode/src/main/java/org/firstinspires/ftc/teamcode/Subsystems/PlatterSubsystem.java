@@ -52,7 +52,7 @@ public class PlatterSubsystem extends SubsystemBase {
      * needing to use the platter
      */
     public void idlePlatter() {
-        platterServo.setPower(0.2);
+        platterServo.setPower(-0.6);
     }
 
     /**
