@@ -12,7 +12,6 @@ public class PrepareShootCommand extends CommandBase {
     private LookupTable lookupTable;
     private LimelightSubsystem limelightSubsystem;
 
-
     public PrepareShootCommand(ShooterSubsystem shooterSubsystem, LookupTable lookupTable, LimelightSubsystem limelightSubsystem) {
         this.shooterSubsystem = shooterSubsystem;
         this.lookupTable = lookupTable;

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Main;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.seattlesolvers.solverslib.command.CommandOpMode;
+import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.ParallelCommandGroup;
 import com.seattlesolvers.solverslib.command.button.Trigger;
@@ -61,7 +62,7 @@ public class CoolOpMode extends CommandOpMode {
         // Gamepad + triggers
         gamepad = new GamepadEx(gamepad1);
         leftTriggerReader  = new TriggerReader(gamepad, GamepadKeys.Trigger.LEFT_TRIGGER);
-        rightTriggerReader = new TriggerReader(gamepad, GamepadKeys.Trigger.RIGHT_TRIGGER);
+//        rightTriggerReader = new TriggerReader(gamepad, GamepadKeys.Trigger.RIGHT_TRIGGER);
 
         // Drive command
         Drive teleopDriveCommand = new Drive(
@@ -75,7 +76,6 @@ public class CoolOpMode extends CommandOpMode {
         // Telemetry
         RunCommand telemetryCommand = new RunCommand(() -> {
             drivetrainSubsystem.telemetrize(telemetry);
-            turretSubsystem.telemetrize(telemetry);
             telemetry.update();
         });
         schedule(telemetryCommand);
@@ -93,8 +93,8 @@ public class CoolOpMode extends CommandOpMode {
 
         // Default commands
         drivetrainSubsystem.setDefaultCommand(teleopDriveCommand);
-        platterSubsystem.setDefaultCommand(notShootCommand);
-        shooterSubsystem.setDefaultCommand(notShootCommand);
+//        platterSubsystem.setDefaultCommand(notShootCommand);
+//        shooterSubsystem.setDefaultCommand(notShootCommand);
 
         configureButtonBindings();
     }
@@ -119,20 +119,17 @@ public class CoolOpMode extends CommandOpMode {
                 )
                 .whenInactive(intakeSubsystem::stop);
 
-        // Right trigger -> shooter
-        BooleanSupplier rightTriggerHeld = () -> {
-            rightTriggerReader.readValue();
-            return rightTriggerReader.isDown();
-        };
+        // Right trigger -> shoot
+        Trigger shootTrigger = new Trigger(() -> {
+//            rightTriggerReader.readValue();
+//            return rightTriggerReader.isDown();
+            return gamepad1.right_trigger > 0.5;
+        });
 
-        Trigger shootTrigger = new Trigger(rightTriggerHeld);
-
-        shootTrigger.whileActiveContinuous(
-                new ParallelCommandGroup(
-                        new PrepareShootCommand(shooterSubsystem, lookupTable, limelightSubsystem),
-                        new ShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, rightTriggerHeld)
-                )
-        );
+        shootTrigger
+                .whileActiveContinuous(
+                        new ShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, lookupTable, limelightSubsystem, () -> gamepad1.right_trigger > 0.5)
+                );
     }
 
     private void slowMode() {

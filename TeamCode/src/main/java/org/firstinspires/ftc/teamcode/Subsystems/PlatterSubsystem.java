@@ -15,7 +15,7 @@ public class PlatterSubsystem extends SubsystemBase {
 
     public final CRServo platterServo;
     public final Servo launcherServo;
-    public final CRServo launchableLeft;  // artifact grabber rollers
+    public final CRServo launchableLeft; // artifact grabber rollers
     public final CRServo launchableRight;
 
     private final NormalizedColorSensor colorSensorBottom;
@@ -124,6 +124,14 @@ public class PlatterSubsystem extends SubsystemBase {
     public void launchableReverse() {
         launchableLeft.setPower(-1.0);
         launchableRight.setPower(-1.0);
+    }
+
+    public void nextMagnet() {
+        if (!isMagnetTripped()) {
+            spinPlatter(0.7);
+        } else {
+            stopPlatter();
+        }
     }
 
     /**
