@@ -55,9 +55,7 @@ public class TurretSubsystem extends SubsystemBase {
         if (Double.isNaN(error)) {
             stopTurret();
         }
-        if (!limelightSubsystem.hasValidTarget()) {
-            stopTurret();
-        }
+
         double output = pidController.calculate(error, 0.0);
 
         setTurretPower(output);

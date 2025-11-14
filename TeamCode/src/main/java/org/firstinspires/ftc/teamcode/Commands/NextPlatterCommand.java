@@ -14,14 +14,12 @@ public class NextPlatterCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        platterSubsystem.spinPlatter(1);
+
     }
 
     @Override
     public void execute() {
-        if (platterSubsystem.isMagnetTripped()) {
-            platterSubsystem.stopPlatter();
-        }
+        platterSubsystem.spinPlatter(0.12);
     }
 
     @Override

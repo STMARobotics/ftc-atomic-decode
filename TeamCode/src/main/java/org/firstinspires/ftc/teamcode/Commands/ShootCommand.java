@@ -65,6 +65,7 @@ public class ShootCommand extends CommandBase {
     public void end(boolean interrupted) {
         platterSubsystem.launchableStop();
         platterSubsystem.launcherDeactivate();
+        platterSubsystem.stopPlatter();
         turretSubsystem.setTurretPower(0);
         shooterSubsystem.setRPM(0);
     }

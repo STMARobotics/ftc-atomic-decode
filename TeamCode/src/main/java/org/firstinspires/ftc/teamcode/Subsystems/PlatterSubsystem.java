@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
@@ -31,6 +32,7 @@ public class PlatterSubsystem extends SubsystemBase {
         launchableRight = hardwareMap.get(CRServo.class, "launchableRight");
 
         launchableRight.setDirection(CRServo.Direction.REVERSE);
+        platterServo.setDirection(DcMotorSimple.Direction.REVERSE);
 
         colorSensorBottom = hardwareMap.get(NormalizedColorSensor.class, "cSensorBottom");
         colorSensorWall = hardwareMap.get(NormalizedColorSensor.class, "cSensorWall");
@@ -52,7 +54,7 @@ public class PlatterSubsystem extends SubsystemBase {
      * needing to use the platter
      */
     public void idlePlatter() {
-        platterServo.setPower(-0.6);
+        platterServo.setPower(0.12);
     }
 
     /**

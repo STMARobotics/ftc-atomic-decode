@@ -6,12 +6,14 @@ import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.ParallelCommandGroup;
+import com.seattlesolvers.solverslib.command.StartEndCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import com.seattlesolvers.solverslib.gamepad.TriggerReader;
 
 import org.firstinspires.ftc.teamcode.Commands.AutoLockTurretCommand;
+import org.firstinspires.ftc.teamcode.Commands.NextPlatterCommand;
 import org.firstinspires.ftc.teamcode.Commands.NotShootCommand;
 import org.firstinspires.ftc.teamcode.Commands.Drive;
 import org.firstinspires.ftc.teamcode.Commands.PrepareShootCommand;
@@ -93,7 +95,7 @@ public class CoolOpMode extends CommandOpMode {
 
         // Default commands
         drivetrainSubsystem.setDefaultCommand(teleopDriveCommand);
-        platterSubsystem.setDefaultCommand(notShootCommand);
+//        platterSubsystem.setDefaultCommand(notShootCommand);
 
         configureButtonBindings();
     }
@@ -119,6 +121,11 @@ public class CoolOpMode extends CommandOpMode {
         intakeTrigger
                 .whileActiveContinuous(
                         new RunCommand(intakeSubsystem::intake, intakeSubsystem)
+                                .alongWith(new NextPlatterCommand(platterSubsystem).andThen(
+                                        new RunCommand(() -> platterSubsystem.spinPlatter(0.12), platterSubsystem)
+                                                .withTimeout(125)
+                                                .whenFinished(platterSubsystem::stopPlatter)
+                                ))
                 )
                 .whenInactive(intakeSubsystem::stop);
 
