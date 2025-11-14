@@ -9,7 +9,10 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.controller.PIDController;
 import com.seattlesolvers.solverslib.util.MathUtils;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.*;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class TurretSubsystem extends SubsystemBase {
 
@@ -87,5 +90,10 @@ public class TurretSubsystem extends SubsystemBase {
         double v = Math.max(POT_MIN_V, Math.min(pot.getVoltage(), POT_MAX_V));
         double fraction = (v - POT_MIN_V) / (POT_MAX_V - POT_MIN_V);
         return fraction * (SOFT_MAX_DEG - SOFT_MIN_DEG) + SOFT_MIN_DEG;
+    }
+
+    public void telemetrize(Telemetry telemetry) {
+        telemetry.addData("Turret Position (deg)", getTurretPosition());
+        telemetry.addData("Turret Applied Power", lastAppliedPower);
     }
 }

@@ -78,6 +78,7 @@ public class CoolOpMode extends CommandOpMode {
         // Telemetry
         RunCommand telemetryCommand = new RunCommand(() -> {
             drivetrainSubsystem.telemetrize(telemetry);
+            turretSubsystem.telemetrize(telemetry);
             telemetry.update();
         });
         schedule(telemetryCommand);
@@ -138,7 +139,7 @@ public class CoolOpMode extends CommandOpMode {
 
         shootTrigger
                 .whileActiveContinuous(
-                        new ShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, lookupTable, limelightSubsystem, () -> gamepad1.right_trigger > 0.5)
+                        new ShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, lookupTable, limelightSubsystem)
                 );
     }
 
