@@ -115,7 +115,7 @@ public class PlatterSubsystem extends SubsystemBase {
     /**
      * Stops the rollers that grab the launched artifacts
      */
-    public void launchableStop() {
+    public void launchableDeactivate() {
         launchableLeft.setPower(0);
         launchableRight.setPower(0);
     }

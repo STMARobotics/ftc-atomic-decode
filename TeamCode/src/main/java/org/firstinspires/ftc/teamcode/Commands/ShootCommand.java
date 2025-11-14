@@ -9,9 +9,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.PlatterSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
+import static org.firstinspires.ftc.teamcode.Constants.TempShooterConstants.DELAY_MS;
 import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.*;
-
-import java.util.function.BooleanSupplier;
 
 public class ShootCommand extends CommandBase {
 
@@ -22,6 +21,11 @@ public class ShootCommand extends CommandBase {
     private final LookupTable lookupTable;
 
     private final PIDController pidController = new PIDController(TURRET_KP, 0.0, TURRET_KD);
+
+    private boolean successfulShot;
+
+    private boolean hasLaunched = false;
+    private long launchTimeMs = 0;
 
     public ShootCommand(PlatterSubsystem platterSubsystem,
                         ShooterSubsystem shooterSubsystem,
@@ -39,27 +43,48 @@ public class ShootCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        shooterSubsystem.setRPM(3000);
-        platterSubsystem.idlePlatter();
+        shooterSubsystem.setRPM(3000); // tune pls
         pidController.reset();
+        platterSubsystem.launchableActivate();
+
+        successfulShot = false;
+        hasLaunched = false;
+        launchTimeMs = 0;
     }
 
     @Override
     public void execute() {
         autoLockTurret();
 
-        if (turretSubsystem.isLockedOn() && shooterSubsystem.flywheelReady()) {
+        if (hasLaunched) {
+            long now = System.currentTimeMillis();
+            if (now - launchTimeMs >= DELAY_MS) {
+                successfulShot = true;  // command can now end
+            }
+            return;
+        }
+
+        boolean readyToShoot =
+                turretSubsystem.isLockedOn() && shooterSubsystem.flywheelReady();
+
+        if (readyToShoot) {
             platterSubsystem.launcherActivate();
-            platterSubsystem.launchableActivate();
+            hasLaunched = true;
+            launchTimeMs = System.currentTimeMillis();
         } else {
-            platterSubsystem.launchableStop();
             platterSubsystem.launcherDeactivate();
+            successfulShot = false;
         }
     }
 
     @Override
+    public boolean isFinished() {
+        return successfulShot;
+    }
+
+    @Override
     public void end(boolean interrupted) {
-        platterSubsystem.launchableStop();
+        platterSubsystem.launchableDeactivate();
         platterSubsystem.launcherDeactivate();
         platterSubsystem.stopPlatter();
         turretSubsystem.setTurretPower(0);
@@ -72,7 +97,6 @@ public class ShootCommand extends CommandBase {
             turretSubsystem.setTurretPower(0);
         } else {
             double output = pidController.calculate(error, 0.0);
-
             turretSubsystem.setTurretPower(output);
         }
     }

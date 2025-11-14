@@ -32,8 +32,6 @@ public class TestSystems extends CommandOpMode {
 
     private GamepadEx gamepad;
 
-    private double reductionFactor = 1;
-
     @Override
     public void initialize() {
         // Create subsystems

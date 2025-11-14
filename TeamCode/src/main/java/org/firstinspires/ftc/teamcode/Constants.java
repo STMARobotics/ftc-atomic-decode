@@ -48,6 +48,10 @@ public final class Constants {
         public static final double STALL_CURRENT_AMPS = 9.2;
     }
 
+    public static class TempShooterConstants {
+        public static final long DELAY_MS = 200;
+    }
+
     public static class DriveCommandConstants {
         public static final double JOYSTICK_DEADZONE = 0.05;
     }

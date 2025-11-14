@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.InstantCommand;
+import com.seattlesolvers.solverslib.command.RepeatCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.ParallelCommandGroup;
 import com.seattlesolvers.solverslib.command.StartEndCommand;
@@ -113,34 +114,47 @@ public class CoolOpMode extends CommandOpMode {
                 .whenPressed(intakeSubsystem::outtake)
                 .whenReleased(intakeSubsystem::stop);
 
-        // Left trigger -> intake
+        // ----------- Intake Cycle -----------
+        // make a new trigger and return if its down
         Trigger intakeTrigger = new Trigger(() -> {
             leftTriggerReader.readValue();
             return leftTriggerReader.isDown();
         });
 
+        // when left trigger is held, do commands
         intakeTrigger
                 .whileActiveContinuous(
                         new RunCommand(intakeSubsystem::intake, intakeSubsystem)
-                                .alongWith(new NextPlatterCommand(platterSubsystem).andThen(
-                                        new RunCommand(() -> platterSubsystem.spinPlatter(0.12), platterSubsystem)
-                                                .withTimeout(125)
-                                                .whenFinished(platterSubsystem::stopPlatter)
-                                ))
-                )
+                                .alongWith(new NextPlatterCommand(platterSubsystem)))
                 .whenInactive(intakeSubsystem::stop);
 
-        // Right trigger -> shoot
+        // ----------- Shoot Cycle -----------
+        // make a new trigger and return if its down
         Trigger shootTrigger = new Trigger(() -> {
-//            rightTriggerReader.readValue();
-//            return rightTriggerReader.isDown();
-            return gamepad1.right_trigger > 0.5;
+            rightTriggerReader.readValue();
+            return rightTriggerReader.isDown();
         });
 
+        // when right trigger is held
+        // do next platter to get in position and then shoot command
+        // it repeats the entire group while held
         shootTrigger
                 .whileActiveContinuous(
-                        new ShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, lookupTable, limelightSubsystem)
-                );
+                        new RepeatCommand(
+                                new NextPlatterCommand(platterSubsystem)
+                                        .andThen(new ShootCommand(
+                                                platterSubsystem,
+                                                shooterSubsystem,
+                                                turretSubsystem,
+                                                lookupTable,
+                                                limelightSubsystem))));
+
+        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                .whenPressed(() -> limelightSubsystem.pipelineSwitcher(0)); // blue
+
+        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                .whenPressed(() -> limelightSubsystem.pipelineSwitcher(1)); // red
+
     }
 
     private void slowMode() {

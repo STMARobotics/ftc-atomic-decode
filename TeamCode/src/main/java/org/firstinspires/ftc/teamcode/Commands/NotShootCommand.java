@@ -16,7 +16,7 @@ public class NotShootCommand extends CommandBase {
     @Override
     public void initialize() {
         platterSubsystem.launcherDeactivate();
-        platterSubsystem.launchableStop();
+        platterSubsystem.launchableDeactivate();
         platterSubsystem.idlePlatter();
     }
 }
