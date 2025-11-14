@@ -68,12 +68,12 @@ public class ShootCommand extends CommandBase {
 
     public void autoLockTurret() {
         double error = limelightSubsystem.getTargetOffset();
-        if (Double.isNaN(error)) {
-            turretSubsystem.stopTurret();
+        if (!limelightSubsystem.hasValidTarget()) {
+            turretSubsystem.setTurretPower(0);
+        } else {
+            double output = pidController.calculate(error, 0.0);
+
+            turretSubsystem.setTurretPower(output);
         }
-
-        double output = pidController.calculate(error, 0.0);
-
-        turretSubsystem.setTurretPower(output);
     }
 }
