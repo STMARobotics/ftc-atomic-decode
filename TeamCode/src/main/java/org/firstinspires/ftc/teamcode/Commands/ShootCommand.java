@@ -43,7 +43,7 @@ public class ShootCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        shooterSubsystem.setRPM(3000); // tune pls
+        shooterSubsystem.setRPM(2750); // tune pls
         pidController.reset();
         platterSubsystem.launchableActivate();
 

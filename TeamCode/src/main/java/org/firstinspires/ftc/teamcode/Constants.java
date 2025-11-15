@@ -49,7 +49,7 @@ public final class Constants {
     }
 
     public static class TempShooterConstants {
-        public static final long DELAY_MS = 200;
+        public static final long DELAY_MS = 1000;
     }
 
     public static class DriveCommandConstants {

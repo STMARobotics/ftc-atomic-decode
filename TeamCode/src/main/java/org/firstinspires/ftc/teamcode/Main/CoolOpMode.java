@@ -107,8 +107,8 @@ public class CoolOpMode extends CommandOpMode {
         gamepad.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(drivetrainSubsystem::resetLocalization);
 
-        gamepad.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
-                .whenPressed(this::slowMode);
+//        gamepad.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
+//                .whenPressed(this::slowMode);
 
         gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(intakeSubsystem::outtake)

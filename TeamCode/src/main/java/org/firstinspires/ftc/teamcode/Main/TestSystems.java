@@ -63,6 +63,11 @@ public class TestSystems extends CommandOpMode {
         GamepadEx gamepad = new GamepadEx(gamepad1);
         gamepad.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(drivetrainSubsystem::resetLocalization);
-    }
 
+        gamepad.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(platterSubsystem::launcherActivate);
+
+        gamepad.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(platterSubsystem::launcherDeactivate);
+    }
 }
