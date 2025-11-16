@@ -3,11 +3,8 @@ package org.firstinspires.ftc.teamcode.Main;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.seattlesolvers.solverslib.command.CommandOpMode;
-import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.RepeatCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
-import com.seattlesolvers.solverslib.command.ParallelCommandGroup;
-import com.seattlesolvers.solverslib.command.StartEndCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
@@ -17,7 +14,6 @@ import org.firstinspires.ftc.teamcode.Commands.AutoLockTurretCommand;
 import org.firstinspires.ftc.teamcode.Commands.NextPlatterCommand;
 import org.firstinspires.ftc.teamcode.Commands.NotShootCommand;
 import org.firstinspires.ftc.teamcode.Commands.Drive;
-import org.firstinspires.ftc.teamcode.Commands.PrepareShootCommand;
 import org.firstinspires.ftc.teamcode.Commands.ShootCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
@@ -26,8 +22,6 @@ import org.firstinspires.ftc.teamcode.Subsystems.LookupTable;
 import org.firstinspires.ftc.teamcode.Subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.PlatterSubsystem;
-
-import java.util.function.BooleanSupplier;
 
 @TeleOp(name="cool op mode")
 public class CoolOpMode extends CommandOpMode {
