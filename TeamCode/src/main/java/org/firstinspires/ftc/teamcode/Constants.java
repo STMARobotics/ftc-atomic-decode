@@ -21,11 +21,11 @@ public final class Constants {
         public static final double SOFT_MAX_DEG = 135.0;
         public static final double TURRET_HOME_DEG = 0.0;
 
-        public static final double TURRET_MAX_POWER = 0.5;
+        public static final double TURRET_MAX_POWER = 0.65;
         public static final double MAX_POWER_DELTA_PER_LOOP = 0.1;
 
-        public static final double TURRET_KP = 0.028;
-        public static final double TURRET_KD = 0.004;
+        public static final double TURRET_KP = 0.03;
+        public static final double TURRET_KD = 0.001;
 
 
         public static final double FEEDFORWARD_KS = 0.05;

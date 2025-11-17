@@ -92,6 +92,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     public void telemetrize(Telemetry telemetry) {
         telemetry.addData("Turret Position (deg)", getTurretPosition());
+        telemetry.addData("shhh bot didnt break", pot.getVoltage());
         telemetry.addData("Turret Applied Power", lastAppliedPower);
     }
 }

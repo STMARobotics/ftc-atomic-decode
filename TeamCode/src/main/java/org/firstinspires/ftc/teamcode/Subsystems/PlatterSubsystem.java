@@ -32,7 +32,6 @@ public class PlatterSubsystem extends SubsystemBase {
         launchableRight = hardwareMap.get(CRServo.class, "launchableRight");
 
         launchableRight.setDirection(CRServo.Direction.REVERSE);
-        platterServo.setDirection(DcMotorSimple.Direction.REVERSE);
 
         colorSensorBottom = hardwareMap.get(NormalizedColorSensor.class, "cSensorBottom");
         colorSensorWall = hardwareMap.get(NormalizedColorSensor.class, "cSensorWall");

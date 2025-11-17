@@ -148,9 +148,6 @@ public class CoolOpMode extends CommandOpMode {
 
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
                 .whenPressed(() -> limelightSubsystem.pipelineSwitcher(1)); // red
-
-        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                .whenPressed(() -> limelightSubsystem.pipelineSwitcher(2)); // test pipeline
     }
 
     private void slowMode() {
