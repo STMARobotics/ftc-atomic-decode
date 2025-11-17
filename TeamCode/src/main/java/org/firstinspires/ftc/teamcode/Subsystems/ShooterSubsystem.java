@@ -10,14 +10,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class ShooterSubsystem extends SubsystemBase {
 
-    public final DcMotorEx flywheelMotor;
-    public final Servo hoodServo;
-    public double targetAngle;
-    public double targetRPM;
+    private final DcMotorEx flywheelMotor;
+    private double targetRPM;
 
     public ShooterSubsystem(HardwareMap hardwareMap) {
         flywheelMotor = hardwareMap.get(DcMotorEx.class, "flywheelMotor");
-        hoodServo = hardwareMap.get(Servo.class, "hoodServo");
     }
 
     /**
@@ -35,30 +32,6 @@ public class ShooterSubsystem extends SubsystemBase {
     public void stop() {
         flywheelMotor.setPower(0);
         targetRPM = 0;
-    }
-
-    /**
-     * Sets the hood servo to desired angle
-     * @param angle the angle we want the hood to be set at
-     */
-    public void setHoodAngle(double angle) {
-        hoodServo.setPosition(angle);
-        targetAngle = angle;
-        // TODO: map the servo angle to the actual angle of the shot
-    }
-
-    /**
-     * Returns t/f if the shooter and the hood are ready for shooting
-     */
-    public boolean shooterIsReady() {
-        return flywheelReady() && hoodReady();
-    }
-
-    /**
-     * Returns t/f if the hood is ready for shooting
-     */
-    public boolean hoodReady() {
-        return hoodServo.getPosition() == targetAngle;
     }
 
     /**

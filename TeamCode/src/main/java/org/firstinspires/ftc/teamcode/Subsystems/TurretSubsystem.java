@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.controller.PIDController;
 import com.seattlesolvers.solverslib.util.MathUtils;
@@ -15,16 +16,19 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class TurretSubsystem extends SubsystemBase {
 
     private final DcMotorEx turretMotor;
+    private final Servo hoodServo;
     private final AnalogInput pot;
     private final LimelightSubsystem limelightSubsystem;
 
     private double lastAppliedPower = 0.0;
+    private double targetAngle;
 
     private final PIDController pidController = new PIDController(TURRET_KP, 0.0, TURRET_KD);
 
     public TurretSubsystem(HardwareMap hardwareMap) {
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
         pot = hardwareMap.get(AnalogInput.class, "turretPotentiometer");
+        hoodServo = hardwareMap.get(Servo.class, "hoodServo");
         limelightSubsystem = new LimelightSubsystem(hardwareMap);
 
         turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -79,6 +83,16 @@ public class TurretSubsystem extends SubsystemBase {
      */
     public boolean isLockedOn() {
         return isLockedOn(DEAD_BAND_DEG);
+    }
+
+    /**
+     * Sets the hood servo to desired angle
+     * @param angle the angle we want the hood to be set at
+     */
+    public void setHoodAngle(double angle) {
+        hoodServo.setPosition(angle);
+        targetAngle = angle;
+        // TODO: map the servo angle to the actual angle of the shot
     }
 
     /**

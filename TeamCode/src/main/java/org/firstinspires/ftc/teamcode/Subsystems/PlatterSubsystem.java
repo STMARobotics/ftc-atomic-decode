@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -128,8 +130,10 @@ public class PlatterSubsystem extends SubsystemBase {
     }
 
     public void nextMagnet() {
+        spinPlatter(0.2);
+        stopPlatter();
         if (!isMagnetTripped()) {
-            spinPlatter(0.7);
+            spinPlatter(0.12);
         } else {
             stopPlatter();
         }

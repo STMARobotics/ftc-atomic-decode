@@ -54,7 +54,7 @@ public class CoolOpMode extends CommandOpMode {
         lookupTable         = new LookupTable();
 
         autoLockTurretCommand = new AutoLockTurretCommand(turretSubsystem);
-        notShootCommand       = new NotShootCommand(platterSubsystem);
+        notShootCommand       = new NotShootCommand(platterSubsystem, shooterSubsystem);
 
         // Gamepad + triggers
         gamepad = new GamepadEx(gamepad1);
