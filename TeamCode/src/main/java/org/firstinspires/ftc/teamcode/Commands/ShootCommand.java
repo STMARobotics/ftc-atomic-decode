@@ -8,9 +8,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.LookupTable;
 import org.firstinspires.ftc.teamcode.Subsystems.PlatterSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.ShooterSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
-import static org.firstinspires.ftc.teamcode.Constants.TempShooterConstants.DELAY_MS;
 import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.*;
 
 public class ShootCommand extends CommandBase {

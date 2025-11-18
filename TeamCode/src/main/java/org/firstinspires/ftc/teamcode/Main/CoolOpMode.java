@@ -3,8 +3,10 @@ package org.firstinspires.ftc.teamcode.Main;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.seattlesolvers.solverslib.command.CommandOpMode;
+import com.seattlesolvers.solverslib.command.ParallelCommandGroup;
 import com.seattlesolvers.solverslib.command.RepeatCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
+import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.button.Trigger;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
@@ -132,16 +134,8 @@ public class CoolOpMode extends CommandOpMode {
         // when right trigger is held
         // do next platter to get in position and then shoot command
         // it repeats the entire group while held
-        shootTrigger
-                .whileActiveContinuous(
-                        new RepeatCommand(
-                                new NextPlatterCommand(platterSubsystem)
-                                        .andThen(new ShootCommand(
-                                                platterSubsystem,
-                                                shooterSubsystem,
-                                                turretSubsystem,
-                                                lookupTable,
-                                                limelightSubsystem))));
+//        shootTrigger
+//                .whileActiveContinuous();
 
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
                 .whenPressed(() -> limelightSubsystem.pipelineSwitcher(0)); // blue
