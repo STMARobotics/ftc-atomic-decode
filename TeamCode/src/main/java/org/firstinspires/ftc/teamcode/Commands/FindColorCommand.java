@@ -16,11 +16,18 @@ public class FindColorCommand extends CommandBase {
 
     @Override
     public void initialize() {
-
+        if (platterSubsystem.isMagnetTripped()) {
+            platterSubsystem.spinPlatter(0.2);
+        } else {
+            platterSubsystem.stopPlatter();
+        }
     }
 
     @Override
     public void execute() {
+        if (platterSubsystem.isMagnetTripped()) {
+
+        }
 
     }
 

@@ -129,15 +129,15 @@ public class PlatterSubsystem extends SubsystemBase {
         launchableRight.setPower(-1.0);
     }
 
-    public void nextMagnet() {
-        spinPlatter(0.2);
-        stopPlatter();
-        if (!isMagnetTripped()) {
-            spinPlatter(0.12);
-        } else {
-            stopPlatter();
-        }
-    }
+//    public void nextMagnet() {
+//        spinPlatter(0.2);
+//        stopPlatter();
+//        if (!isMagnetTripped()) {
+//            spinPlatter(0.12);
+//        } else {
+//            stopPlatter();
+//        }
+//    }
 
     /**
      * Sends telemetry data about the platter subsystem.
