@@ -3,16 +3,15 @@ package org.firstinspires.ftc.teamcode.Main;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.seattlesolvers.solverslib.command.CommandOpMode;
-import com.seattlesolvers.solverslib.command.ParallelCommandGroup;
-import com.seattlesolvers.solverslib.command.RepeatCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
-import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
+import com.seattlesolvers.solverslib.command.RepeatCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import com.seattlesolvers.solverslib.gamepad.TriggerReader;
 
 import org.firstinspires.ftc.teamcode.Commands.AutoLockTurretCommand;
+import org.firstinspires.ftc.teamcode.Commands.CleanupCommand;
 import org.firstinspires.ftc.teamcode.Commands.FindColorCommand;
 import org.firstinspires.ftc.teamcode.Commands.NextPlatterCommand;
 import org.firstinspires.ftc.teamcode.Commands.NotShootCommand;
@@ -27,9 +26,15 @@ import org.firstinspires.ftc.teamcode.Subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.PlatterSubsystem;
 
+import static org.firstinspires.ftc.teamcode.Constants.DriveConstants.NORMAL_DRIVE_SCALE;
+import static org.firstinspires.ftc.teamcode.Constants.DriveConstants.SLOW_DRIVE_SCALE;
+import static org.firstinspires.ftc.teamcode.Constants.limelightConstants.BLUE_PIPELINE;
+import static org.firstinspires.ftc.teamcode.Constants.limelightConstants.RED_PIPELINE;
+
 @TeleOp(name="cool op mode")
 public class CoolOpMode extends CommandOpMode {
 
+    // Subsystems
     private DrivetrainSubsystem drivetrainSubsystem;
     private ShooterSubsystem shooterSubsystem;
     private TurretSubsystem turretSubsystem;
@@ -37,15 +42,19 @@ public class CoolOpMode extends CommandOpMode {
     private IntakeSubsystem intakeSubsystem;
     private LimelightSubsystem limelightSubsystem;
     private LookupTable lookupTable;
+
+    // Commands
     private NotShootCommand notShootCommand;
     private AutoLockTurretCommand autoLockTurretCommand;
     private FindColorCommand findColorCommand;
+    private CleanupCommand cleanupCommand;
 
     private GamepadEx gamepad;
     private TriggerReader leftTriggerReader;
     private TriggerReader rightTriggerReader;
 
-    private double reductionFactor = 1.0;
+    // Driving scale (formerly slow mode or something like that)
+    private double driveScale = NORMAL_DRIVE_SCALE;
 
     @Override
     public void initialize() {
@@ -58,11 +67,13 @@ public class CoolOpMode extends CommandOpMode {
         limelightSubsystem  = new LimelightSubsystem(hardwareMap);
         lookupTable         = new LookupTable();
 
-        autoLockTurretCommand = new AutoLockTurretCommand(turretSubsystem);
+        // Commands
+        autoLockTurretCommand = new AutoLockTurretCommand(turretSubsystem, lookupTable, limelightSubsystem, shooterSubsystem);
         notShootCommand       = new NotShootCommand(platterSubsystem, shooterSubsystem);
         findColorCommand      = new FindColorCommand(platterSubsystem);
+        cleanupCommand        = new CleanupCommand(turretSubsystem, platterSubsystem, shooterSubsystem);
 
-        // Gamepad + triggers
+        // Gamepad things
         gamepad = new GamepadEx(gamepad1);
         leftTriggerReader  = new TriggerReader(gamepad, GamepadKeys.Trigger.LEFT_TRIGGER);
         rightTriggerReader = new TriggerReader(gamepad, GamepadKeys.Trigger.RIGHT_TRIGGER);
@@ -73,7 +84,7 @@ public class CoolOpMode extends CommandOpMode {
                 () -> -gamepad1.left_stick_y,
                 () -> -gamepad1.left_stick_x,
                 () -> -gamepad1.right_stick_x,
-                () -> reductionFactor
+                () -> driveScale
         );
 
         // Telemetry
@@ -84,7 +95,7 @@ public class CoolOpMode extends CommandOpMode {
         });
         schedule(telemetryCommand);
 
-        // Register all subsystems
+        // Register subsystems
         register(
                 drivetrainSubsystem,
                 shooterSubsystem,
@@ -95,47 +106,40 @@ public class CoolOpMode extends CommandOpMode {
                 lookupTable
         );
 
-        // Default commands
+        // Default command things
         drivetrainSubsystem.setDefaultCommand(teleopDriveCommand);
-//        platterSubsystem.setDefaultCommand(notShootCommand);
+         platterSubsystem.setDefaultCommand(notShootCommand); // Working?
 
         configureButtonBindings();
     }
 
     private void configureButtonBindings() {
-
+        // Reset field centric
         gamepad.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(drivetrainSubsystem::resetLocalization);
-
-//        gamepad.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
-//                .whenPressed(this::slowMode);
 
         gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(intakeSubsystem::outtake)
                 .whenReleased(intakeSubsystem::stop);
 
-        // ----------- Intake Cycle -----------
-        // make a new trigger and return if its down
+        // -------- Intake Cycle (lt) --------
         Trigger intakeTrigger = new Trigger(() -> {
             leftTriggerReader.readValue();
             return leftTriggerReader.isDown();
         });
 
-        // when left trigger is held, do commands
         intakeTrigger
                 .whileActiveContinuous(
                         new RunCommand(intakeSubsystem::intake, intakeSubsystem)
                                 .alongWith(new NextPlatterCommand(platterSubsystem)))
                 .whenInactive(intakeSubsystem::stop);
 
-        // ----------- Shoot Cycle -----------
-        // make a new trigger and return if its down
+        // -------- Shoot Cycle (rt) --------
         Trigger shootTrigger = new Trigger(() -> {
             rightTriggerReader.readValue();
             return rightTriggerReader.isDown();
         });
 
-        // when right trigger is held, do commands
         shootTrigger
                 .whileActiveContinuous(
                         new RepeatCommand(
@@ -146,16 +150,24 @@ public class CoolOpMode extends CommandOpMode {
                                                 lookupTable,
                                                 limelightSubsystem,
                                                 Constants.ArtifactColor.ALL))
-                                        .alongWith(new AutoLockTurretCommand(turretSubsystem))));
+                                        .alongWith(new AutoLockTurretCommand(turretSubsystem,
+                                                lookupTable,
+                                                limelightSubsystem,
+                                                shooterSubsystem)))
+                                .andThen(new CleanupCommand(turretSubsystem,
+                                        platterSubsystem,
+                                        shooterSubsystem))
+                );
 
+        // LL Pipeline selection
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                .whenPressed(() -> limelightSubsystem.pipelineSwitcher(0)); // blue
+                .whenPressed(() -> limelightSubsystem.pipelineSwitcher(BLUE_PIPELINE));
 
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(() -> limelightSubsystem.pipelineSwitcher(1)); // red
+                .whenPressed(() -> limelightSubsystem.pipelineSwitcher(RED_PIPELINE));
     }
 
-    private void slowMode() {
-        reductionFactor = (reductionFactor == 1.0) ? 0.5 : 1.0;
+    private void toggleDriveScale() {
+        driveScale = (driveScale == NORMAL_DRIVE_SCALE) ? SLOW_DRIVE_SCALE : NORMAL_DRIVE_SCALE;
     }
 }

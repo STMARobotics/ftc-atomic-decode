@@ -11,6 +11,8 @@ public final class Constants {
 
     public static final class limelightConstants {
         public static final int LIMELIGHT_POLL_HZ = 90;
+        public static final int BLUE_PIPELINE = 0;
+        public static final int RED_PIPELINE  = 1;
     }
 
     public static final class TurretConstants {
@@ -48,12 +50,10 @@ public final class Constants {
         public static final double STALL_CURRENT_AMPS = 9.2;
     }
 
-    public static class TempShooterConstants {
-        public static final long DELAY_MS = 1000;
-    }
-
-    public static class DriveCommandConstants {
+    public static class DriveConstants {
         public static final double JOYSTICK_DEADZONE = 0.05;
+        public static final double NORMAL_DRIVE_SCALE = 1.0;
+        public static final double SLOW_DRIVE_SCALE   = 0.5;
     }
 
     public static enum AllianceColor {
