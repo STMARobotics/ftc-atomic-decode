@@ -13,10 +13,12 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import com.seattlesolvers.solverslib.gamepad.TriggerReader;
 
 import org.firstinspires.ftc.teamcode.Commands.AutoLockTurretCommand;
+import org.firstinspires.ftc.teamcode.Commands.FindColorCommand;
 import org.firstinspires.ftc.teamcode.Commands.NextPlatterCommand;
 import org.firstinspires.ftc.teamcode.Commands.NotShootCommand;
 import org.firstinspires.ftc.teamcode.Commands.Drive;
 import org.firstinspires.ftc.teamcode.Commands.ShootCommand;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
@@ -29,14 +31,15 @@ import org.firstinspires.ftc.teamcode.Subsystems.PlatterSubsystem;
 public class CoolOpMode extends CommandOpMode {
 
     private DrivetrainSubsystem drivetrainSubsystem;
-    private NotShootCommand notShootCommand;
-    private AutoLockTurretCommand autoLockTurretCommand;
     private ShooterSubsystem shooterSubsystem;
     private TurretSubsystem turretSubsystem;
     private PlatterSubsystem platterSubsystem;
     private IntakeSubsystem intakeSubsystem;
     private LimelightSubsystem limelightSubsystem;
     private LookupTable lookupTable;
+    private NotShootCommand notShootCommand;
+    private AutoLockTurretCommand autoLockTurretCommand;
+    private FindColorCommand findColorCommand;
 
     private GamepadEx gamepad;
     private TriggerReader leftTriggerReader;
@@ -57,6 +60,7 @@ public class CoolOpMode extends CommandOpMode {
 
         autoLockTurretCommand = new AutoLockTurretCommand(turretSubsystem);
         notShootCommand       = new NotShootCommand(platterSubsystem, shooterSubsystem);
+        findColorCommand      = new FindColorCommand(platterSubsystem);
 
         // Gamepad + triggers
         gamepad = new GamepadEx(gamepad1);
@@ -131,11 +135,18 @@ public class CoolOpMode extends CommandOpMode {
             return rightTriggerReader.isDown();
         });
 
-        // when right trigger is held
-        // do next platter to get in position and then shoot command
-        // it repeats the entire group while held
-//        shootTrigger
-//                .whileActiveContinuous();
+        // when right trigger is held, do commands
+        shootTrigger
+                .whileActiveContinuous(
+                        new RepeatCommand(
+                                new FindColorCommand(platterSubsystem)
+                                        .andThen(new ShootCommand(
+                                                platterSubsystem,
+                                                shooterSubsystem,
+                                                lookupTable,
+                                                limelightSubsystem,
+                                                Constants.ArtifactColor.ALL))
+                                        .alongWith(new AutoLockTurretCommand(turretSubsystem))));
 
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
                 .whenPressed(() -> limelightSubsystem.pipelineSwitcher(0)); // blue
