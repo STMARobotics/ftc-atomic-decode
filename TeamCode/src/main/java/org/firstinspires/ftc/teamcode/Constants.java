@@ -17,7 +17,7 @@ public final class Constants {
 
     public static final class TurretConstants {
 
-        public static final double DEAD_BAND_DEG = 2.0;
+        public static final double DEAD_BAND_DEG = 3.0;
 
         public static final double SOFT_MIN_DEG = -135.0;
         public static final double SOFT_MAX_DEG = 135.0;
