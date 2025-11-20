@@ -10,18 +10,21 @@ import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.LookupTable;
 import org.firstinspires.ftc.teamcode.Subsystems.PlatterSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.ShooterSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
 public class ShootCommand extends CommandBase {
 
     private enum State {
-        LEAVE_INITIAL_MAGNET,  // leave current slot
-        SEEK_NEXT_MAGNET,      // drive forward until we see the next magnet
-        NUDGE_BACK,            // reverse slowly until we're back on that magnet
+        WAIT_FOR_READY,      // wait for shooter + turret
+        LEAVE_INITIAL_MAGNET,
+        SEEK_NEXT_MAGNET,
+        NUDGE_BACK,
         DONE
     }
 
     private final PlatterSubsystem platterSubsystem;
     private final ShooterSubsystem shooterSubsystem;
+    private final TurretSubsystem turretSubsystem;
     private final LimelightSubsystem limelightSubsystem;
     private final LookupTable lookupTable;
     private final Constants.ArtifactColor artifactColor;
@@ -33,58 +36,63 @@ public class ShootCommand extends CommandBase {
                         ShooterSubsystem shooterSubsystem,
                         LookupTable lookupTable,
                         LimelightSubsystem limelightSubsystem,
+                        TurretSubsystem turretSubsystem,
                         Constants.ArtifactColor artifactColor) {
         this.platterSubsystem = platterSubsystem;
         this.shooterSubsystem = shooterSubsystem;
+        this.turretSubsystem  = turretSubsystem;
         this.limelightSubsystem = limelightSubsystem;
         this.lookupTable = lookupTable;
         this.artifactColor = artifactColor;
 
-        addRequirements(platterSubsystem, shooterSubsystem);
-        // limelight / lookup / color are read-only if you use them later
+        addRequirements(platterSubsystem);
     }
 
     @Override
     public void initialize() {
         done = false;
-        state = State.LEAVE_INITIAL_MAGNET;
-
-        shooterSubsystem.setRPM(3000); // tune pls
-
-        platterSubsystem.launchableActivate();
-        platterSubsystem.launcherActivate();
+        state = State.WAIT_FOR_READY;
     }
 
     @Override
     public void execute() {
         switch (state) {
+
+            case WAIT_FOR_READY:
+                // Wait until shooter AND turret are ready
+                if (shooterSubsystem.flywheelReady() && turretSubsystem.isLockedOn()) {
+                    // Start launcher + rollers exactly when we decide to shoot
+                    platterSubsystem.launchableActivate();
+                    platterSubsystem.launcherActivate();
+                    state = State.LEAVE_INITIAL_MAGNET;
+                }
+                break;
+
             case LEAVE_INITIAL_MAGNET:
-                // We start ON a magnet at the correct color/slot.
+                // We start ON a magnet at the correct slot.
                 // Move forward until we are OFF this magnet.
                 if (platterSubsystem.isMagnetTripped()) {
                     platterSubsystem.spinPlatter(SHOOT_POWER);
                 } else {
-                    // Left the initial slot, now look for the NEXT magnet.
+                    // Left initial slot → go find next magnet.
                     state = State.SEEK_NEXT_MAGNET;
                 }
                 break;
 
             case SEEK_NEXT_MAGNET:
-                // Move forward at shooting speed until we hit the next magnet.
+                // Move forward until the next magnet.
                 platterSubsystem.spinPlatter(SHOOT_POWER);
                 if (platterSubsystem.isMagnetTripped()) {
-                    // We’ve reached the next slot (may coast a bit past).
-                    // Now reverse slowly until we're centered back on it.
+                    // Hit next magnet (may have coasted a bit); now reverse to center.
                     state = State.NUDGE_BACK;
                 }
                 break;
 
             case NUDGE_BACK:
-                // Reverse slowly until the magnet is tripped again.
+                // Reverse slowly until we are on the magnet again.
                 if (!platterSubsystem.isMagnetTripped()) {
                     platterSubsystem.spinPlatter(-NUDGE_POWER);
                 } else {
-                    // Back on magnet → stop and finish.
                     platterSubsystem.stopPlatter();
                     state = State.DONE;
                     done = true;
@@ -92,7 +100,6 @@ public class ShootCommand extends CommandBase {
                 break;
 
             case DONE:
-                // Nothing. Wait for end() to clean up.
                 break;
         }
     }
