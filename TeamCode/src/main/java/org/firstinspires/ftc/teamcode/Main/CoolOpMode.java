@@ -126,6 +126,7 @@ public class CoolOpMode extends CommandOpMode {
                                 shooterSubsystem,
                                 lookupTable,
                                 limelightSubsystem,
+                                turretSubsystem,
                                 color
                         ))
                         .alongWith(new AutoLockTurretCommand(
