@@ -33,6 +33,8 @@ public class CleanupCommand extends CommandBase {
         turretSubsystem.goToHome();
         shooterSubsystem.setRPM(1500);
         platterSubsystem.stopPlatter();
+        platterSubsystem.launchableDeactivate();
+        platterSubsystem.launcherDeactivate();
     }
 
     @Override

@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
+import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.TURRET_KD;
+import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.TURRET_KP;
+
 import com.seattlesolvers.solverslib.command.CommandBase;
+import com.seattlesolvers.solverslib.controller.PIDController;
 
 import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.LookupTable;
@@ -16,6 +20,8 @@ public class AutoLockTurretCommand extends CommandBase {
 
     private double distanceToTarget;
 
+    private final PIDController pidController = new PIDController(TURRET_KP, 0.0, TURRET_KD);
+
     public AutoLockTurretCommand(TurretSubsystem turretSubsystem,
                                  LookupTable lookupTable,
                                  LimelightSubsystem limelightSubsystem,
@@ -29,7 +35,7 @@ public class AutoLockTurretCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        // Nothing to initialize
+        pidController.reset();
     }
 
     @Override
