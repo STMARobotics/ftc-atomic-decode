@@ -40,10 +40,8 @@ public class AutoLockTurretCommand extends CommandBase {
 
     @Override
     public void execute() {
-        distanceToTarget = limelightSubsystem.getDistance();
-        turretSubsystem.autoLockTurret();
-        shooterSubsystem.setRPM(3000); // Only hood movement saves power
-        turretSubsystem.setHoodAngle(lookupTable.getHoodAngle(distanceToTarget));
+        autoLockTurret();
+        shooterSubsystem.setRPM(5000); // Only hood movement saves power
     }
 
     @Override
@@ -54,5 +52,16 @@ public class AutoLockTurretCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         // Things get cleaned up in the cleanup command
+    }
+
+    public void autoLockTurret() {
+        double error = limelightSubsystem.getTargetOffset();
+        if (Double.isNaN(error)) {
+            turretSubsystem.stopTurret();
+        } else {
+            double output = pidController.calculate(error, 0.0);
+
+            turretSubsystem.setTurretPower(output);
+        }
     }
 }

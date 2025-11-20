@@ -59,11 +59,12 @@ public class TurretSubsystem extends SubsystemBase {
         double error = limelightSubsystem.getTargetOffset();
         if (Double.isNaN(error)) {
             stopTurret();
+        } else {
+
+            double output = pidController.calculate(error, 0.0);
+
+            setTurretPower(output);
         }
-
-        double output = pidController.calculate(error, 0.0);
-
-        setTurretPower(output);
     }
 
     public boolean isLockedOn(double thresholdDeg) {
@@ -71,7 +72,6 @@ public class TurretSubsystem extends SubsystemBase {
         if (Double.isNaN(tx)) {
             return false;
         }
-
         return Math.abs(tx) <= thresholdDeg;
     }
 
@@ -106,7 +106,6 @@ public class TurretSubsystem extends SubsystemBase {
 
     public void telemetrize(Telemetry telemetry) {
         telemetry.addData("Turret Position (deg)", getTurretPosition());
-        telemetry.addData("shhh bot didnt break", pot.getVoltage());
         telemetry.addData("Turret Applied Power", lastAppliedPower);
     }
 }

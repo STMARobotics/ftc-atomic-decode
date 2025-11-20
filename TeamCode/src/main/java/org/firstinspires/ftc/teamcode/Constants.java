@@ -58,7 +58,7 @@ public final class Constants {
 
     public static class PlatterConstants {
         public static final double SEARCH_POWER = 0.2;
-        public static final double NUDGE_POWER  = 0.15;
+        public static final double NUDGE_POWER  = -0.15;
         public static final double SHOOT_POWER = 0.5;
     }
 

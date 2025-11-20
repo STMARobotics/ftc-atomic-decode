@@ -30,6 +30,7 @@ public class FindColorCommand extends CommandBase {
 
     @Override
     public void initialize() {
+        platterSubsystem.launcherDeactivate();
         state = State.SEEK_MAGNET;
     }
 
@@ -42,7 +43,7 @@ public class FindColorCommand extends CommandBase {
                     platterSubsystem.spinPlatter(SEARCH_POWER);
                 } else {
                     platterSubsystem.stopPlatter();
-                    state = State.CHECK_COLOR;
+                    state = State.DONE;
                 }
                 break;
 

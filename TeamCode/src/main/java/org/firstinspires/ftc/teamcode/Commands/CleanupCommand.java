@@ -30,8 +30,7 @@ public class CleanupCommand extends CommandBase {
 
     @Override
     public void execute() {
-        turretSubsystem.goToHome();
-        shooterSubsystem.setRPM(1500);
+        shooterSubsystem.setRPM(1000);
         platterSubsystem.stopPlatter();
         platterSubsystem.launchableDeactivate();
         platterSubsystem.launcherDeactivate();
@@ -39,7 +38,7 @@ public class CleanupCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return turretSubsystem.getTurretPosition() == TURRET_HOME_DEG;
+        return false;
     }
 
     @Override

@@ -113,7 +113,6 @@ public class CoolOpMode extends CommandOpMode {
         // Default commands
         drivetrainSubsystem.setDefaultCommand(teleopDriveCommand);
         platterSubsystem.setDefaultCommand(notShootCommand);
-        turretSubsystem.setDefaultCommand(autoLockTurretCommand);
 
         configureButtonBindings();
     }
@@ -128,18 +127,13 @@ public class CoolOpMode extends CommandOpMode {
                                 limelightSubsystem,
                                 turretSubsystem,
                                 color
-                        ))
-                        .alongWith(new AutoLockTurretCommand(
-                                turretSubsystem,
-                                lookupTable,
-                                limelightSubsystem,
-                                shooterSubsystem
-                        ))
-        ).andThen(new CleanupCommand(
-                turretSubsystem,
-                platterSubsystem,
-                shooterSubsystem
-        ));
+                        )))
+                .alongWith(new AutoLockTurretCommand(
+                        turretSubsystem,
+                        lookupTable,
+                        limelightSubsystem,
+                        shooterSubsystem
+                ));
     }
 
     private void configureButtonBindings() {
@@ -155,7 +149,7 @@ public class CoolOpMode extends CommandOpMode {
         // -------- Intake Cycle (LT) --------
         Trigger intakeTrigger = new Trigger(() -> {
             leftTriggerReader.readValue();
-            return leftTriggerReader.isDown();
+            return gamepad1.left_trigger >= 0.2;
         });
 
         intakeTrigger
@@ -168,7 +162,7 @@ public class CoolOpMode extends CommandOpMode {
         // -------- Shoot Cycle --------
         Trigger shootTrigger = new Trigger(() -> {
             rightTriggerReader.readValue();
-            return rightTriggerReader.isDown();
+            return gamepad1.right_trigger >= 0.2;
         });
 
         // RT = ALL

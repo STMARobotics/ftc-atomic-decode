@@ -22,7 +22,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * @param RPM the rpm that we want the flywheel to run at
      */
     public void setRPM(double RPM) {
-        flywheelMotor.setVelocity(RPM*360/60, AngleUnit.DEGREES);
+        flywheelMotor.setVelocity(RPM*28/60);
         targetRPM = RPM;
     }
 
