@@ -95,14 +95,14 @@ public class PlatterSubsystem extends SubsystemBase {
      * Activates the spring loaded launcher with a servo
      */
     public void launcherActivate() {
-        launcherServo.setPosition(0.6); // placeholder, tune on robot
+        launcherServo.setPosition(0.5); // placeholder, tune on robot
     }
 
     /**
      * Deactivates the spring loaded launcher with a servo
      */
     public void launcherDeactivate() {
-        launcherServo.setPosition(0); // placeholder
+        launcherServo.setPosition(0.2); // placeholder
     }
 
     /**

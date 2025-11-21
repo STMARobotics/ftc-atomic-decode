@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
-import com.seattlesolvers.solverslib.command.RepeatCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
@@ -14,12 +13,9 @@ import com.seattlesolvers.solverslib.gamepad.TriggerReader;
 import org.firstinspires.ftc.teamcode.Commands.AutoLockTurretCommand;
 import org.firstinspires.ftc.teamcode.Commands.CleanupCommand;
 import org.firstinspires.ftc.teamcode.Commands.Drive;
-import org.firstinspires.ftc.teamcode.Commands.FindColorCommand;
 import org.firstinspires.ftc.teamcode.Commands.NextPlatterCommand;
 import org.firstinspires.ftc.teamcode.Commands.NotShootCommand;
 import org.firstinspires.ftc.teamcode.Commands.ShootCommand;
-import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.Constants.ArtifactColor;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
@@ -117,23 +113,19 @@ public class CoolOpMode extends CommandOpMode {
         configureButtonBindings();
     }
 
-    private Command makeShot(ArtifactColor color) {
-        return new RepeatCommand(
-                new FindColorCommand(platterSubsystem, color)
-                        .andThen(new ShootCommand(
-                                platterSubsystem,
-                                shooterSubsystem,
-                                lookupTable,
-                                limelightSubsystem,
-                                turretSubsystem,
-                                color
-                        )))
-                .alongWith(new AutoLockTurretCommand(
-                        turretSubsystem,
-                        lookupTable,
-                        limelightSubsystem,
-                        shooterSubsystem
-                ));
+    private Command justShoot() {
+        return new ShootCommand(
+                platterSubsystem,
+                shooterSubsystem,
+                lookupTable,
+                limelightSubsystem,
+                turretSubsystem
+        ).alongWith(new AutoLockTurretCommand(
+                turretSubsystem,
+                lookupTable,
+                limelightSubsystem,
+                shooterSubsystem
+        ));
     }
 
     private void configureButtonBindings() {
@@ -168,7 +160,7 @@ public class CoolOpMode extends CommandOpMode {
         // RT = ALL
         shootTrigger
                 .whileActiveContinuous(
-                        makeShot(ArtifactColor.ALL)
+                        justShoot()
                 );
 
         // LL pipeline selection

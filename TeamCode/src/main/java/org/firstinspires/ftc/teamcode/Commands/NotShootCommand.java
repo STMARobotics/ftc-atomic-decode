@@ -25,6 +25,6 @@ public class NotShootCommand extends CommandBase {
 
     @Override
     public void execute() {
-        shooterSubsystem.setRPM(2500);
+        shooterSubsystem.setRPM(1000);
     }
 }
