@@ -37,18 +37,13 @@ public class ShootCommand extends CommandBase {
     @Override
     public void initialize() {
         platterSubsystem.spinPlatter(SHOOT_POWER);
+        platterSubsystem.launchableActivate();
+        platterSubsystem.launcherActivate();
     }
 
-    @Override
-    public void execute() {
-        if (turretSubsystem.isLockedOn()) {
-            platterSubsystem.launcherActivate();
-            platterSubsystem.launchableActivate();
-        } else {
-            platterSubsystem.launcherDeactivate();
-            platterSubsystem.launchableDeactivate();
-        }
-    }
+//    @Override
+//    public void execute() {
+//    }
 
     @Override
     public void end(boolean interrupted) {
