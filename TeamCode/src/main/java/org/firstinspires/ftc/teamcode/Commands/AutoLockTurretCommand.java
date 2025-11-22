@@ -41,7 +41,7 @@ public class AutoLockTurretCommand extends CommandBase {
     @Override
     public void execute() {
         autoLockTurret();
-        shooterSubsystem.setRPM(5000); // Only hood movement saves power
+        shooterSubsystem.setRPM(3000); // Only hood movement saves power
     }
 
     @Override

@@ -16,7 +16,7 @@ public class NextPlatterCommand extends CommandBase {
 
     @Override
     public void initialize() {
-
+        finished = false;
     }
 
     @Override
@@ -28,15 +28,18 @@ public class NextPlatterCommand extends CommandBase {
 //            platterSubsystem.spinPlatter(0.12);
 //            finished = false;
 //        }
-        platterSubsystem.spinPlatter(0.11);
+
+        if (platterSubsystem.isMagnetTripped()) {
+            finished = true;
+        } else {
+            finished = false;
+            platterSubsystem.spinPlatter(0.11);
+        }
     }
 
     @Override
-    public boolean isFinished() {return platterSubsystem.isMagnetTripped();
-    }
+    public boolean isFinished() {return finished;}
 
     @Override
-    public void end(boolean interrupted) {
-        platterSubsystem.stopPlatter();
-    }
+    public void end(boolean interrupted) {platterSubsystem.stopPlatter();}
 }

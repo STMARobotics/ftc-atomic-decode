@@ -133,35 +133,49 @@ public class CoolOpMode extends CommandOpMode {
         gamepad.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(drivetrainSubsystem::resetLocalization);
 
-        // Intake reverse
+        // Intake forward
         gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(new RunCommand(intakeSubsystem::intake, intakeSubsystem)
+                        .alongWith(new NextPlatterCommand((platterSubsystem))))
+                        .whenReleased(new RunCommand(intakeSubsystem::stop, intakeSubsystem));
+
+        // Intake reverse
+        gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(intakeSubsystem::outtake)
                 .whenReleased(intakeSubsystem::stop);
 
-        // -------- Intake Cycle (LT) --------
-        Trigger intakeTrigger = new Trigger(() -> {
+        // -------- Auto Lock Cycle (LT) --------
+        Trigger autoLockTrigger = new Trigger(() -> {
             leftTriggerReader.readValue();
-            return gamepad1.left_trigger >= 0.2;
+            return gamepad1.left_trigger >= 0.1;
         });
 
-        intakeTrigger
+        // LT = AUTO-LOCK
+        autoLockTrigger
                 .whileActiveContinuous(
-                        new RunCommand(intakeSubsystem::intake, intakeSubsystem)
-                                .alongWith(new NextPlatterCommand(platterSubsystem))
-                )
-                .whenInactive(intakeSubsystem::stop);
+                        new AutoLockTurretCommand(
+                                turretSubsystem,
+                                lookupTable,
+                                limelightSubsystem,
+                                shooterSubsystem
+                        ));
 
         // -------- Shoot Cycle --------
         Trigger shootTrigger = new Trigger(() -> {
             rightTriggerReader.readValue();
-            return gamepad1.right_trigger >= 0.2;
+            return gamepad1.right_trigger >= 0.1;
         });
 
         // RT = ALL
         shootTrigger
                 .whileActiveContinuous(
-                        justShoot()
-                );
+                        new ShootCommand(
+                                platterSubsystem,
+                                shooterSubsystem,
+                                lookupTable,
+                                limelightSubsystem,
+                                turretSubsystem
+                        ));
 
         // LL pipeline selection
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
