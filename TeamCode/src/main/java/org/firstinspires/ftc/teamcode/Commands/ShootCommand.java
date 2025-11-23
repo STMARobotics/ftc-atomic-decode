@@ -18,9 +18,6 @@ public class ShootCommand extends CommandBase {
     private final LimelightSubsystem limelightSubsystem;
     private final LookupTable lookupTable;
 
-    private int magsHit = 0;
-    private boolean lastMagState = false;
-
     public ShootCommand(PlatterSubsystem platterSubsystem,
                         ShooterSubsystem shooterSubsystem,
                         LookupTable lookupTable,
@@ -40,22 +37,6 @@ public class ShootCommand extends CommandBase {
         platterSubsystem.spinPlatter(SHOOT_POWER);
         platterSubsystem.launchableActivate();
         platterSubsystem.launcherActivate();
-        magsHit = 0;
-    }
-
-    @Override
-    public void execute() {
-        boolean mag = platterSubsystem.isMagnetTripped();
-        if (mag && !lastMagState) {
-            magsHit++;
-        }
-        lastMagState = mag;
-
-        if (magsHit == 2) {
-            platterSubsystem.spinPlatter(SHOOT_POWER * 0.3);
-        } else if (magsHit >= 3) {
-            platterSubsystem.stopPlatter();
-        }
     }
 
     @Override

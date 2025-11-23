@@ -141,7 +141,7 @@ public class CoolOpMode extends CommandOpMode {
 
         // Intake reverse
         gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(intakeSubsystem::outtake)
+                .whenHeld(new RunCommand(intakeSubsystem::outtake))
                 .whenReleased(intakeSubsystem::stop);
 
         // -------- Auto Lock Cycle (LT) --------
