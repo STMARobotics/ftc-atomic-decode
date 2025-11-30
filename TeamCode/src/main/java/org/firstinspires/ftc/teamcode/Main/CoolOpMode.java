@@ -13,6 +13,7 @@ import com.seattlesolvers.solverslib.gamepad.TriggerReader;
 import org.firstinspires.ftc.teamcode.Commands.AutoLockTurretCommand;
 import org.firstinspires.ftc.teamcode.Commands.CleanupCommand;
 import org.firstinspires.ftc.teamcode.Commands.Drive;
+import org.firstinspires.ftc.teamcode.Commands.IntakeCommand;
 import org.firstinspires.ftc.teamcode.Commands.NextPlatterCommand;
 import org.firstinspires.ftc.teamcode.Commands.NotShootCommand;
 import org.firstinspires.ftc.teamcode.Commands.ShootCommand;
@@ -135,9 +136,7 @@ public class CoolOpMode extends CommandOpMode {
 
         // Intake forward
         gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(new RunCommand(intakeSubsystem::intake, intakeSubsystem)
-                        .alongWith(new NextPlatterCommand((platterSubsystem))))
-                        .whenReleased(new RunCommand(intakeSubsystem::stop, intakeSubsystem));
+                .whileActiveContinuous(new IntakeCommand(platterSubsystem, intakeSubsystem));
 
         // Intake reverse
         gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)

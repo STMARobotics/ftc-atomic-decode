@@ -84,6 +84,15 @@ public class PlatterSubsystem extends SubsystemBase {
     }
 
     /**
+     * Checks if there is an artifact present
+     * @return true if an artifact is present, false otherwise
+     */
+    public boolean hasArtifact() {
+        return checkColor() != ArtifactColor.NONE;
+    }
+
+
+    /**
      * Checks if the magnet switch is tripped
      * @return true if the magnet switch is tripped, false otherwise
      */

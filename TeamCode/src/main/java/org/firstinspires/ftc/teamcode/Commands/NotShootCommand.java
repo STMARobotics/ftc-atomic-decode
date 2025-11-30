@@ -10,7 +10,8 @@ public class NotShootCommand extends CommandBase {
     private final PlatterSubsystem platterSubsystem;
     private final ShooterSubsystem shooterSubsystem;
 
-    public NotShootCommand(PlatterSubsystem platterSubsystem, ShooterSubsystem shooterSubsystem) {
+    public NotShootCommand(PlatterSubsystem platterSubsystem,
+                           ShooterSubsystem shooterSubsystem) {
         this.platterSubsystem = platterSubsystem;
         this.shooterSubsystem = shooterSubsystem;
         addRequirements(platterSubsystem, shooterSubsystem);

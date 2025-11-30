@@ -22,7 +22,8 @@ public class FindColorCommand extends CommandBase {
 
     private State state = State.SEEK_MAGNET;
 
-    public FindColorCommand(PlatterSubsystem platterSubsystem, ArtifactColor targetColor) {
+    public FindColorCommand(PlatterSubsystem platterSubsystem,
+                            ArtifactColor targetColor) {
         this.platterSubsystem = platterSubsystem;
         this.targetColor = targetColor;
         addRequirements(platterSubsystem);
