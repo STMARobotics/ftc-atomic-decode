@@ -92,6 +92,8 @@ public class CoolOpMode extends CommandOpMode {
         RunCommand telemetryCommand = new RunCommand(() -> {
             drivetrainSubsystem.telemetrize(telemetry);
             turretSubsystem.telemetrize(telemetry);
+            telemetry.addData("|-----|Platter Telemetry|-----|", "");
+            platterSubsystem.telemetrize(telemetry);
             telemetry.update();
         });
         schedule(telemetryCommand);

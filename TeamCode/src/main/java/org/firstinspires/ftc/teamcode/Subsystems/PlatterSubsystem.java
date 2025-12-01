@@ -170,5 +170,11 @@ public class PlatterSubsystem extends SubsystemBase {
             telemetry.addData("Raw B Bottom", "%.3f", cB.blue);
             telemetry.addData("Color found Wall", checkColor());
         }
+
+        if (hasArtifact()) {
+            telemetry.addData("Artifact Present", "Yes (%s)", detected);
+        } else {
+            telemetry.addData("Artifact Present", "No");
+        }
     }
 }
