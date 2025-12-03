@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import java.util.List;
 import org.firstinspires.ftc.teamcode.Math.LookupTableMath;
+
+import java.util.List;
 
 /**
  * Central constants container.
@@ -24,12 +25,9 @@ public final class Constants {
         public static final double TURRET_HOME_DEG = 0.0;
 
         public static final double TURRET_MAX_POWER = 0.65;
-        public static final double MAX_POWER_DELTA_PER_LOOP = 0.1;
 
         public static final double TURRET_KP = 0.03;
         public static final double TURRET_KD = 0.001;
-
-
         public static final double FEEDFORWARD_KS = 0.05;
 
         public static final double POT_MIN_V = 0.94;
@@ -39,7 +37,6 @@ public final class Constants {
 
     public static class ClimbConstants {
         public static final double CLIMB_POWER = 1.0;
-        public static final double STALL_CURRENT_AMPS = 9.2;
         public static final double CLUTCH_ENGAGED_POS = 0.8; // placeholder
         public static final double CLUTCH_DISENGAGED_POS = 0; // placeholder
     }
@@ -63,12 +60,12 @@ public final class Constants {
         public static final double INDEX_POWER = 0.4;
     }
 
-    public static enum AllianceColor {
+    public enum AllianceColor {
         RED,
         BLUE
     }
 
-    public static enum ArtifactColor {
+    public enum ArtifactColor {
         PURPLE,
         GREEN,
         ALL,

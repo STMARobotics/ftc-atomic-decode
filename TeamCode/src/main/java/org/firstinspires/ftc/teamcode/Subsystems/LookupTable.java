@@ -10,8 +10,6 @@ import org.firstinspires.ftc.teamcode.Math.LookupTableMath.ShootingSettings;
  */
 public class LookupTable extends SubsystemBase {
 
-    private static final double DEFAULT_DISTANCE_M = 3.0;
-
     public LookupTable() {
         ShootingSettings settings = new ShootingSettings();
     }

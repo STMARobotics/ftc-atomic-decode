@@ -13,10 +13,9 @@ import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
 public class AutoLockTurretCommand extends CommandBase {
 
-    private TurretSubsystem turretSubsystem;
-    private LookupTable lookupTable;
-    private LimelightSubsystem limelightSubsystem;
-    private ShooterSubsystem shooterSubsystem;
+    private final TurretSubsystem turretSubsystem;
+    private final LimelightSubsystem limelightSubsystem;
+    private final ShooterSubsystem shooterSubsystem;
 
     private double distanceToTarget;
 
@@ -27,7 +26,6 @@ public class AutoLockTurretCommand extends CommandBase {
                                  LimelightSubsystem limelightSubsystem,
                                  ShooterSubsystem shooterSubsystem) {
         this.turretSubsystem = turretSubsystem;
-        this.lookupTable = lookupTable;
         this.limelightSubsystem = limelightSubsystem;
         this.shooterSubsystem = shooterSubsystem;
         addRequirements(turretSubsystem, lookupTable, limelightSubsystem, shooterSubsystem);
@@ -42,11 +40,6 @@ public class AutoLockTurretCommand extends CommandBase {
     public void execute() {
         autoLockTurret();
         shooterSubsystem.setRPM(3000); // Only hood movement saves power
-    }
-
-    @Override
-    public boolean isFinished() {
-        return false;
     }
 
     @Override

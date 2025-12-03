@@ -22,9 +22,7 @@ public class PlatterSubsystem extends SubsystemBase {
     public final CRServo launchableRight;
 
     private final NormalizedColorSensor colorSensorLeft;
-    private final NormalizedColorSensor colorSensorRight;
     private final DistanceSensor distanceSensorLeft;
-    private final DistanceSensor distanceSensorRight;
     private final TouchSensor magnetSwitch;
 
     private ArtifactColor artifactColor;
@@ -38,9 +36,9 @@ public class PlatterSubsystem extends SubsystemBase {
         platterServo.setDirection(DcMotorSimple.Direction.REVERSE);
 
         colorSensorLeft = hardwareMap.get(NormalizedColorSensor.class, "cSensorLeft");
-        colorSensorRight = hardwareMap.get(NormalizedColorSensor.class, "cSensorRight");
+        NormalizedColorSensor colorSensorRight = hardwareMap.get(NormalizedColorSensor.class, "cSensorRight");
         distanceSensorLeft = hardwareMap.get(DistanceSensor.class, "dSensorLeft");
-        distanceSensorRight = hardwareMap.get(DistanceSensor.class, "dSensorRight");
+        DistanceSensor distanceSensorRight = hardwareMap.get(DistanceSensor.class, "dSensorRight");
 
         magnetSwitch = hardwareMap.get(TouchSensor.class, "magnetSwitch");
     }
@@ -147,16 +145,6 @@ public class PlatterSubsystem extends SubsystemBase {
         launchableLeft.setPower(-1.0);
         launchableRight.setPower(-1.0);
     }
-
-//    public void nextMagnet() {
-//        spinPlatter(0.2);
-//        stopPlatter();
-//        if (!isMagnetTripped()) {
-//            spinPlatter(0.12);
-//        } else {
-//            stopPlatter();
-//        }
-//    }
 
     /**
      * Sends telemetry data about the platter subsystem.

@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import static org.firstinspires.ftc.teamcode.Constants.ClimbConstants.CLIMB_POWER;
+import static org.firstinspires.ftc.teamcode.Constants.ClimbConstants.CLUTCH_DISENGAGED_POS;
+import static org.firstinspires.ftc.teamcode.Constants.ClimbConstants.CLUTCH_ENGAGED_POS;
+
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
-
-import static org.firstinspires.ftc.teamcode.Constants.ClimbConstants.*;
 
 public class ClimbSubsystem extends SubsystemBase {
 
@@ -22,9 +24,8 @@ public class ClimbSubsystem extends SubsystemBase {
 
     /**
      * Sets the climb motors (back l/r) to a given power
-     * @param power the power to set the climb motors to
      */
-    public void setClimbPower(double power) {
+    public void setClimbPower() {
         double protectedPower = Math.abs(CLIMB_POWER); // Redundant protection
         left2.setPower(protectedPower);
         right2.setPower(protectedPower);

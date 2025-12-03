@@ -1,5 +1,14 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.DEAD_BAND_DEG;
+import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.POT_MAX_V;
+import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.POT_MIN_V;
+import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.SOFT_MAX_DEG;
+import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.SOFT_MIN_DEG;
+import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.TURRET_KD;
+import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.TURRET_KP;
+import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.TURRET_MAX_POWER;
+
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -8,8 +17,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.controller.PIDController;
 import com.seattlesolvers.solverslib.util.MathUtils;
-
-import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.*;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -21,7 +28,6 @@ public class TurretSubsystem extends SubsystemBase {
     private final LimelightSubsystem limelightSubsystem;
 
     private double lastAppliedPower = 0.0;
-    private double targetAngle;
 
     private final PIDController pidController = new PIDController(TURRET_KP, 0.0, TURRET_KD);
 
@@ -91,7 +97,6 @@ public class TurretSubsystem extends SubsystemBase {
      */
     public void setHoodAngle(double angle) {
         hoodServo.setPosition(angle);
-        targetAngle = angle;
         // TODO: map the servo angle to the actual angle of the shot
     }
 

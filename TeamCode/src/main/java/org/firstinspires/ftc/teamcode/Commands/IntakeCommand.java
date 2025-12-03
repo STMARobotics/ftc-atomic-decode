@@ -66,11 +66,6 @@ public class IntakeCommand extends CommandBase {
     }
 
     @Override
-    public boolean isFinished() {
-        return false;
-    }
-
-    @Override
     public void end(boolean interrupted) {
         platterSubsystem.stopPlatter();
         intakeSubsystem.stop();

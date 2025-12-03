@@ -6,7 +6,6 @@ import java.util.TreeMap;
 
 /**
  * Lightweight lookup table math utility.
- *
  * This is a simplified replacement of the WPILib-based interpolator used in the original code.
  * It stores (distance -> velocity, pitch) pairs and linearly interpolates between the nearest
  * points. All units are plain doubles: distance in meters, velocity in rotations-per-second,
@@ -85,10 +84,6 @@ public class LookupTableMath {
         public ShootingSettings pitch(double pitch) {
             this.pitch = pitch;
             return this;
-        }
-
-        public double getDistance() {
-            return distance;
         }
 
         public double getVelocity() {

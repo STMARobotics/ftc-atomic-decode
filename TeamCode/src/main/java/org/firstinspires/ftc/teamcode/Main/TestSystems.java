@@ -7,25 +7,15 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.Subsystems.PlatterSubsystem;
 
-// I copied andy so merek can sleep at night
-
 @TeleOp(name="test systems", group = "testing")
 public class TestSystems extends CommandOpMode {
 
     private PlatterSubsystem platterSubsystem;
-    private double pos;
 
     @Override
     public void initialize() {
         // Create subsystems
         platterSubsystem = new PlatterSubsystem(hardwareMap);
-
-//        RunCommand telemetryCommand = new RunCommand(() -> {
-//            drivetrainSubsystem.telemetrize(telemetry);
-//            platterSubsystem.telemetrize(telemetry);
-//            telemetry.update();
-//        });
-//        schedule(telemetryCommand);
 
         register(platterSubsystem);
 

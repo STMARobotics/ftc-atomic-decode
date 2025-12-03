@@ -23,8 +23,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     private final PIDController yController = new PIDController(0.07, 0.0, 0.0);
     private final PIDController headingController = new PIDController(0.2, 0.0, 0.0);
 
-    private double positionDeadzoneMm = 10.0;
-    private double headingDeadzoneRad = Math.toRadians(2.0);
+    private final double headingDeadzoneRad = Math.toRadians(2.0);
 
     public DrivetrainSubsystem(HardwareMap hardwareMap) {
         follower = Constants.createFollower(hardwareMap);
@@ -139,6 +138,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         double distanceError = Math.hypot(xError, yError);
 
+        double positionDeadzoneMm = 10.0;
         if (distanceError <= positionDeadzoneMm && Math.abs(headingError) <= headingDeadzoneRad) {
             follower.setTeleOpDrive(0.0, 0.0, 0.0, false);
             return;

@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode.Main;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import static org.firstinspires.ftc.teamcode.Constants.DriveConstants.NORMAL_DRIVE_SCALE;
+import static org.firstinspires.ftc.teamcode.Constants.DriveConstants.SLOW_DRIVE_SCALE;
+import static org.firstinspires.ftc.teamcode.Constants.limelightConstants.BLUE_PIPELINE;
+import static org.firstinspires.ftc.teamcode.Constants.limelightConstants.RED_PIPELINE;
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.RunCommand;
@@ -11,10 +15,8 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import com.seattlesolvers.solverslib.gamepad.TriggerReader;
 
 import org.firstinspires.ftc.teamcode.Commands.AutoLockTurretCommand;
-import org.firstinspires.ftc.teamcode.Commands.CleanupCommand;
 import org.firstinspires.ftc.teamcode.Commands.Drive;
 import org.firstinspires.ftc.teamcode.Commands.IntakeCommand;
-import org.firstinspires.ftc.teamcode.Commands.NextPlatterCommand;
 import org.firstinspires.ftc.teamcode.Commands.NotShootCommand;
 import org.firstinspires.ftc.teamcode.Commands.ShootCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
@@ -24,11 +26,6 @@ import org.firstinspires.ftc.teamcode.Subsystems.LookupTable;
 import org.firstinspires.ftc.teamcode.Subsystems.PlatterSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
-
-import static org.firstinspires.ftc.teamcode.Constants.DriveConstants.NORMAL_DRIVE_SCALE;
-import static org.firstinspires.ftc.teamcode.Constants.DriveConstants.SLOW_DRIVE_SCALE;
-import static org.firstinspires.ftc.teamcode.Constants.limelightConstants.BLUE_PIPELINE;
-import static org.firstinspires.ftc.teamcode.Constants.limelightConstants.RED_PIPELINE;
 
 @TeleOp(name = "cool op mode")
 public class CoolOpMode extends CommandOpMode {
@@ -41,11 +38,6 @@ public class CoolOpMode extends CommandOpMode {
     private IntakeSubsystem intakeSubsystem;
     private LimelightSubsystem limelightSubsystem;
     private LookupTable lookupTable;
-
-    // Commands
-    private NotShootCommand notShootCommand;
-    private AutoLockTurretCommand autoLockTurretCommand;
-    private CleanupCommand cleanupCommand;
 
     private GamepadEx gamepad;
     private TriggerReader leftTriggerReader;
@@ -65,14 +57,8 @@ public class CoolOpMode extends CommandOpMode {
         lookupTable         = new LookupTable();
 
         // Commands
-        autoLockTurretCommand = new AutoLockTurretCommand(
-                turretSubsystem,
-                lookupTable,
-                limelightSubsystem,
-                shooterSubsystem
-        );
-        notShootCommand = new NotShootCommand(platterSubsystem, shooterSubsystem);
-        cleanupCommand  = new CleanupCommand(turretSubsystem, platterSubsystem, shooterSubsystem);
+        // Commands
+        NotShootCommand notShootCommand = new NotShootCommand(platterSubsystem, shooterSubsystem);
 
         // Gamepad
         gamepad = new GamepadEx(gamepad1);
@@ -118,11 +104,7 @@ public class CoolOpMode extends CommandOpMode {
 
     private Command justShoot() {
         return new ShootCommand(
-                platterSubsystem,
-                shooterSubsystem,
-                lookupTable,
-                limelightSubsystem,
-                turretSubsystem
+                platterSubsystem
         ).alongWith(new AutoLockTurretCommand(
                 turretSubsystem,
                 lookupTable,
@@ -171,11 +153,7 @@ public class CoolOpMode extends CommandOpMode {
         shootTrigger
                 .whileActiveContinuous(
                         new ShootCommand(
-                                platterSubsystem,
-                                shooterSubsystem,
-                                lookupTable,
-                                limelightSubsystem,
-                                turretSubsystem
+                                platterSubsystem
                         ));
 
         // LL pipeline selection
