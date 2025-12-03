@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import static java.lang.Thread.sleep;
-
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -167,21 +165,8 @@ public class PlatterSubsystem extends SubsystemBase {
     public void telemetrize(Telemetry telemetry) {
         ArtifactColor detected = checkColor();
 
-        if (colorSensorRight != null) {
-            NormalizedRGBA cW = colorSensorRight.getNormalizedColors();
-            telemetry.addData("Raw R Wall", "%.3f", cW.red);
-            telemetry.addData("Raw G Wall", "%.3f", cW.green);
-            telemetry.addData("Raw B Wall", "%.3f", cW.blue);
-            telemetry.addData("Color found Wall", checkColor());
-        }
-        telemetry.addData(" ", null);
-        if (colorSensorLeft != null) {
-            NormalizedRGBA cB = colorSensorLeft.getNormalizedColors();
-            telemetry.addData("Raw R Bottom", "%.3f", cB.red);
-            telemetry.addData("Raw G Bottom", "%.3f", cB.green);
-            telemetry.addData("Raw B Bottom", "%.3f", cB.blue);
-            telemetry.addData("Color found Wall", checkColor());
-        }
+        telemetry.addData("Distance (mm)", "%.2f", distanceSensorLeft.getDistance(DistanceUnit.MM));
+        telemetry.addData("Magnet Tripped", isMagnetTripped() ? "Yes" : "No");
 
         if (hasArtifact()) {
             telemetry.addData("Artifact Present", "Yes (%s)", detected);
