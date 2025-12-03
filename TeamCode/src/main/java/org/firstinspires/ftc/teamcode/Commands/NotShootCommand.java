@@ -28,4 +28,14 @@ public class NotShootCommand extends CommandBase {
     public void execute() {
         shooterSubsystem.setRPM(3000);
     }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        // Nothing to clean up
+    }
 }

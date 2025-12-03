@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Math.LookupTableMath;
  */
 public final class Constants {
 
-    public static final class limelightConstants {
+    public static final class LimelightConstants {
         public static final int LIMELIGHT_POLL_HZ = 90;
         public static final int BLUE_PIPELINE = 0;
         public static final int RED_PIPELINE  = 1;
@@ -37,26 +37,26 @@ public final class Constants {
         public static final double POT_HOME_V = 1.319;
     }
 
-    public static class ClimbConstants {
+    public static final class ClimbConstants {
         public static final double CLIMB_POWER = 1.0;
         public static final double STALL_CURRENT_AMPS = 9.2;
         public static final double CLUTCH_ENGAGED_POS = 0.8; // placeholder
         public static final double CLUTCH_DISENGAGED_POS = 0; // placeholder
     }
 
-    public static class IntakeConstants {
+    public static final class IntakeConstants {
         public static final double INTAKE_POWER = 1.0;
         public static final double OUTTAKE_POWER = -1.0;
         public static final double STALL_CURRENT_AMPS = 9.2;
     }
 
-    public static class DriveConstants {
+    public static final class DriveConstants {
         public static final double JOYSTICK_DEADZONE = 0.05;
         public static final double NORMAL_DRIVE_SCALE = 1.0;
         public static final double SLOW_DRIVE_SCALE   = 0.5;
     }
 
-    public static class PlatterConstants {
+    public static final class PlatterConstants {
         public static final double SEARCH_POWER = 0.2;
         public static final double NUDGE_POWER  = -0.15;
         public static final double SHOOT_POWER = 0.4;

@@ -11,10 +11,8 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import com.seattlesolvers.solverslib.gamepad.TriggerReader;
 
 import org.firstinspires.ftc.teamcode.Commands.AutoLockTurretCommand;
-import org.firstinspires.ftc.teamcode.Commands.CleanupCommand;
 import org.firstinspires.ftc.teamcode.Commands.Drive;
 import org.firstinspires.ftc.teamcode.Commands.IntakeCommand;
-import org.firstinspires.ftc.teamcode.Commands.NextPlatterCommand;
 import org.firstinspires.ftc.teamcode.Commands.NotShootCommand;
 import org.firstinspires.ftc.teamcode.Commands.ShootCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
@@ -27,8 +25,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
 import static org.firstinspires.ftc.teamcode.Constants.DriveConstants.NORMAL_DRIVE_SCALE;
 import static org.firstinspires.ftc.teamcode.Constants.DriveConstants.SLOW_DRIVE_SCALE;
-import static org.firstinspires.ftc.teamcode.Constants.limelightConstants.BLUE_PIPELINE;
-import static org.firstinspires.ftc.teamcode.Constants.limelightConstants.RED_PIPELINE;
+import static org.firstinspires.ftc.teamcode.Constants.LimelightConstants.BLUE_PIPELINE;
+import static org.firstinspires.ftc.teamcode.Constants.LimelightConstants.RED_PIPELINE;
 
 @TeleOp(name = "cool op mode")
 public class CoolOpMode extends CommandOpMode {
@@ -44,8 +42,6 @@ public class CoolOpMode extends CommandOpMode {
 
     // Commands
     private NotShootCommand notShootCommand;
-    private AutoLockTurretCommand autoLockTurretCommand;
-    private CleanupCommand cleanupCommand;
 
     private GamepadEx gamepad;
     private TriggerReader leftTriggerReader;
@@ -65,14 +61,7 @@ public class CoolOpMode extends CommandOpMode {
         lookupTable         = new LookupTable();
 
         // Commands
-        autoLockTurretCommand = new AutoLockTurretCommand(
-                turretSubsystem,
-                lookupTable,
-                limelightSubsystem,
-                shooterSubsystem
-        );
         notShootCommand = new NotShootCommand(platterSubsystem, shooterSubsystem);
-        cleanupCommand  = new CleanupCommand(turretSubsystem, platterSubsystem, shooterSubsystem);
 
         // Gamepad
         gamepad = new GamepadEx(gamepad1);
@@ -117,18 +106,13 @@ public class CoolOpMode extends CommandOpMode {
     }
 
     private Command justShoot() {
-        return new ShootCommand(
-                platterSubsystem,
-                shooterSubsystem,
-                lookupTable,
-                limelightSubsystem,
-                turretSubsystem
-        ).alongWith(new AutoLockTurretCommand(
-                turretSubsystem,
-                lookupTable,
-                limelightSubsystem,
-                shooterSubsystem
-        ));
+        return new ShootCommand(platterSubsystem)
+                .alongWith(new AutoLockTurretCommand(
+                        turretSubsystem,
+                        lookupTable,
+                        limelightSubsystem,
+                        shooterSubsystem
+                ));
     }
 
     private void configureButtonBindings() {
@@ -169,14 +153,7 @@ public class CoolOpMode extends CommandOpMode {
 
         // RT = ALL
         shootTrigger
-                .whileActiveContinuous(
-                        new ShootCommand(
-                                platterSubsystem,
-                                shooterSubsystem,
-                                lookupTable,
-                                limelightSubsystem,
-                                turretSubsystem
-                        ));
+                .whileActiveContinuous(new ShootCommand(platterSubsystem));
 
         // LL pipeline selection
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)

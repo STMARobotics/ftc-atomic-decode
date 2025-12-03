@@ -13,12 +13,9 @@ import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
 public class AutoLockTurretCommand extends CommandBase {
 
-    private TurretSubsystem turretSubsystem;
-    private LookupTable lookupTable;
-    private LimelightSubsystem limelightSubsystem;
-    private ShooterSubsystem shooterSubsystem;
-
-    private double distanceToTarget;
+    private final TurretSubsystem turretSubsystem;
+    private final LimelightSubsystem limelightSubsystem;
+    private final ShooterSubsystem shooterSubsystem;
 
     private final PIDController pidController = new PIDController(TURRET_KP, 0.0, TURRET_KD);
 
@@ -27,7 +24,6 @@ public class AutoLockTurretCommand extends CommandBase {
                                  LimelightSubsystem limelightSubsystem,
                                  ShooterSubsystem shooterSubsystem) {
         this.turretSubsystem = turretSubsystem;
-        this.lookupTable = lookupTable;
         this.limelightSubsystem = limelightSubsystem;
         this.shooterSubsystem = shooterSubsystem;
         addRequirements(turretSubsystem, lookupTable, limelightSubsystem, shooterSubsystem);

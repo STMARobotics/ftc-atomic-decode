@@ -16,18 +16,16 @@ import org.firstinspires.ftc.teamcode.Constants.ArtifactColor;
 
 public class PlatterSubsystem extends SubsystemBase {
 
-    public final CRServo platterServo;
-    public final Servo launcherServo;
-    public final CRServo launchableLeft; // artifact grabber rollers
-    public final CRServo launchableRight;
+    private final CRServo platterServo;
+    private final Servo launcherServo;
+    private final CRServo launchableLeft;
+    private final CRServo launchableRight;
 
     private final NormalizedColorSensor colorSensorLeft;
     private final NormalizedColorSensor colorSensorRight;
     private final DistanceSensor distanceSensorLeft;
     private final DistanceSensor distanceSensorRight;
     private final TouchSensor magnetSwitch;
-
-    private ArtifactColor artifactColor;
 
     public PlatterSubsystem(HardwareMap hardwareMap) {
         platterServo = hardwareMap.get(CRServo.class, "platterServo");
@@ -71,7 +69,7 @@ public class PlatterSubsystem extends SubsystemBase {
 
     public ArtifactColor checkColor() {
         NormalizedRGBA cL = colorSensorLeft.getNormalizedColors();
-        NormalizedRGBA cR = colorSensorLeft.getNormalizedColors();
+        NormalizedRGBA cR = colorSensorRight.getNormalizedColors();
         if (cL.green < 0.01 && cL.blue < 0.01 && cR.green < 0.01 && cR.blue < 0.01) {
             return ArtifactColor.NONE;
         }
@@ -147,16 +145,6 @@ public class PlatterSubsystem extends SubsystemBase {
         launchableLeft.setPower(-1.0);
         launchableRight.setPower(-1.0);
     }
-
-//    public void nextMagnet() {
-//        spinPlatter(0.2);
-//        stopPlatter();
-//        if (!isMagnetTripped()) {
-//            spinPlatter(0.12);
-//        } else {
-//            stopPlatter();
-//        }
-//    }
 
     /**
      * Sends telemetry data about the platter subsystem.

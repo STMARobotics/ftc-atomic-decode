@@ -21,13 +21,14 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     /**
-     * Sets the climb motors (back l/r) to a given power
+     * Sets the climb motors (back l/r) to a given power.
+     * Power is clamped to the maximum allowed by CLIMB_POWER.
      * @param power the power to set the climb motors to
      */
     public void setClimbPower(double power) {
-        double protectedPower = Math.abs(CLIMB_POWER); // Redundant protection
-        left2.setPower(protectedPower);
-        right2.setPower(protectedPower);
+        double clampedPower = Math.min(Math.abs(power), CLIMB_POWER);
+        left2.setPower(clampedPower);
+        right2.setPower(clampedPower);
     }
 
     /**
@@ -42,13 +43,13 @@ public class ClimbSubsystem extends SubsystemBase {
      * Engages the clutch to enable climbing
      */
     public void engageClutch() {
-        clutchServo.setPosition(CLUTCH_ENGAGED_POS); // placeholder
+        clutchServo.setPosition(CLUTCH_ENGAGED_POS);
     }
 
     /**
      * Disengages the clutch to disable climbing
      */
     public void disengageClutch() {
-        clutchServo.setPosition(CLUTCH_DISENGAGED_POS); // placeholder
+        clutchServo.setPosition(CLUTCH_DISENGAGED_POS);
     }
 }

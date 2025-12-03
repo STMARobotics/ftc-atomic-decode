@@ -21,7 +21,6 @@ public class TurretSubsystem extends SubsystemBase {
     private final LimelightSubsystem limelightSubsystem;
 
     private double lastAppliedPower = 0.0;
-    private double targetAngle;
 
     private final PIDController pidController = new PIDController(TURRET_KP, 0.0, TURRET_KD);
 
@@ -91,8 +90,6 @@ public class TurretSubsystem extends SubsystemBase {
      */
     public void setHoodAngle(double angle) {
         hoodServo.setPosition(angle);
-        targetAngle = angle;
-        // TODO: map the servo angle to the actual angle of the shot
     }
 
     /**

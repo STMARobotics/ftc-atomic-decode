@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
-import com.pedropathing.geometry.Pose;
 import com.seattlesolvers.solverslib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
@@ -14,9 +13,6 @@ public class Drive extends CommandBase {
     private final DoubleSupplier tySupplier;
     private final DoubleSupplier tzSupplier;
     private final DoubleSupplier reductionSupplier;
-
-    private boolean holding = false;
-    private Pose heldPose = null;
 
     public Drive(DrivetrainSubsystem drivetrain,
                  DoubleSupplier txSupplier,
@@ -45,28 +41,6 @@ public class Drive extends CommandBase {
 
     @Override
     public void execute() {
-//        double tx = txSupplier.getAsDouble();
-//        double ty = tySupplier.getAsDouble();
-//        double tz = tzSupplier.getAsDouble();
-//
-//        boolean inputsZero = Math.abs(tx) <= JOYSTICK_DEADZONE
-//                && Math.abs(ty) <= JOYSTICK_DEADZONE
-//                && Math.abs(tz) <= JOYSTICK_DEADZONE;
-//
-//        if (inputsZero) {
-//            if (!holding) {
-//                heldPose = drivetrain.getCurrentPose();
-//                holding = true;
-//            }
-//            if (heldPose != null) {
-//                drivetrain.holdPosition(heldPose);
-//            }
-//        } else {
-//            holding = false;
-//            drivetrain.drive(tx, ty, tz, reductionSupplier.getAsDouble());
-//        }
-
-        // backup simple drive
         drivetrain.drive(
                 txSupplier.getAsDouble(),
                 tySupplier.getAsDouble(),

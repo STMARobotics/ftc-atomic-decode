@@ -62,8 +62,9 @@ public class FollowPathCommand extends CommandBase {
         follower.setStartingPose(startPose);
         if (maxPower != 1.0) {
             follower.followPath(pathChain, maxPower, holdEnd);
+        } else {
+            follower.followPath(pathChain, holdEnd);
         }
-        follower.followPath(pathChain, holdEnd);
     }
 
     @Override

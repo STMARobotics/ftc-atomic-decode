@@ -21,14 +21,6 @@ public class NextPlatterCommand extends CommandBase {
 
     @Override
     public void execute() {
-//        if (platterSubsystem.isMagnetTripped()) {
-//            platterSubsystem.spinPlatter(-0.06); // it overshoots slightly
-//            finished = true;
-//        } else {
-//            platterSubsystem.spinPlatter(0.12);
-//            finished = false;
-//        }
-
         if (platterSubsystem.isMagnetTripped()) {
             finished = true;
         } else {
