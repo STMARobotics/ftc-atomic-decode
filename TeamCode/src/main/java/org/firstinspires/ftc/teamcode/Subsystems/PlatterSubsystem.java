@@ -94,8 +94,13 @@ public class PlatterSubsystem extends SubsystemBase {
      * @return true if an artifact is present, false otherwise
      */
     public boolean hasArtifact() {
-        return distanceSensorLeft.getDistance(DistanceUnit.CM) < 8.0 ||
-               distanceSensorRight.getDistance(DistanceUnit.CM) < 8.0;
+        double d = distanceSensorLeft.getDistance(DistanceUnit.MM);
+
+        if (Double.isNaN(d) || d <= 0) {
+            return false;
+        }
+
+        return d < 80.0;
     }
 
 
