@@ -4,6 +4,7 @@ import static java.lang.Thread.sleep;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Constants.ArtifactColor;
 
 public class PlatterSubsystem extends SubsystemBase {
@@ -21,8 +23,10 @@ public class PlatterSubsystem extends SubsystemBase {
     public final CRServo launchableLeft; // artifact grabber rollers
     public final CRServo launchableRight;
 
-    private final NormalizedColorSensor colorSensorBottom;
-    private final NormalizedColorSensor colorSensorWall;
+    private final NormalizedColorSensor colorSensorLeft;
+    private final NormalizedColorSensor colorSensorRight;
+    private final DistanceSensor distanceSensorLeft;
+    private final DistanceSensor distanceSensorRight;
     private final TouchSensor magnetSwitch;
 
     private ArtifactColor artifactColor;
@@ -35,8 +39,10 @@ public class PlatterSubsystem extends SubsystemBase {
 
         platterServo.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        colorSensorBottom = hardwareMap.get(NormalizedColorSensor.class, "cSensorBottom");
-        colorSensorWall = hardwareMap.get(NormalizedColorSensor.class, "cSensorWall");
+        colorSensorLeft = hardwareMap.get(NormalizedColorSensor.class, "cSensorLeft");
+        colorSensorRight = hardwareMap.get(NormalizedColorSensor.class, "cSensorRight");
+        distanceSensorLeft = hardwareMap.get(DistanceSensor.class, "dSensorLeft");
+        distanceSensorRight = hardwareMap.get(DistanceSensor.class, "dSensorRight");
 
         magnetSwitch = hardwareMap.get(TouchSensor.class, "magnetSwitch");
     }
@@ -66,13 +72,13 @@ public class PlatterSubsystem extends SubsystemBase {
     }
 
     public ArtifactColor checkColor() {
-        NormalizedRGBA cB = colorSensorBottom.getNormalizedColors();
-        NormalizedRGBA cW = colorSensorBottom.getNormalizedColors();
-        if (cB.green < 0.01 && cB.blue < 0.01 && cW.green < 0.01 && cW.blue < 0.01) {
+        NormalizedRGBA cL = colorSensorLeft.getNormalizedColors();
+        NormalizedRGBA cR = colorSensorLeft.getNormalizedColors();
+        if (cL.green < 0.01 && cL.blue < 0.01 && cR.green < 0.01 && cR.blue < 0.01) {
             return ArtifactColor.NONE;
         }
 
-        return cB.green >= 0.012 && cW.green >= 0.012 ? ArtifactColor.GREEN : ArtifactColor.PURPLE;
+        return cL.green >= 0.012 && cR.green >= 0.012 ? ArtifactColor.GREEN : ArtifactColor.PURPLE;
     }
 
     /**
@@ -88,7 +94,8 @@ public class PlatterSubsystem extends SubsystemBase {
      * @return true if an artifact is present, false otherwise
      */
     public boolean hasArtifact() {
-        return checkColor() != ArtifactColor.NONE;
+        return distanceSensorLeft.getDistance(DistanceUnit.CM) < 8.0 ||
+               distanceSensorRight.getDistance(DistanceUnit.CM) < 8.0;
     }
 
 
@@ -155,16 +162,16 @@ public class PlatterSubsystem extends SubsystemBase {
     public void telemetrize(Telemetry telemetry) {
         ArtifactColor detected = checkColor();
 
-        if (colorSensorWall != null) {
-            NormalizedRGBA cW = colorSensorWall.getNormalizedColors();
+        if (colorSensorRight != null) {
+            NormalizedRGBA cW = colorSensorRight.getNormalizedColors();
             telemetry.addData("Raw R Wall", "%.3f", cW.red);
             telemetry.addData("Raw G Wall", "%.3f", cW.green);
             telemetry.addData("Raw B Wall", "%.3f", cW.blue);
             telemetry.addData("Color found Wall", checkColor());
         }
         telemetry.addData(" ", null);
-        if (colorSensorBottom != null) {
-            NormalizedRGBA cB = colorSensorBottom.getNormalizedColors();
+        if (colorSensorLeft != null) {
+            NormalizedRGBA cB = colorSensorLeft.getNormalizedColors();
             telemetry.addData("Raw R Bottom", "%.3f", cB.red);
             telemetry.addData("Raw G Bottom", "%.3f", cB.green);
             telemetry.addData("Raw B Bottom", "%.3f", cB.blue);

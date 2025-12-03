@@ -21,7 +21,7 @@ public class IntakeCommand extends CommandBase {
     private State state = State.SEEK_MAGNET;
 
     public IntakeCommand(PlatterSubsystem platterSubsystem,
-                              IntakeSubsystem intakeSubsystem) {
+                         IntakeSubsystem intakeSubsystem) {
         this.platterSubsystem = platterSubsystem;
         this.intakeSubsystem = intakeSubsystem;
 
