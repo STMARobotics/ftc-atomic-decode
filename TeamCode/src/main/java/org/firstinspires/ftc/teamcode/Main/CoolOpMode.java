@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.Commands.Drive;
 import org.firstinspires.ftc.teamcode.Commands.IntakeCommand;
 import org.firstinspires.ftc.teamcode.Commands.NotShootCommand;
 import org.firstinspires.ftc.teamcode.Commands.ShootCommand;
+import org.firstinspires.ftc.teamcode.Math.LookupTableMath;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
@@ -35,6 +36,7 @@ public class CoolOpMode extends CommandOpMode {
     private PlatterSubsystem platterSubsystem;
     private IntakeSubsystem intakeSubsystem;
     private LimelightSubsystem limelightSubsystem;
+    private LookupTableMath lookupTable;
 
     private GamepadEx gamepad;
     private TriggerReader leftTriggerReader;
@@ -44,7 +46,6 @@ public class CoolOpMode extends CommandOpMode {
 
     @Override
     public void initialize() {
-        // Subsystems
         drivetrainSubsystem = new DrivetrainSubsystem(hardwareMap);
         shooterSubsystem    = new ShooterSubsystem(hardwareMap);
         turretSubsystem     = new TurretSubsystem(hardwareMap);

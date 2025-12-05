@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import org.firstinspires.ftc.teamcode.Subsystems.LookupTable;
+import org.firstinspires.ftc.teamcode.Math.LookupTableMath;
 
 /**
  * Central constants container.
@@ -70,15 +70,12 @@ public final class Constants {
         NONE
     }
 
-    public static final LookupTable INTERPOLATOR = new LookupTable()
-            .addPointShooter(2.16, 3300).addPointHood(2.16, .61)
-            .addPointShooter(-0.25, 3300).addPointHood(-0.25, .64)
-            .addPointShooter(-2.2, 3300).addPointHood(-2.2, .625)
-            .addPointShooter(-5.0, 3400).addPointHood(-5.0, .64)
-            .addPointShooter(-8.54, 3600).addPointHood(-8.54, .62)
-            .addPointShooter(-12.7, 4200).addPointHood(-12.7, .70)
-            .addPointShooter(-13.0, 4300).addPointHood(-13.0, .73)
-            .createTables();
-
-
+    public static final LookupTableMath INTERPOLATOR = new LookupTableMath()
+            .addEntry(2.16, 3300, .61)
+            .addEntry(-0.25, 3300, .64)
+            .addEntry(-2.2, 3300, .625)
+            .addEntry(-5.0, 3400, .64)
+            .addEntry(-8.54, 3600, .62)
+            .addEntry(-12.7, 4200, .70)
+            .addEntry(-13.0, 4300, .73);
 }
