@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import org.firstinspires.ftc.teamcode.Math.LookupTableMath;
-import org.firstinspires.ftc.teamcode.Subsystems.LookupTable;
 
 import java.util.List;
 

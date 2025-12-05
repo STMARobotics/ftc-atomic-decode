@@ -27,8 +27,6 @@ public class PlatterSubsystem extends SubsystemBase {
     private final DistanceSensor distanceSensorLeft;
     private final TouchSensor magnetSwitch;
 
-    private ArtifactColor artifactColor;
-
     public PlatterSubsystem(HardwareMap hardwareMap) {
         platterServo = hardwareMap.get(CRServo.class, "platterServo");
         launcherServo = hardwareMap.get(Servo.class, "launcherServo");
@@ -38,9 +36,7 @@ public class PlatterSubsystem extends SubsystemBase {
         platterServo.setDirection(DcMotorSimple.Direction.REVERSE);
 
         colorSensorLeft = hardwareMap.get(NormalizedColorSensor.class, "cSensorLeft");
-        NormalizedColorSensor colorSensorRight = hardwareMap.get(NormalizedColorSensor.class, "cSensorRight");
         distanceSensorLeft = hardwareMap.get(DistanceSensor.class, "cSensorLeft");
-        DistanceSensor distanceSensorRight = hardwareMap.get(DistanceSensor.class, "cSensorRight");
 
         magnetSwitch = hardwareMap.get(TouchSensor.class, "magnetSwitch");
     }

@@ -14,9 +14,6 @@ public class Drive extends CommandBase {
     private final DoubleSupplier tzSupplier;
     private final DoubleSupplier reductionSupplier;
 
-//    private boolean holding = false;
-//    private Pose heldPose = null;
-
     public Drive(DrivetrainSubsystem drivetrain,
                  DoubleSupplier txSupplier,
                  DoubleSupplier tySupplier,

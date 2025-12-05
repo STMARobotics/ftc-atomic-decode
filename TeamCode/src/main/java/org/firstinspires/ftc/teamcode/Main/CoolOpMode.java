@@ -6,7 +6,6 @@ import static org.firstinspires.ftc.teamcode.Constants.limelightConstants.BLUE_P
 import static org.firstinspires.ftc.teamcode.Constants.limelightConstants.RED_PIPELINE;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
@@ -43,9 +42,6 @@ public class CoolOpMode extends CommandOpMode {
     private TriggerReader leftTriggerReader;
     private TriggerReader rightTriggerReader;
 
-    private double flywheelRPM = 3000;
-    private double hoodAngle = 0;
-
     private double driveScale = NORMAL_DRIVE_SCALE;
 
     @Override
@@ -59,12 +55,6 @@ public class CoolOpMode extends CommandOpMode {
         limelightSubsystem  = new LimelightSubsystem(hardwareMap);
         lookupTable         = new LookupTable();
 
-        AutoLockTurretCommand autoLockTurretCommand = new AutoLockTurretCommand(
-                turretSubsystem,
-                lookupTable,
-                limelightSubsystem,
-                shooterSubsystem
-        );
         NotShootCommand notShootCommand = new NotShootCommand(platterSubsystem, shooterSubsystem);
 
         // Gamepad
@@ -92,8 +82,6 @@ public class CoolOpMode extends CommandOpMode {
             telemetry.addData("", "");
             telemetry.addData("|-----|Shooter Telemetry|-----|", "");
             shooterSubsystem.telemetrize(telemetry);
-//            telemetry.addData("|-----|Platter Telemetry|-----|", "");
-//            platterSubsystem.telemetrize(telemetry);
             telemetry.update();
         });
         schedule(telemetryCommand);
@@ -114,17 +102,6 @@ public class CoolOpMode extends CommandOpMode {
         platterSubsystem.setDefaultCommand(notShootCommand);
 
         configureButtonBindings();
-    }
-
-    private Command justShoot() {
-        return new ShootCommand(
-                platterSubsystem
-        ).alongWith(new AutoLockTurretCommand(
-                turretSubsystem,
-                lookupTable,
-                limelightSubsystem,
-                shooterSubsystem
-        ));
     }
 
     private void configureButtonBindings() {

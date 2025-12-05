@@ -4,35 +4,22 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Commands.AutoLockTurretCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.LookupTable;
 import org.firstinspires.ftc.teamcode.Subsystems.PlatterSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.ShooterSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
 @TeleOp
 public class asdf extends LinearOpMode {
 
-    private Servo hoodServo;
-    private ShooterSubsystem shooterSubsystem;
-    private LimelightSubsystem limelightSubsystem;
-    private PlatterSubsystem platterSubsystem;
-    private AutoLockTurretCommand autoLockTurretCommand;
-    private TurretSubsystem turretSubsystem;
-    private LookupTable lookupTable;
     private double angle = 0.1;
     private double rpm = 3000;
 
     @Override
     public void runOpMode() {
-        hoodServo = hardwareMap.get(Servo.class, "hoodServo");
-        shooterSubsystem = new ShooterSubsystem(hardwareMap);
-        limelightSubsystem = new LimelightSubsystem(hardwareMap);
-        platterSubsystem = new PlatterSubsystem(hardwareMap);
-        turretSubsystem = new TurretSubsystem(hardwareMap);
-        lookupTable = new LookupTable();
-        autoLockTurretCommand = new AutoLockTurretCommand(turretSubsystem, lookupTable, limelightSubsystem, shooterSubsystem);
+        Servo hoodServo = hardwareMap.get(Servo.class, "hoodServo");
+        ShooterSubsystem shooterSubsystem = new ShooterSubsystem(hardwareMap);
+        LimelightSubsystem limelightSubsystem = new LimelightSubsystem(hardwareMap);
+        PlatterSubsystem platterSubsystem = new PlatterSubsystem(hardwareMap);
 
         limelightSubsystem.pipelineSwitcher(0);
 
