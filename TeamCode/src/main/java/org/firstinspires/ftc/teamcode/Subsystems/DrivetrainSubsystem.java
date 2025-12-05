@@ -45,8 +45,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
         double clampedReduction = MathUtils.clamp(reductionFactor, 0.0, 1.0);
 
         // Square and reduce the axes
-        double modifiedY = translationY * clampedReduction;
-        double modifiedX = translationX * clampedReduction;
+        double modifiedY = square(translationY) * clampedReduction;
+        double modifiedX = square(translationX) * clampedReduction;
         double modifiedRotation = square(rotation * clampedReduction);
 
         follower.setTeleOpDrive(modifiedX, modifiedY, modifiedRotation, false);
