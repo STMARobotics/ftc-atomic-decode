@@ -18,11 +18,9 @@ import org.firstinspires.ftc.teamcode.Commands.Drive;
 import org.firstinspires.ftc.teamcode.Commands.IntakeCommand;
 import org.firstinspires.ftc.teamcode.Commands.NotShootCommand;
 import org.firstinspires.ftc.teamcode.Commands.ShootCommand;
-import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.LookupTable;
 import org.firstinspires.ftc.teamcode.Subsystems.PlatterSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
@@ -37,7 +35,6 @@ public class CoolOpMode extends CommandOpMode {
     private PlatterSubsystem platterSubsystem;
     private IntakeSubsystem intakeSubsystem;
     private LimelightSubsystem limelightSubsystem;
-    private LookupTable lookupTable;
 
     private GamepadEx gamepad;
     private TriggerReader leftTriggerReader;
@@ -54,7 +51,6 @@ public class CoolOpMode extends CommandOpMode {
         platterSubsystem    = new PlatterSubsystem(hardwareMap);
         intakeSubsystem     = new IntakeSubsystem(hardwareMap);
         limelightSubsystem  = new LimelightSubsystem(hardwareMap);
-        lookupTable         = Constants.INTERPOLATOR;
 
         NotShootCommand notShootCommand = new NotShootCommand(platterSubsystem, shooterSubsystem);
 
@@ -94,8 +90,7 @@ public class CoolOpMode extends CommandOpMode {
                 turretSubsystem,
                 platterSubsystem,
                 intakeSubsystem,
-                limelightSubsystem,
-                lookupTable
+                limelightSubsystem
         );
 
         // Default commands
@@ -130,7 +125,6 @@ public class CoolOpMode extends CommandOpMode {
                 .whileActiveContinuous(
                         new AutoLockTurretCommand(
                                 turretSubsystem,
-                                lookupTable,
                                 limelightSubsystem,
                                 shooterSubsystem
                         ));

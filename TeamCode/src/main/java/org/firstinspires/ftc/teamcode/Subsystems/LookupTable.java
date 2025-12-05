@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.util.InterpLUT;
 
 /**
  * Subsystem wrapper that exposes lookup-table based shooter settings.
  */
-public class LookupTable extends SubsystemBase {
+public class LookupTable {
 
     InterpLUT lutShooter = new InterpLUT();
     InterpLUT lutHood = new InterpLUT();
