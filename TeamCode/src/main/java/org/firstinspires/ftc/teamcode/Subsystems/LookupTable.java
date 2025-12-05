@@ -1,17 +1,34 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.seattlesolvers.solverslib.command.SubsystemBase;
-import org.firstinspires.ftc.teamcode.Constants;
-
-import org.firstinspires.ftc.teamcode.Math.LookupTableMath.ShootingSettings;
+import com.seattlesolvers.solverslib.util.InterpLUT;
 
 /**
  * Subsystem wrapper that exposes lookup-table based shooter settings.
  */
 public class LookupTable extends SubsystemBase {
 
+    InterpLUT lutShooter = new InterpLUT();
+    InterpLUT lutHood = new InterpLUT();
+
+
     public LookupTable() {
-        ShootingSettings settings = new ShootingSettings();
+    }
+
+    public LookupTable addPointShooter(double distanceMeters, double shooterRPM) {
+        lutShooter.add(distanceMeters, shooterRPM);
+        return this;
+    }
+
+    public LookupTable addPointHood(double distanceMeters, double hoodAngleDegrees) {
+        lutHood.add(distanceMeters, hoodAngleDegrees);
+        return this;
+    }
+
+    public LookupTable createTables() {
+        lutShooter.createLUT();
+        lutHood.createLUT();
+        return this;
     }
 
     /**
@@ -21,9 +38,7 @@ public class LookupTable extends SubsystemBase {
      * @return shooter wheel speed in RPM
      */
     public double getShooterRPM(double distanceMeters) {
-        ShootingSettings settings = Constants.SHOOTER_INTERPOLATOR.calculate(distanceMeters);
-        // settings.getVelocity() returns rotations per second; convert to RPM
-        return settings.getVelocity() * 60.0;
+        return lutShooter.get(distanceMeters);
     }
 
     /**
@@ -33,7 +48,6 @@ public class LookupTable extends SubsystemBase {
      * @return hood pitch in degrees
      */
     public double getHoodAngle(double distanceMeters) {
-        ShootingSettings settings = Constants.SHOOTER_INTERPOLATOR.calculate(distanceMeters);
-        return settings.getPitch();
+        return lutHood.get(distanceMeters);
     }
 }
