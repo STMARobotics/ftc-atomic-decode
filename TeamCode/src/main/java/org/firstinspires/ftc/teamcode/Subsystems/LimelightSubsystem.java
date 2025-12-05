@@ -49,7 +49,7 @@ public class LimelightSubsystem extends SubsystemBase {
         if (result == null || !result.isValid()) {
             return Double.NaN;
         }
-        return result.getBotposeAvgDist();
+        return result.getTy();
     }
 
     /**

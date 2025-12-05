@@ -97,7 +97,6 @@ public class TurretSubsystem extends SubsystemBase {
      */
     public void setHoodAngle(double angle) {
         hoodServo.setPosition(angle);
-        // TODO: map the servo angle to the actual angle of the shot
     }
 
     /**
@@ -110,7 +109,8 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     public void telemetrize(Telemetry telemetry) {
-        telemetry.addData("Turret Position (deg)", getTurretPosition());
+        telemetry.addData("Turret Position (deg) [BROKEN]", getTurretPosition());
         telemetry.addData("Turret Applied Power", lastAppliedPower);
+        telemetry.addData("Hood Servo Position", hoodServo.getPosition());
     }
 }

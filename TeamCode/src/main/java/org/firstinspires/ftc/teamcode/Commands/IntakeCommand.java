@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
+import static org.firstinspires.ftc.teamcode.Constants.PlatterConstants.INDEX_POWER;
+
 import com.seattlesolvers.solverslib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.PlatterSubsystem;
-
-import static org.firstinspires.ftc.teamcode.Constants.PlatterConstants.INDEX_POWER;
 
 public class IntakeCommand extends CommandBase {
 
@@ -31,7 +31,6 @@ public class IntakeCommand extends CommandBase {
     @Override
     public void initialize() {
         state = State.SEEK_MAGNET;
-        intakeSubsystem.intake();
     }
 
     @Override
@@ -40,9 +39,9 @@ public class IntakeCommand extends CommandBase {
 
             case SEEK_MAGNET:
                 if (!platterSubsystem.isMagnetTripped()) {
-                    platterSubsystem.spinPlatter(INDEX_POWER);
+                    platterSubsystem.nextMagnet();
+                    intakeSubsystem.stop();
                 } else {
-                    platterSubsystem.stopPlatter();
                     state = State.WAIT_FOR_BALL;
                 }
                 break;
@@ -52,12 +51,14 @@ public class IntakeCommand extends CommandBase {
                     state = State.ADVANCE_TO_NEXT;
                 } else {
                     platterSubsystem.stopPlatter();
+                    intakeSubsystem.intake();
                 }
                 break;
 
             case ADVANCE_TO_NEXT:
                 if (platterSubsystem.isMagnetTripped()) {
                     platterSubsystem.spinPlatter(INDEX_POWER);
+                    intakeSubsystem.stop();
                 } else {
                     state = State.SEEK_MAGNET;
                 }

@@ -43,6 +43,9 @@ public class CoolOpMode extends CommandOpMode {
     private TriggerReader leftTriggerReader;
     private TriggerReader rightTriggerReader;
 
+    private double flywheelRPM = 3000;
+    private double hoodAngle = 0;
+
     private double driveScale = NORMAL_DRIVE_SCALE;
 
     @Override
@@ -56,8 +59,12 @@ public class CoolOpMode extends CommandOpMode {
         limelightSubsystem  = new LimelightSubsystem(hardwareMap);
         lookupTable         = new LookupTable();
 
-        // Commands
-        // Commands
+        AutoLockTurretCommand autoLockTurretCommand = new AutoLockTurretCommand(
+                turretSubsystem,
+                lookupTable,
+                limelightSubsystem,
+                shooterSubsystem
+        );
         NotShootCommand notShootCommand = new NotShootCommand(platterSubsystem, shooterSubsystem);
 
         // Gamepad
@@ -76,10 +83,17 @@ public class CoolOpMode extends CommandOpMode {
 
         // Telemetry
         RunCommand telemetryCommand = new RunCommand(() -> {
+            telemetry.addData("|-----|Drivetrain Telemetry|-----|", "");
             drivetrainSubsystem.telemetrize(telemetry);
+            telemetry.addData("", "");
+            telemetry.addData("|-----|Turret Telemetry|-----|", "");
             turretSubsystem.telemetrize(telemetry);
-            telemetry.addData("|-----|Platter Telemetry|-----|", "");
-            platterSubsystem.telemetrize(telemetry);
+            telemetry.addData("distance to target", limelightSubsystem.getDistance());
+            telemetry.addData("", "");
+            telemetry.addData("|-----|Shooter Telemetry|-----|", "");
+            shooterSubsystem.telemetrize(telemetry);
+//            telemetry.addData("|-----|Platter Telemetry|-----|", "");
+//            platterSubsystem.telemetrize(telemetry);
             telemetry.update();
         });
         schedule(telemetryCommand);

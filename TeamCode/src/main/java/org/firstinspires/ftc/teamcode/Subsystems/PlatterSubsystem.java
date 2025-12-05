@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import static org.firstinspires.ftc.teamcode.Constants.PlatterConstants.INDEX_POWER;
+
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -37,8 +39,8 @@ public class PlatterSubsystem extends SubsystemBase {
 
         colorSensorLeft = hardwareMap.get(NormalizedColorSensor.class, "cSensorLeft");
         NormalizedColorSensor colorSensorRight = hardwareMap.get(NormalizedColorSensor.class, "cSensorRight");
-        distanceSensorLeft = hardwareMap.get(DistanceSensor.class, "dSensorLeft");
-        DistanceSensor distanceSensorRight = hardwareMap.get(DistanceSensor.class, "dSensorRight");
+        distanceSensorLeft = hardwareMap.get(DistanceSensor.class, "cSensorLeft");
+        DistanceSensor distanceSensorRight = hardwareMap.get(DistanceSensor.class, "cSensorRight");
 
         magnetSwitch = hardwareMap.get(TouchSensor.class, "magnetSwitch");
     }
@@ -60,11 +62,19 @@ public class PlatterSubsystem extends SubsystemBase {
         platterServo.setPower(0.12);
     }
 
+    public void nextMagnet() {
+        if (!isMagnetTripped()) {
+            spinPlatter(INDEX_POWER);
+        } else {
+            stopPlatter();
+        }
+    }
+
     /**
      * Stops the platter from spinning
      */
     public void stopPlatter() {
-        platterServo.setPower(0);
+        platterServo.setPower(-0.05);
     }
 
     public ArtifactColor checkColor() {
@@ -96,9 +106,8 @@ public class PlatterSubsystem extends SubsystemBase {
             return false;
         }
 
-        return d < 80.0;
+        return d < 20.0;
     }
-
 
     /**
      * Checks if the magnet switch is tripped

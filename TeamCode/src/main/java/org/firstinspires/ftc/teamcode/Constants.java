@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import org.firstinspires.ftc.teamcode.Math.LookupTableMath;
+import org.firstinspires.ftc.teamcode.Subsystems.LookupTable;
 
 import java.util.List;
 
@@ -57,7 +58,7 @@ public final class Constants {
         public static final double SEARCH_POWER = 0.2;
         public static final double NUDGE_POWER  = -0.15;
         public static final double SHOOT_POWER = 0.4;
-        public static final double INDEX_POWER = 0.4;
+        public static final double INDEX_POWER = 0.2;
     }
 
     public enum AllianceColor {
@@ -75,6 +76,12 @@ public final class Constants {
     // Shooter interpolator values: distances are meters, velocities are rotations/sec, pitch is degrees
     public static final LookupTableMath SHOOTER_INTERPOLATOR = new LookupTableMath(
             List.of(
-                    new LookupTableMath.ShootingSettings().distance(1.0400968).velocity(50).pitch(34.0)
+                    new LookupTableMath.ShootingSettings().distance(2.16).velocity(3300).pitch(.61),
+                    new LookupTableMath.ShootingSettings().distance(-0.25).velocity(3300).pitch(.64),
+                    new LookupTableMath.ShootingSettings().distance(-2.2).velocity(3300).pitch(.625),
+                    new LookupTableMath.ShootingSettings().distance(-5).velocity(3400).pitch(.64),
+                    new LookupTableMath.ShootingSettings().distance(-8.54).velocity(3600).pitch(.62),
+                    new LookupTableMath.ShootingSettings().distance(-12.7).velocity(4200).pitch(.7),
+                    new LookupTableMath.ShootingSettings().distance(-13.0).velocity(4300).pitch(.73)
             ));
 }
