@@ -72,7 +72,7 @@ public final class Constants {
         NONE
     }
 
-    // Shooter interpolator values: distances are meters, velocities are rotations/sec, pitch is degrees
+    // Shooter interpolator values: distances are meters, velocities are rotations/min, pitch is degrees
     public static final LookupTableMath SHOOTER_INTERPOLATOR = new LookupTableMath(
             List.of(
                     new LookupTableMath.ShootingSettings().distance(2.16).velocity(3300).pitch(.61),
