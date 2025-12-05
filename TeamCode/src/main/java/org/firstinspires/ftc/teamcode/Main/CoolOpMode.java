@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.Commands.Drive;
 import org.firstinspires.ftc.teamcode.Commands.IntakeCommand;
 import org.firstinspires.ftc.teamcode.Commands.NotShootCommand;
 import org.firstinspires.ftc.teamcode.Commands.ShootCommand;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
@@ -53,7 +54,7 @@ public class CoolOpMode extends CommandOpMode {
         platterSubsystem    = new PlatterSubsystem(hardwareMap);
         intakeSubsystem     = new IntakeSubsystem(hardwareMap);
         limelightSubsystem  = new LimelightSubsystem(hardwareMap);
-        lookupTable         = new LookupTable();
+        lookupTable         = Constants.INTERPOLATOR;
 
         NotShootCommand notShootCommand = new NotShootCommand(platterSubsystem, shooterSubsystem);
 

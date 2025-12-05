@@ -70,18 +70,7 @@ public final class Constants {
         NONE
     }
 
-    // Shooter interpolator values: distances are meters, velocities are rotations/min, pitch is degrees
-//    public static final LookupTableMath SHOOTER_INTERPOLATOR = new LookupTableMath(
-//            List.of(
-//                    new LookupTableMath.ShootingSettings().distance(2.16).velocity(3300).pitch(.61),
-//                    new LookupTableMath.ShootingSettings().distance(-0.25).velocity(3300).pitch(.64),
-//                    new LookupTableMath.ShootingSettings().distance(-2.2).velocity(3300).pitch(.625),
-//                    new LookupTableMath.ShootingSettings().distance(-5).velocity(3400).pitch(.64),
-//                    new LookupTableMath.ShootingSettings().distance(-8.54).velocity(3600).pitch(.62),
-//                    new LookupTableMath.ShootingSettings().distance(-12.7).velocity(4200).pitch(.7),
-//                    new LookupTableMath.ShootingSettings().distance(-13.0).velocity(4300).pitch(.73)
-//            ));
-    public static final LookupTable SHOOTER_INTERPOLATOR = new LookupTable()
+    public static final LookupTable INTERPOLATOR = new LookupTable()
             .addPointShooter(2.16, 3300).addPointHood(2.16, .61)
             .addPointShooter(-0.25, 3300).addPointHood(-0.25, .64)
             .addPointShooter(-2.2, 3300).addPointHood(-2.2, .625)
