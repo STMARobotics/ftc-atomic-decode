@@ -16,8 +16,7 @@ public class AutoLockTurretCommand extends CommandBase {
     private final TurretSubsystem turretSubsystem;
     private final LimelightSubsystem limelightSubsystem;
     private final ShooterSubsystem shooterSubsystem;
-
-    private double distanceToTarget;
+    private final LookupTable lookupTable;
 
     private final PIDController pidController = new PIDController(TURRET_KP, 0.0, TURRET_KD);
 
@@ -28,6 +27,7 @@ public class AutoLockTurretCommand extends CommandBase {
         this.turretSubsystem = turretSubsystem;
         this.limelightSubsystem = limelightSubsystem;
         this.shooterSubsystem = shooterSubsystem;
+        this.lookupTable = lookupTable;
         addRequirements(turretSubsystem, lookupTable, limelightSubsystem, shooterSubsystem);
     }
 
@@ -39,7 +39,11 @@ public class AutoLockTurretCommand extends CommandBase {
     @Override
     public void execute() {
         autoLockTurret();
-        shooterSubsystem.setRPM(3000); // Only hood movement saves power
+        double distanceToTarget = limelightSubsystem.getDistance();
+        double lookupRPM = lookupTable.getShooterRPM(distanceToTarget);
+        double hoodAngle = lookupTable.getHoodAngle(distanceToTarget);
+        shooterSubsystem.setRPM(lookupRPM);
+        turretSubsystem.setHoodAngle(hoodAngle);
     }
 
     @Override
