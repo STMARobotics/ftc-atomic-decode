@@ -23,8 +23,8 @@ public class PlatterSubsystem extends SubsystemBase {
     public final CRServo launchableLeft; // artifact grabber rollers
     public final CRServo launchableRight;
 
-    private final NormalizedColorSensor colorSensorLeft;
-    private final DistanceSensor distanceSensorLeft;
+    private final NormalizedColorSensor colorSensor;
+    private final DistanceSensor distanceSensor;
     private final TouchSensor magnetSwitch;
 
     public PlatterSubsystem(HardwareMap hardwareMap) {
@@ -35,8 +35,8 @@ public class PlatterSubsystem extends SubsystemBase {
 
         platterServo.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        colorSensorLeft = hardwareMap.get(NormalizedColorSensor.class, "cSensorLeft");
-        distanceSensorLeft = hardwareMap.get(DistanceSensor.class, "cSensorLeft");
+        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "cSensor");
+        distanceSensor = hardwareMap.get(DistanceSensor.class, "cSensor");
 
         magnetSwitch = hardwareMap.get(TouchSensor.class, "magnetSwitch");
     }
@@ -74,8 +74,8 @@ public class PlatterSubsystem extends SubsystemBase {
     }
 
     public ArtifactColor checkColor() {
-        NormalizedRGBA cL = colorSensorLeft.getNormalizedColors();
-        NormalizedRGBA cR = colorSensorLeft.getNormalizedColors();
+        NormalizedRGBA cL = colorSensor.getNormalizedColors();
+        NormalizedRGBA cR = colorSensor.getNormalizedColors();
         if (cL.green < 0.01 && cL.blue < 0.01 && cR.green < 0.01 && cR.blue < 0.01) {
             return ArtifactColor.NONE;
         }
@@ -96,13 +96,13 @@ public class PlatterSubsystem extends SubsystemBase {
      * @return true if an artifact is present, false otherwise
      */
     public boolean hasArtifact() {
-        double d = distanceSensorLeft.getDistance(DistanceUnit.MM);
+        double d = distanceSensor.getDistance(DistanceUnit.MM);
 
         if (Double.isNaN(d) || d <= 0) {
             return false;
         }
 
-        return d < 20.0;
+        return d < 60.0;
     }
 
     /**
@@ -158,7 +158,7 @@ public class PlatterSubsystem extends SubsystemBase {
     public void telemetrize(Telemetry telemetry) {
         ArtifactColor detected = checkColor();
 
-        telemetry.addData("Distance (mm)", "%.2f", distanceSensorLeft.getDistance(DistanceUnit.MM));
+        telemetry.addData("Distance (mm)", "%.2f", distanceSensor.getDistance(DistanceUnit.MM));
         telemetry.addData("Magnet Tripped", isMagnetTripped() ? "Yes" : "No");
 
         if (hasArtifact()) {

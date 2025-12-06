@@ -99,6 +99,10 @@ public class TurretSubsystem extends SubsystemBase {
         hoodServo.setPosition(angle);
     }
 
+    public void hoodToHome() {
+        hoodServo.setPosition(0.25); // placeholder
+    }
+
     /**
      * Returns the turret position in degrees based on the potentiometer.
      */

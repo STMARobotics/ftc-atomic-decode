@@ -42,6 +42,8 @@ public class IntakeCommand extends CommandBase {
                     platterSubsystem.nextMagnet();
                     intakeSubsystem.stop();
                 } else {
+                    platterSubsystem.spinPlatter(-0.09);
+                    platterSubsystem.stopPlatter();
                     state = State.WAIT_FOR_BALL;
                 }
                 break;

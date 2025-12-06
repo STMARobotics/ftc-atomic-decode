@@ -20,6 +20,8 @@ public class AutoLockTurretCommand extends CommandBase {
 
     private final PIDController pidController = new PIDController(TURRET_KP, 0.0, TURRET_KD);
 
+    private double lastRPM = 0.0;
+
     public AutoLockTurretCommand(TurretSubsystem turretSubsystem,
                                  LimelightSubsystem limelightSubsystem,
                                  ShooterSubsystem shooterSubsystem) {
@@ -40,12 +42,18 @@ public class AutoLockTurretCommand extends CommandBase {
         autoLockTurret();
 
         double distanceToTarget = limelightSubsystem.getDistance();
+        if (Double.isNaN(distanceToTarget)) {
+            shooterSubsystem.setRPM(lastRPM);
+            return;
+        }
 
         LookupTableMath.ShootingSettings s = INTERPOLATOR.calculate(distanceToTarget);
 
         double lookupRPM   = s.getVelocity();
         double hoodAngle   = s.getPitch();
 
+        // update last known good RPM and apply settings
+        lastRPM = lookupRPM;
         shooterSubsystem.setRPM(lookupRPM);
         turretSubsystem.setHoodAngle(hoodAngle);
     }

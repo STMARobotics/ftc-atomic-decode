@@ -7,6 +7,7 @@ import static org.firstinspires.ftc.teamcode.Constants.limelightConstants.RED_PI
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
+import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
@@ -80,6 +81,8 @@ public class CoolOpMode extends CommandOpMode {
             telemetry.addData("", "");
             telemetry.addData("|-----|Shooter Telemetry|-----|", "");
             shooterSubsystem.telemetrize(telemetry);
+            telemetry.addData("|-----|Platter Telemetry|-----|", "");
+            platterSubsystem.telemetrize(telemetry);
             telemetry.update();
         });
         schedule(telemetryCommand);
@@ -129,6 +132,11 @@ public class CoolOpMode extends CommandOpMode {
                                 limelightSubsystem,
                                 shooterSubsystem
                         ));
+
+        autoLockTrigger
+                .whenInactive(
+                        new InstantCommand(turretSubsystem::hoodToHome, turretSubsystem)
+                );
 
         // -------- Shoot Cycle --------
         Trigger shootTrigger = new Trigger(() -> {
