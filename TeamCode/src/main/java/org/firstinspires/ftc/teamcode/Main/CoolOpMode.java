@@ -147,9 +147,7 @@ public class CoolOpMode extends CommandOpMode {
         // RT = ALL
         shootTrigger
                 .whileActiveContinuous(
-                        new ShootCommand(
-                                platterSubsystem
-                        ));
+                        new ShootCommand(platterSubsystem));
 
         // LL pipeline selection
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
