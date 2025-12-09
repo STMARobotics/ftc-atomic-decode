@@ -1,14 +1,20 @@
 package org.firstinspires.ftc.teamcode.Autos;
 
+import com.pedropathing.Drivetrain;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.ParallelCommandGroup;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
-import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
+
+import org.firstinspires.ftc.teamcode.Commands.Drive;
+import org.firstinspires.ftc.teamcode.Commands.FollowPathCommand;
 import com.pedropathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.Autos.Paths.BackZoneSixPaths;
 import org.firstinspires.ftc.teamcode.Commands.AutoIntakeCommand;
 import org.firstinspires.ftc.teamcode.Commands.AutoShootCommand;
+import org.firstinspires.ftc.teamcode.PedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.PlatterSubsystem;
@@ -69,28 +75,21 @@ public class BackZoneSix extends CommandOpMode {
     public void initialize() {
         // TODO: Replace with your follower initialization helper if you have one
         // Pedro follower used for driving the paths
-        Follower follower = new Follower(hardwareMap);
 
         PlatterSubsystem platterSubsystem = new PlatterSubsystem(hardwareMap);
         ShooterSubsystem shooterSubsystem = new ShooterSubsystem(hardwareMap);
         TurretSubsystem turretSubsystem = new TurretSubsystem(hardwareMap);
         LimelightSubsystem limelightSubsystem = new LimelightSubsystem(hardwareMap);
         IntakeSubsystem intakeSubsystem = new IntakeSubsystem(hardwareMap);
-        register(platterSubsystem, shooterSubsystem, turretSubsystem, limelightSubsystem, intakeSubsystem);
+        DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(hardwareMap);
+        register(platterSubsystem, shooterSubsystem, turretSubsystem, limelightSubsystem, intakeSubsystem, drivetrainSubsystem);
+
+        Follower follower = drivetrainSubsystem.getFollower();
 
         // Schedule the generated path sequence
         schedule(
                 new SequentialCommandGroup(
-                        new AutoShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, limelightSubsystem),
-                        new ParallelCommandGroup(
-                                new AutoIntakeCommand(platterSubsystem, intakeSubsystem),
-                                new SequentialCommandGroup(
-                                        new FollowPathCommand(follower, BackZoneSixPaths.Path1(follower)),
-                                        new FollowPathCommand(follower, BackZoneSixPaths.Path2(follower))
-                                )
-                        ),
-                        new FollowPathCommand(follower, BackZoneSixPaths.Path3(follower))
-                )
-        );
+                        new FollowPathCommand(new Pose(53.51196172248804, 8.1, Math.toRadians(180)), follower, BackZoneSixPaths.Path1(follower), drivetrainSubsystem)),
+                        new FollowPathCommand(new Pose(22.507177033492823, 8.1, Math.toRadians(180.0)), follower, BackZoneSixPaths.Path2(follower), drivetrainSubsystem));
     }
 }

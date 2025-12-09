@@ -10,16 +10,16 @@ public class BackZoneSixPaths {
 
     public static PathChain Path1(Follower follower) {
         return follower.pathBuilder()
-                .addPath(new com.pedropathing.paths.Path(new BezierLine(new Pose(51.153284671532845, 8.3, Math.toRadians(90.0)), new Pose(9.927007299270072, 8.3, Math.toRadians(180.0)))))
+                .addPath(new BezierLine(new Pose(53.51196172248804, 8.1, Math.toRadians(180.0)), new Pose(22.507177033492823, 8.1, Math.toRadians(180.0))))
                 .setLinearHeadingInterpolation(
-                        Math.toRadians(90.0),
+                        Math.toRadians(180.0),
                         Math.toRadians(180.0))
                 .build();
     }
 
     public static PathChain Path2(Follower follower) {
         return follower.pathBuilder()
-                .addPath(new com.pedropathing.paths.Path(new BezierLine(new Pose(9.927007299270072, 8.3, Math.toRadians(180.0)), new Pose(53.95620437956204, 13.547445255474447, Math.toRadians(180.0)))))
+                .addPath(new BezierLine(new Pose(22.507177033492823, 8.1, Math.toRadians(180.0)), new Pose(22.507177033492823, 8.1, Math.toRadians(0.0))))
                 .setLinearHeadingInterpolation(
                         Math.toRadians(180.0),
                         Math.toRadians(180.0))
@@ -28,7 +28,7 @@ public class BackZoneSixPaths {
 
     public static PathChain Path3(Follower follower) {
         return follower.pathBuilder()
-                .addPath(new com.pedropathing.paths.Path(new BezierLine(new Pose(53.95620437956204, 13.547445255474447, Math.toRadians(180.0)), new Pose(53.95620437956204, 13.547445255474447, Math.toRadians(0.0)))))
+                .addPath(new BezierLine(new Pose(53.95620437956204, 13.547445255474447, Math.toRadians(180.0)), new Pose(53.95620437956204, 13.547445255474447, Math.toRadians(0.0))))
                 .setLinearHeadingInterpolation(
                         Math.toRadians(180.0),
                         Math.toRadians(0.0))

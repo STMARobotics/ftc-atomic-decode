@@ -27,6 +27,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     public DrivetrainSubsystem(HardwareMap hardwareMap) {
         follower = Constants.createFollower(hardwareMap);
+        follower.update();
     }
 
     /**
@@ -71,7 +72,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
      * Stops the drivetrain.
      */
     public void stop() {
-        follower.setTeleOpDrive(0.0, 0.0, 0.0, true);
+        startTeleop();
+        follower.setTeleOpDrive(0.0, 0.0, 0.0, false);
     }
 
     /**

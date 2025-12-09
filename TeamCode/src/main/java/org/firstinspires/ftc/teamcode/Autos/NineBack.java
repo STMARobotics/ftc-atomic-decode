@@ -5,15 +5,14 @@ import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 import com.pedropathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.Autos.Paths.NineBackPaths;
+import org.firstinspires.ftc.teamcode.PedroPathing.Constants;
 
 public class NineBack extends CommandOpMode {
-
-    private Follower follower;
 
     @Override
     public void initialize() {
         // TODO: Replace with your follower initialization
-        follower = new Follower(hardwareMap);
+        Follower follower = Constants.createFollower(hardwareMap);
 
         schedule(
                 new SequentialCommandGroup(
