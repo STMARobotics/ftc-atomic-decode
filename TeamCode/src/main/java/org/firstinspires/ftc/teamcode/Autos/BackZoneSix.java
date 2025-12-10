@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode.Autos;
 
 import com.pedropathing.Drivetrain;
+import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.ParallelCommandGroup;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 
+import org.firstinspires.ftc.teamcode.Commands.AutoLockTurretCommand;
 import org.firstinspires.ftc.teamcode.Commands.Drive;
 import org.firstinspires.ftc.teamcode.Commands.FollowPathCommand;
 import com.pedropathing.follower.Follower;
@@ -87,9 +90,45 @@ public class BackZoneSix extends CommandOpMode {
         Follower follower = drivetrainSubsystem.getFollower();
 
         // Schedule the generated path sequence
+//        schedule(
+//                new ParallelCommandGroup(
+//                        new AutoLockTurretCommand(turretSubsystem, limelightSubsystem, shooterSubsystem),
+//                        new AutoShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, limelightSubsystem))
+//                        .andThen(
+//                                new ParallelCommandGroup(
+//                                        new AutoIntakeCommand(platterSubsystem, intakeSubsystem),
+//                                        new SequentialCommandGroup(
+//                                                new FollowPathCommand(StartPath1, follower, Path1(follower), drivetrainSubsystem),
+//                                                new FollowPathCommand(StartPath2, follower, Path2(follower), drivetrainSubsystem)))
+//                                        .andThen(
+//                                                new ParallelCommandGroup(
+//                                                        new AutoLockTurretCommand(turretSubsystem, limelightSubsystem, shooterSubsystem),
+//                                                        new AutoShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, limelightSubsystem)
+//                                                ))));
+
         schedule(
                 new SequentialCommandGroup(
-                        new FollowPathCommand(new Pose(53.51196172248804, 8.1, Math.toRadians(180)), follower, BackZoneSixPaths.Path1(follower), drivetrainSubsystem)),
-                        new FollowPathCommand(new Pose(22.507177033492823, 8.1, Math.toRadians(180.0)), follower, BackZoneSixPaths.Path2(follower), drivetrainSubsystem));
+                        new FollowPathCommand(StartPath1, follower, Path1(follower), drivetrainSubsystem),
+                        new FollowPathCommand(StartPath2, follower, Path2(follower), drivetrainSubsystem
+                )));
+    }
+    public Pose StartPath1 = new Pose(53.51196172248804, 8.1, Math.toRadians(180.0));
+    public static PathChain Path1(Follower follower) {
+        return follower.pathBuilder()
+                .addPath(new BezierLine(new Pose(53.51196172248804, 8.1, Math.toRadians(180.0)), new Pose(22.507177033492823, 8.1, Math.toRadians(180.0))))
+                .setLinearHeadingInterpolation(
+                        Math.toRadians(180.0),
+                        Math.toRadians(180.0))
+                .build();
+    }
+
+    public Pose StartPath2 = new Pose(22.507177033492823, 8.1, Math.toRadians(180.0));
+    public static PathChain Path2(Follower follower) {
+        return follower.pathBuilder()
+                .addPath(new BezierLine(new Pose(22.507177033492823, 8.1, Math.toRadians(180.0)), new Pose(57.5, 20, Math.toRadians(0.0))))
+                .setLinearHeadingInterpolation(
+                        Math.toRadians(180.0),
+                        Math.toRadians(0.0))
+                .build();
     }
 }
