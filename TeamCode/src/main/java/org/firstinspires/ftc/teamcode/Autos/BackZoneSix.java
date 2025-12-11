@@ -53,6 +53,9 @@ public class BackZoneSix extends CommandOpMode {
                         .setLinearHeadingInterpolation(Math.toRadians(180.0), Math.toRadians(180.0))
                         .build();
 
+        follower.setStartingPose(StartPath1);
+        follower.setPose(StartPath1);
+
         // Schedule the full sequence now but start only after play via the WaitForStartCommand
         schedule(
                 new SequentialCommandGroup(
