@@ -28,10 +28,9 @@ public class ShootCommand extends CommandBase {
 
     @Override
     public void execute() {
-        if (shooterSubsystem.flywheelReady() && limelightSubsystem.getDistance() <= -9.0) {
-            platterSubsystem.launchableActivate();
-            platterSubsystem.launcherActivate();
-        } else if (limelightSubsystem.getDistance() >= -9.0) {
+        double distance = limelightSubsystem.getDistance();
+        boolean inRange = Math.abs(distance) <= 9.0;
+        if (shooterSubsystem.flywheelReady() && inRange) {
             platterSubsystem.launchableActivate();
             platterSubsystem.launcherActivate();
         } else {
