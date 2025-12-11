@@ -37,7 +37,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * Returns t/f if the flywheel is ready for shooting
      */
     public boolean flywheelReady() {
-        return Math.abs(flywheelMotor.getVelocity() / 28.0 * 60.0 - targetRPM) <= 100;
+        return Math.abs(getRPM() - targetRPM) <= 75;
     }
 
     public double getRPM() {

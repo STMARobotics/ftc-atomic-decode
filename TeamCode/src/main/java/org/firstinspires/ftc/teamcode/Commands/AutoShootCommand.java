@@ -38,7 +38,7 @@ public class AutoShootCommand extends CommandBase {
         this.turretSubsystem = turretSubsystem;
         this.limelightSubsystem = limelightSubsystem;
 
-        addRequirements(platterSubsystem, shooterSubsystem, turretSubsystem);
+        addRequirements(platterSubsystem);
     }
 
     @Override

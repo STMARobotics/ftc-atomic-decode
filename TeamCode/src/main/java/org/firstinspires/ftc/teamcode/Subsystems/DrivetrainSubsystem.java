@@ -105,6 +105,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
         return follower;
     }
 
+    public Pose getPose() {
+        return follower.getPose();
+    }
+
     /**
      * Adds drivetrain telemetry data.
      * @param telemetry telemetry object
