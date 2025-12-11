@@ -57,10 +57,7 @@ public class BackZoneSix extends CommandOpMode {
         schedule(
                 new SequentialCommandGroup(
                         new WaitForStartCommand(),
-                        new ParallelDeadlineGroup(
-                                new AutoShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, limelightSubsystem),
-                                new AutoLockTurretCommand(turretSubsystem, limelightSubsystem, shooterSubsystem)
-                        ),
+                        new AutoShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, limelightSubsystem),
                         new FollowPathCommand(path1, 0.5, drivetrainSubsystem, follower),
                         new ParallelDeadlineGroup(
                                 new AutoIntakeCommand(platterSubsystem, intakeSubsystem),
@@ -69,7 +66,6 @@ public class BackZoneSix extends CommandOpMode {
                         new FollowPathCommand(path2, 0.5, drivetrainSubsystem, follower),
                         new ParallelDeadlineGroup(
                                 new AutoShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, limelightSubsystem),
-                                new AutoLockTurretCommand(turretSubsystem, limelightSubsystem, shooterSubsystem),
                                 new ReeceMagic(drivetrainSubsystem, follower)
                         )
                 )
