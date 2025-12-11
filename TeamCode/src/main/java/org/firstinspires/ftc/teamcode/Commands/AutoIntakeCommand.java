@@ -56,6 +56,7 @@ public class AutoIntakeCommand extends CommandBase {
                     platterSubsystem.spinPlatter(INDEX_POWER);
                     intakeSubsystem.intake();
                 } else {
+                    platterSubsystem.spinPlatter(-0.09);
                     platterSubsystem.stopPlatter();
                     state = State.WAIT_FOR_ARTIFACT;
                 }

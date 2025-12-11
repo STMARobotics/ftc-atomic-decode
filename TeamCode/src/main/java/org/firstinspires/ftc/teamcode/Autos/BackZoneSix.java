@@ -62,12 +62,12 @@ public class BackZoneSix extends CommandOpMode {
                                 new AutoShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, limelightSubsystem),
                                 new AutoLockTurretCommand(turretSubsystem, limelightSubsystem, shooterSubsystem)
                         ),
-                                new FollowPathCommand(StartPath1, follower, Path1(follower), drivetrainSubsystem).withGlobalMaxPower(0.5),
-                                new ParallelDeadlineGroup(
-                                        new AutoIntakeCommand(platterSubsystem, intakeSubsystem),
-                                        new ReeceMagic(drivetrainSubsystem, follower)
-                                ),
-                                new FollowPathCommand(StartPath2, follower, Path2(follower), drivetrainSubsystem).withGlobalMaxPower(0.5),
+                        new FollowPathCommand(StartPath1, follower, Path1(follower), drivetrainSubsystem).withGlobalMaxPower(0.5),
+                        new ParallelDeadlineGroup(
+                                new AutoIntakeCommand(platterSubsystem, intakeSubsystem),
+                                new ReeceMagic(drivetrainSubsystem, follower)
+                        ),
+                        new FollowPathCommand(StartPath2, follower, Path2(follower), drivetrainSubsystem).withGlobalMaxPower(-0.3),
                         new ParallelDeadlineGroup(
                                 new AutoShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, limelightSubsystem),
                                 new AutoLockTurretCommand(turretSubsystem, limelightSubsystem, shooterSubsystem),
@@ -77,17 +77,17 @@ public class BackZoneSix extends CommandOpMode {
     public Pose StartPath1 = new Pose(56, 8.1, Math.toRadians(180.0));
     public static PathChain Path1(Follower follower) {
         return follower.pathBuilder()
-                .addPath(new BezierLine(new Pose(56, 8.1, Math.toRadians(180.0)), new Pose(22.507177033492823, 8.1, Math.toRadians(180.0))))
+                .addPath(new BezierLine(new Pose(56, 8.1, Math.toRadians(180.0)), new Pose(15, 8.1, Math.toRadians(180.0))))
                 .setLinearHeadingInterpolation(
                         Math.toRadians(180.0),
                         Math.toRadians(180.0))
                 .build();
     }
 
-    public Pose StartPath2 = new Pose(22.507177033492823, 8.1, Math.toRadians(180.0));
+    public Pose StartPath2 = new Pose(15, 8.1, Math.toRadians(180.0));
     public static PathChain Path2(Follower follower) {
         return follower.pathBuilder()
-                .addPath(new BezierLine(new Pose(22.507177033492823, 8.1, Math.toRadians(180.0)), new Pose(57.5, 20, Math.toRadians(180.0))))
+                .addPath(new BezierLine(new Pose(15, 8.1, Math.toRadians(180.0)), new Pose(57.5, 20, Math.toRadians(180.0))))
                 .setLinearHeadingInterpolation(
                         Math.toRadians(180.0),
                         Math.toRadians(180.0))
