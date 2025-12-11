@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
-import static org.firstinspires.ftc.teamcode.Constants.DriveCommandConstants.JOYSTICK_DEADZONE;
-
-import com.pedropathing.geometry.Pose;
 import com.seattlesolvers.solverslib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
@@ -16,9 +13,6 @@ public class Drive extends CommandBase {
     private final DoubleSupplier tySupplier;
     private final DoubleSupplier tzSupplier;
     private final DoubleSupplier reductionSupplier;
-
-    private boolean holding = false;
-    private Pose heldPose = null;
 
     public Drive(DrivetrainSubsystem drivetrain,
                  DoubleSupplier txSupplier,
@@ -78,7 +72,7 @@ public class Drive extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return false; // Dont stop pls its kinda important
+        return false; // Don't stop pls its kinda important
     }
 
     @Override

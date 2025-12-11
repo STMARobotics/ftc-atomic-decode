@@ -1,21 +1,18 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.Path;
-import com.pedropathing.paths.PathChain;
 import com.seattlesolvers.solverslib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
 
-public class FollowPathCommand extends CommandBase {
-    private final PathChain pathChain;
-    private final double maxPower;
+public class ReeceMagic extends CommandBase {
     private final DrivetrainSubsystem drivetrainSubsystem;
     private final Follower follower;
-    public FollowPathCommand(PathChain pathChain, double maxPower, DrivetrainSubsystem drivetrainSubsystem, Follower follower) {
-        this.pathChain = pathChain;
-        this.maxPower = maxPower;
+    private Pose startingPose = new Pose();
+
+    public ReeceMagic(DrivetrainSubsystem drivetrainSubsystem, Follower follower) {
         this.drivetrainSubsystem = drivetrainSubsystem;
         this.follower = follower;
         addRequirements(drivetrainSubsystem);
@@ -23,13 +20,22 @@ public class FollowPathCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        follower.setMaxPower(maxPower);
-        follower.followPath(pathChain, false);
+        startingPose = follower.getPose();
+    }
+
+    @Override
+    public void execute() {
+        follower.followPath(
+                follower.pathBuilder()
+                        .addPath(new BezierLine(drivetrainSubsystem.getPose(), startingPose))
+                        .setLinearHeadingInterpolation(drivetrainSubsystem.getPose().getHeading(), startingPose.getHeading())
+                        .build()
+        );
     }
 
     @Override
     public boolean isFinished() {
-        return !follower.isBusy();
+        return drivetrainSubsystem.getPose() == startingPose;
     }
 
     @Override

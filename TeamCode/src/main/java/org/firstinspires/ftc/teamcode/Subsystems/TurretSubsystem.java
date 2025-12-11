@@ -1,5 +1,14 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.DEAD_BAND_DEG;
+import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.POT_MAX_V;
+import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.POT_MIN_V;
+import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.SOFT_MAX_DEG;
+import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.SOFT_MIN_DEG;
+import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.TURRET_KD;
+import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.TURRET_KP;
+import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.TURRET_MAX_POWER;
+
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -8,8 +17,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.controller.PIDController;
 import com.seattlesolvers.solverslib.util.MathUtils;
-
-import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.*;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -21,7 +28,6 @@ public class TurretSubsystem extends SubsystemBase {
     private final LimelightSubsystem limelightSubsystem;
 
     private double lastAppliedPower = 0.0;
-    private double targetAngle;
 
     private final PIDController pidController = new PIDController(TURRET_KP, 0.0, TURRET_KD);
 
@@ -59,11 +65,12 @@ public class TurretSubsystem extends SubsystemBase {
         double error = limelightSubsystem.getTargetOffset();
         if (Double.isNaN(error)) {
             stopTurret();
+        } else {
+
+            double output = pidController.calculate(error, 0.0);
+
+            setTurretPower(output);
         }
-
-        double output = pidController.calculate(error, 0.0);
-
-        setTurretPower(output);
     }
 
     public boolean isLockedOn(double thresholdDeg) {
@@ -71,7 +78,6 @@ public class TurretSubsystem extends SubsystemBase {
         if (Double.isNaN(tx)) {
             return false;
         }
-
         return Math.abs(tx) <= thresholdDeg;
     }
 
@@ -91,8 +97,10 @@ public class TurretSubsystem extends SubsystemBase {
      */
     public void setHoodAngle(double angle) {
         hoodServo.setPosition(angle);
-        targetAngle = angle;
-        // TODO: map the servo angle to the actual angle of the shot
+    }
+
+    public void hoodToHome() {
+        hoodServo.setPosition(0.25); // placeholder
     }
 
     /**
@@ -105,8 +113,8 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     public void telemetrize(Telemetry telemetry) {
-        telemetry.addData("Turret Position (deg)", getTurretPosition());
-        telemetry.addData("shhh bot didnt break", pot.getVoltage());
+        telemetry.addData("Turret Position (deg) [BROKEN]", getTurretPosition());
         telemetry.addData("Turret Applied Power", lastAppliedPower);
+        telemetry.addData("Hood Servo Position", hoodServo.getPosition());
     }
 }

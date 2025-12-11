@@ -23,11 +23,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     private final PIDController yController = new PIDController(0.07, 0.0, 0.0);
     private final PIDController headingController = new PIDController(0.2, 0.0, 0.0);
 
-    private double positionDeadzoneMm = 10.0;
-    private double headingDeadzoneRad = Math.toRadians(2.0);
+    private final double headingDeadzoneRad = Math.toRadians(2.0);
 
     public DrivetrainSubsystem(HardwareMap hardwareMap) {
         follower = Constants.createFollower(hardwareMap);
+        follower.update();
     }
 
     /**
@@ -46,8 +46,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
         double clampedReduction = MathUtils.clamp(reductionFactor, 0.0, 1.0);
 
         // Square and reduce the axes
-        double modifiedY = translationY * clampedReduction;
-        double modifiedX = translationX * clampedReduction;
+        double modifiedY = square(translationY) * clampedReduction;
+        double modifiedX = square(translationX) * clampedReduction;
         double modifiedRotation = square(rotation * clampedReduction);
 
         follower.setTeleOpDrive(modifiedX, modifiedY, modifiedRotation, false);
@@ -72,7 +72,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
      * Stops the drivetrain.
      */
     public void stop() {
-        follower.setTeleOpDrive(0.0, 0.0, 0.0, true);
+        startTeleop();
+        follower.setTeleOpDrive(0.0, 0.0, 0.0, false);
     }
 
     /**
@@ -102,6 +103,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     public Follower getFollower() {
         return follower;
+    }
+
+    public Pose getPose() {
+        return follower.getPose();
     }
 
     /**
@@ -139,6 +144,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         double distanceError = Math.hypot(xError, yError);
 
+        double positionDeadzoneMm = 10.0;
         if (distanceError <= positionDeadzoneMm && Math.abs(headingError) <= headingDeadzoneRad) {
             follower.setTeleOpDrive(0.0, 0.0, 0.0, false);
             return;

@@ -10,7 +10,8 @@ public class NotShootCommand extends CommandBase {
     private final PlatterSubsystem platterSubsystem;
     private final ShooterSubsystem shooterSubsystem;
 
-    public NotShootCommand(PlatterSubsystem platterSubsystem, ShooterSubsystem shooterSubsystem) {
+    public NotShootCommand(PlatterSubsystem platterSubsystem,
+                           ShooterSubsystem shooterSubsystem) {
         this.platterSubsystem = platterSubsystem;
         this.shooterSubsystem = shooterSubsystem;
         addRequirements(platterSubsystem, shooterSubsystem);
@@ -18,9 +19,13 @@ public class NotShootCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        platterSubsystem.launcherDeactivate();
+        platterSubsystem.stopPlatter();
         platterSubsystem.launchableDeactivate();
-        platterSubsystem.idlePlatter();
-        shooterSubsystem.setRPM(3000);
+        platterSubsystem.launcherDeactivate();
+    }
+
+    @Override
+    public void execute() {
+        shooterSubsystem.setRPM(2000);
     }
 }

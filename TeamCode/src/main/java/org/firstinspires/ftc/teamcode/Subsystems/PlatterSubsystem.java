@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import static java.lang.Thread.sleep;
+import static org.firstinspires.ftc.teamcode.Constants.PlatterConstants.INDEX_POWER;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Constants.ArtifactColor;
 
 public class PlatterSubsystem extends SubsystemBase {
@@ -21,11 +23,9 @@ public class PlatterSubsystem extends SubsystemBase {
     public final CRServo launchableLeft; // artifact grabber rollers
     public final CRServo launchableRight;
 
-    private final NormalizedColorSensor colorSensorBottom;
-    private final NormalizedColorSensor colorSensorWall;
+    private final NormalizedColorSensor colorSensor;
+    private final DistanceSensor distanceSensor;
     private final TouchSensor magnetSwitch;
-
-    private ArtifactColor artifactColor;
 
     public PlatterSubsystem(HardwareMap hardwareMap) {
         platterServo = hardwareMap.get(CRServo.class, "platterServo");
@@ -33,10 +33,10 @@ public class PlatterSubsystem extends SubsystemBase {
         launchableLeft = hardwareMap.get(CRServo.class, "launchableLeft");
         launchableRight = hardwareMap.get(CRServo.class, "launchableRight");
 
-        launchableRight.setDirection(CRServo.Direction.REVERSE);
+        platterServo.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        colorSensorBottom = hardwareMap.get(NormalizedColorSensor.class, "cSensorBottom");
-        colorSensorWall = hardwareMap.get(NormalizedColorSensor.class, "cSensorWall");
+        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "cSensor");
+        distanceSensor = hardwareMap.get(DistanceSensor.class, "cSensor");
 
         magnetSwitch = hardwareMap.get(TouchSensor.class, "magnetSwitch");
     }
@@ -58,21 +58,29 @@ public class PlatterSubsystem extends SubsystemBase {
         platterServo.setPower(0.12);
     }
 
+    public void nextMagnet() {
+        if (!isMagnetTripped()) {
+            spinPlatter(INDEX_POWER);
+        } else {
+            stopPlatter();
+        }
+    }
+
     /**
      * Stops the platter from spinning
      */
     public void stopPlatter() {
-        platterServo.setPower(0);
+        platterServo.setPower(-0.05);
     }
 
     public ArtifactColor checkColor() {
-        NormalizedRGBA cB = colorSensorBottom.getNormalizedColors();
-        NormalizedRGBA cW = colorSensorBottom.getNormalizedColors();
-        if (cB.green < 0.01 && cB.blue < 0.01 && cW.green < 0.01 && cW.blue < 0.01) {
+        NormalizedRGBA cL = colorSensor.getNormalizedColors();
+        NormalizedRGBA cR = colorSensor.getNormalizedColors();
+        if (cL.green < 0.01 && cL.blue < 0.01 && cR.green < 0.01 && cR.blue < 0.01) {
             return ArtifactColor.NONE;
         }
 
-        return cB.green >= 0.012 && cW.green >= 0.012 ? ArtifactColor.GREEN : ArtifactColor.PURPLE;
+        return cL.green >= 0.012 && cR.green >= 0.012 ? ArtifactColor.GREEN : ArtifactColor.PURPLE;
     }
 
     /**
@@ -81,6 +89,20 @@ public class PlatterSubsystem extends SubsystemBase {
      */
     public boolean isCorrectColor(ArtifactColor target) {
         return target == ArtifactColor.ALL || checkColor() == target;
+    }
+
+    /**
+     * Checks if there is an artifact present
+     * @return true if an artifact is present, false otherwise
+     */
+    public boolean hasArtifact() {
+        double d = distanceSensor.getDistance(DistanceUnit.MM);
+
+        if (Double.isNaN(d) || d <= 0) {
+            return false;
+        }
+
+        return d < 60.0;
     }
 
     /**
@@ -95,14 +117,14 @@ public class PlatterSubsystem extends SubsystemBase {
      * Activates the spring loaded launcher with a servo
      */
     public void launcherActivate() {
-        launcherServo.setPosition(0.6); // placeholder, tune on robot
+        launcherServo.setPosition(0.5); // placeholder, tune on robot
     }
 
     /**
      * Deactivates the spring loaded launcher with a servo
      */
     public void launcherDeactivate() {
-        launcherServo.setPosition(0); // placeholder
+        launcherServo.setPosition(0.2); // placeholder
     }
 
     /**
@@ -129,16 +151,6 @@ public class PlatterSubsystem extends SubsystemBase {
         launchableRight.setPower(-1.0);
     }
 
-    public void nextMagnet() {
-        spinPlatter(0.2);
-        stopPlatter();
-        if (!isMagnetTripped()) {
-            spinPlatter(0.12);
-        } else {
-            stopPlatter();
-        }
-    }
-
     /**
      * Sends telemetry data about the platter subsystem.
      * @param telemetry the telemetry object to send data to
@@ -146,20 +158,13 @@ public class PlatterSubsystem extends SubsystemBase {
     public void telemetrize(Telemetry telemetry) {
         ArtifactColor detected = checkColor();
 
-        if (colorSensorWall != null) {
-            NormalizedRGBA cW = colorSensorWall.getNormalizedColors();
-            telemetry.addData("Raw R Wall", "%.3f", cW.red);
-            telemetry.addData("Raw G Wall", "%.3f", cW.green);
-            telemetry.addData("Raw B Wall", "%.3f", cW.blue);
-            telemetry.addData("Color found Wall", checkColor());
-        }
-        telemetry.addData(" ", null);
-        if (colorSensorBottom != null) {
-            NormalizedRGBA cB = colorSensorBottom.getNormalizedColors();
-            telemetry.addData("Raw R Bottom", "%.3f", cB.red);
-            telemetry.addData("Raw G Bottom", "%.3f", cB.green);
-            telemetry.addData("Raw B Bottom", "%.3f", cB.blue);
-            telemetry.addData("Color found Wall", checkColor());
+        telemetry.addData("Distance (mm)", "%.2f", distanceSensor.getDistance(DistanceUnit.MM));
+        telemetry.addData("Magnet Tripped", isMagnetTripped() ? "Yes" : "No");
+
+        if (hasArtifact()) {
+            telemetry.addData("Artifact Present", "Yes (%s)", detected);
+        } else {
+            telemetry.addData("Artifact Present", "No");
         }
     }
 }

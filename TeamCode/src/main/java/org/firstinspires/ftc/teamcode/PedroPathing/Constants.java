@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.PedroPathing;
 
+import com.pedropathing.control.FilteredPIDFCoefficients;
 import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
@@ -26,19 +27,22 @@ public class Constants {
             .hardwareMapName(OTOS_NAME)
             .linearUnit(DistanceUnit.INCH)
             .angleUnit(AngleUnit.RADIANS)
-            .linearScalar(1.07)
-            .angularScalar(0.99)
+            .linearScalar(0.9983021436711816)
+            .angularScalar(0.9938358046794901)
             .offset(new SparkFunOTOS.Pose2D(
                     47 / 25.4, // +x forward
                     47 / 25.4, // +y
                     Math.PI));
 
     public static final FollowerConstants FOLLOWER_CONSTANTS = new FollowerConstants()
-            .mass(5) // must be kg
+            .mass(13.1541787) // must be kg
             .forwardZeroPowerAcceleration(-58.742)
             .lateralZeroPowerAcceleration(-82.934)
             .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.0, 0))
-            .headingPIDFCoefficients(new PIDFCoefficients(0.8, 0, 0.0, 0));
+            .headingPIDFCoefficients(new PIDFCoefficients(0.8, 0, 0.0, 0))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.01, 0, 0.0, 0, 0.0))
+            .forwardZeroPowerAcceleration(-32.08424777795885)
+            .lateralZeroPowerAcceleration(-49.85446442889164);
 
     public static final MecanumConstants DRIVE_CONSTANTS = new MecanumConstants()
             .maxPower(1)
@@ -52,7 +56,10 @@ public class Constants {
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .useBrakeModeInTeleOp(true);
+            .useBrakeModeInTeleOp(true)
+            .xVelocity(58.29998827356053)
+            .yVelocity(43.76028466412402)
+            .useVoltageCompensation(true);
 
     public static final PathConstraints PATH_CONSTRAINTS =
             new PathConstraints(0.99, 100, 1, 1);

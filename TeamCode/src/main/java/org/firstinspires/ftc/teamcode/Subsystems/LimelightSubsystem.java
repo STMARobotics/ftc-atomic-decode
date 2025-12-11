@@ -9,7 +9,7 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 public class LimelightSubsystem extends SubsystemBase {
 
-    private Limelight3A limelight;
+    private final Limelight3A limelight;
 
     public LimelightSubsystem(HardwareMap hardwareMap) {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
@@ -49,7 +49,7 @@ public class LimelightSubsystem extends SubsystemBase {
         if (result == null || !result.isValid()) {
             return Double.NaN;
         }
-        return result.getBotposeAvgDist();
+        return result.getTy();
     }
 
     /**
