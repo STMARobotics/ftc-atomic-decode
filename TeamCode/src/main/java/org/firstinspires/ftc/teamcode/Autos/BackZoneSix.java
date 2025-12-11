@@ -4,8 +4,8 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.seattlesolvers.solverslib.command.CommandBase;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
-import com.seattlesolvers.solverslib.command.ParallelCommandGroup;
 import com.seattlesolvers.solverslib.command.ParallelDeadlineGroup;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 
@@ -39,58 +39,47 @@ public class BackZoneSix extends CommandOpMode {
 
         Follower follower = drivetrainSubsystem.getFollower();
 
-        // Schedule the generated path sequence
-//        schedule(
-//                new ParallelCommandGroup(
-//                        new AutoLockTurretCommand(turretSubsystem, limelightSubsystem, shooterSubsystem),
-//                        new AutoShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, limelightSubsystem))
-//                        .andThen(
-//                                new ParallelCommandGroup(
-//                                        new AutoIntakeCommand(platterSubsystem, intakeSubsystem),
-//                                        new SequentialCommandGroup(
-//                                                new FollowPathCommand(StartPath1, follower, Path1(follower), drivetrainSubsystem),
-//                                                new FollowPathCommand(StartPath2, follower, Path2(follower), drivetrainSubsystem)))
-//                                        .andThen(
-//                                                new ParallelCommandGroup(
-//                                                        new AutoLockTurretCommand(turretSubsystem, limelightSubsystem, shooterSubsystem),
-//                                                        new AutoShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, limelightSubsystem)
-//                                                ))));
+        Pose StartPath1 = new Pose(56, 8.1, Math.toRadians(180.0));
+        PathChain path1 =
+                follower.pathBuilder()
+                        .addPath(new BezierLine(new Pose(56, 8.1, Math.toRadians(180.0)), new Pose(15, 8.1, Math.toRadians(180.0))))
+                        .setLinearHeadingInterpolation(Math.toRadians(180.0), Math.toRadians(180.0))
+                        .build();
 
+        Pose StartPath2 = new Pose(15, 8.1, Math.toRadians(180.0));
+        PathChain path2 =
+                follower.pathBuilder()
+                        .addPath(new BezierLine(new Pose(15, 8.1, Math.toRadians(180.0)), new Pose(56, 8.1, Math.toRadians(180.0))))
+                        .setLinearHeadingInterpolation(Math.toRadians(180.0), Math.toRadians(180.0))
+                        .build();
+
+        // Schedule the full sequence now but start only after play via the WaitForStartCommand
         schedule(
                 new SequentialCommandGroup(
+                        new WaitForStartCommand(),
                         new ParallelDeadlineGroup(
                                 new AutoShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, limelightSubsystem),
                                 new AutoLockTurretCommand(turretSubsystem, limelightSubsystem, shooterSubsystem)
                         ),
-                        new FollowPathCommand(StartPath1, follower, Path1(follower), drivetrainSubsystem).withGlobalMaxPower(0.5),
+                        new FollowPathCommand(path1, 0.5, drivetrainSubsystem, follower),
                         new ParallelDeadlineGroup(
                                 new AutoIntakeCommand(platterSubsystem, intakeSubsystem),
                                 new ReeceMagic(drivetrainSubsystem, follower)
                         ),
-                        new FollowPathCommand(StartPath2, follower, Path2(follower), drivetrainSubsystem).withGlobalMaxPower(-0.3),
+                        new FollowPathCommand(path2, 0.5, drivetrainSubsystem, follower),
                         new ParallelDeadlineGroup(
                                 new AutoShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, limelightSubsystem),
                                 new AutoLockTurretCommand(turretSubsystem, limelightSubsystem, shooterSubsystem),
                                 new ReeceMagic(drivetrainSubsystem, follower)
-                )));
-    }
-    public Pose StartPath1 = new Pose(56, 8.1, Math.toRadians(180.0));
-    public static PathChain Path1(Follower follower) {
-        return follower.pathBuilder()
-                .addPath(new BezierLine(new Pose(56, 8.1, Math.toRadians(180.0)), new Pose(15, 8.1, Math.toRadians(180.0))))
-                .setLinearHeadingInterpolation(
-                        Math.toRadians(180.0),
-                        Math.toRadians(180.0))
-                .build();
+                        )
+                )
+        );
     }
 
-    public Pose StartPath2 = new Pose(15, 8.1, Math.toRadians(180.0));
-    public static PathChain Path2(Follower follower) {
-        return follower.pathBuilder()
-                .addPath(new BezierLine(new Pose(15, 8.1, Math.toRadians(180.0)), new Pose(57.5, 20, Math.toRadians(180.0))))
-                .setLinearHeadingInterpolation(
-                        Math.toRadians(180.0),
-                        Math.toRadians(180.0))
-                .build();
+    private class WaitForStartCommand extends CommandBase {
+        @Override
+        public boolean isFinished() {
+            return BackZoneSix.this.isStarted();
+        }
     }
 }
