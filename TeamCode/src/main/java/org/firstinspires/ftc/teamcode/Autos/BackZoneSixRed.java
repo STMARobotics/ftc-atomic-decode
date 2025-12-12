@@ -39,56 +39,35 @@ public class BackZoneSixRed extends CommandOpMode {
 
         limelightSubsystem.pipelineSwitcher(1);
 
-        Pose StartPath1 = new Pose(56, 8.1, Math.toRadians(180.0));
+        Pose startPose1 = new Pose(56, 8.1, Math.toRadians(180.0));
         PathChain path1 =
-                follower.pathBuilder()
-                        .addPath(new BezierLine(new Pose(56, 8.1, Math.toRadians(180.0)), new Pose(15, 8.1, Math.toRadians(180.0))))
-                        .setLinearHeadingInterpolation(Math.toRadians(180.0), Math.toRadians(180.0))
-                        .build();
+                mirrorPath(startPose1, new Pose(15, 8.1, Math.toRadians(180.0)), follower);
 
-        Pose StartPath2 = new Pose(15, 8.1, Math.toRadians(180.0));
+        Pose startPose2 = new Pose(15, 8.1, Math.toRadians(180.0));
         PathChain path2 =
-                follower.pathBuilder()
-                        .addPath(new BezierLine(new Pose(15, 8.1, Math.toRadians(180.0)), new Pose(51, 8.1, Math.toRadians(180.0))))
-                        .setLinearHeadingInterpolation(Math.toRadians(180.0), Math.toRadians(180.0))
-                        .build();
+                mirrorPath(startPose2, new Pose(51, 8.1, Math.toRadians(180.0)), follower);
 
-        Pose StartPath3 = new Pose(51, 8.1, Math.toRadians(180));
+        Pose startPose3 = new Pose(51, 8.1, Math.toRadians(180));
         PathChain path3 =
-                follower.pathBuilder()
-                        .addPath(new BezierLine(new Pose(51, 8.1, Math.toRadians(180)), new Pose(51, 30, Math.toRadians(180.0))))
-                        .setLinearHeadingInterpolation(Math.toRadians(180.0), Math.toRadians(0))
-                        .build();
+                mirrorPath(startPose3, new Pose(51, 30, Math.toRadians(0.0)), follower);
 
-        follower.setStartingPose(mirrorPose(StartPath1));
-        follower.setPose(mirrorPose(StartPath1));
+        follower.setStartingPose(mirrorPose(startPose1));
+        follower.setPose(mirrorPose(startPose1));
 
         schedule(
                 new SequentialCommandGroup(
                         new WaitForStartCommand(),
-                        new AutoShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, limelightSubsystem),
+                        new AutoShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, limelightSubsystem, -2.0),
                         new ParallelDeadlineGroup(
                                 new AutoIntakeCommand(platterSubsystem, intakeSubsystem).withTimeout(10000),
-                                new FollowPathCommand(mirrorPath(
-                                        StartPath1,
-                                        new Pose(15, 8.1, Math.toRadians(180.0)),
-                                        follower
-                                ), drivetrainSubsystem, follower, true, 0.7)
+                                new FollowPathCommand(path1, drivetrainSubsystem, follower, true, 0.7)
                         ),
-                        new FollowPathCommand(mirrorPath(
-                                StartPath2,
-                                new Pose(51, 8.1, Math.toRadians(180.0)),
-                                follower
-                        ), drivetrainSubsystem, follower, false, 0.8),
+                        new FollowPathCommand(path2, drivetrainSubsystem, follower, false, 0.8),
                         new ParallelDeadlineGroup(
-                                new AutoShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, limelightSubsystem),
+                                new AutoShootCommand(platterSubsystem, shooterSubsystem, turretSubsystem, limelightSubsystem, -2.0),
                                 new ReeceMagic(drivetrainSubsystem, follower)
                         ),
-                        new FollowPathCommand(mirrorPath(
-                                StartPath3,
-                                new Pose(51, 30, Math.toRadians(0)),
-                                follower
-                        ), drivetrainSubsystem, follower, true, 1.0)
+                        new FollowPathCommand(path3, drivetrainSubsystem, follower, true, 1.0)
                 )
         );
     }
@@ -106,10 +85,6 @@ public class BackZoneSixRed extends CommandOpMode {
         double x1 = pose.getX();
         double y1 = pose.getY();
         double h1 = pose.getHeading();
-
-        double x2 = pose.getX();
-        double y2 = pose.getY();
-        double h2 = pose.getHeading();
 
         return new Pose((FIELD_WIDTH - x1), y1, -h1 + Math.PI);
     }

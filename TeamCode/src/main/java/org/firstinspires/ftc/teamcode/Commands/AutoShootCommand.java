@@ -22,6 +22,7 @@ public class AutoShootCommand extends CommandBase {
     private final LimelightSubsystem limelightSubsystem;
     private final PIDController pidController = new PIDController(TURRET_KP, 0.0, TURRET_KD);
     private int magsHit = 0;
+    private double offset;
     private boolean lastMagState = false;
     private boolean done = false;
     private double lastTargetRpm = Double.NaN;
@@ -29,11 +30,13 @@ public class AutoShootCommand extends CommandBase {
     public AutoShootCommand(PlatterSubsystem platterSubsystem,
                             ShooterSubsystem shooterSubsystem,
                             TurretSubsystem turretSubsystem,
-                            LimelightSubsystem limelightSubsystem) {
+                            LimelightSubsystem limelightSubsystem,
+                            double offset) {
         this.platterSubsystem = platterSubsystem;
         this.shooterSubsystem = shooterSubsystem;
         this.turretSubsystem = turretSubsystem;
         this.limelightSubsystem = limelightSubsystem;
+        this.offset = offset;
 
         addRequirements(platterSubsystem, shooterSubsystem, turretSubsystem);
     }
@@ -100,7 +103,7 @@ public class AutoShootCommand extends CommandBase {
         if (!hasTarget || Double.isNaN(error)) {
             turretSubsystem.stopTurret();
         } else {
-            double output = pidController.calculate(error, 2.0);
+            double output = pidController.calculate(error, offset);
             turretSubsystem.setTurretPower(output);
         }
 
