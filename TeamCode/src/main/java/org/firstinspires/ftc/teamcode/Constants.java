@@ -8,10 +8,31 @@ import org.firstinspires.ftc.teamcode.Math.LookupTableMath;
  */
 public final class Constants {
 
+    public static final LookupTableMath INTERPOLATOR = new LookupTableMath()
+            .addEntry(2.16, 3300, .61)
+            .addEntry(-0.25, 3300, .64)
+            .addEntry(-2.2, 3300, .625)
+            .addEntry(-5.0, 3400, .64)
+            .addEntry(-8.54, 3600, .62)
+            .addEntry(-12.7, 4200, .70)
+            .addEntry(-13.2, 4300, .74);
+
+    public enum AllianceColor {
+        RED,
+        BLUE
+    }
+
+    public enum ArtifactColor {
+        PURPLE,
+        GREEN,
+        ALL,
+        NONE
+    }
+
     public static final class limelightConstants {
         public static final int LIMELIGHT_POLL_HZ = 90;
         public static final int BLUE_PIPELINE = 0;
-        public static final int RED_PIPELINE  = 1;
+        public static final int RED_PIPELINE = 1;
     }
 
     public static final class TurretConstants {
@@ -48,34 +69,13 @@ public final class Constants {
     public static class DriveConstants {
         public static final double JOYSTICK_DEADZONE = 0.05;
         public static final double NORMAL_DRIVE_SCALE = 1.0;
-        public static final double SLOW_DRIVE_SCALE   = 0.5;
+        public static final double SLOW_DRIVE_SCALE = 0.5;
     }
 
     public static class PlatterConstants {
         public static final double SEARCH_POWER = 0.2;
-        public static final double NUDGE_POWER  = -0.15;
+        public static final double NUDGE_POWER = -0.15;
         public static final double SHOOT_POWER = 0.4;
         public static final double INDEX_POWER = 0.22;
     }
-
-    public enum AllianceColor {
-        RED,
-        BLUE
-    }
-
-    public enum ArtifactColor {
-        PURPLE,
-        GREEN,
-        ALL,
-        NONE
-    }
-
-    public static final LookupTableMath INTERPOLATOR = new LookupTableMath()
-            .addEntry(2.16, 3300, .61)
-            .addEntry(-0.25, 3300, .64)
-            .addEntry(-2.2, 3300, .625)
-            .addEntry(-5.0, 3400, .64)
-            .addEntry(-8.54, 3600, .62)
-            .addEntry(-12.7, 4200, .70)
-            .addEntry(-13.0, 4300, .73);
 }

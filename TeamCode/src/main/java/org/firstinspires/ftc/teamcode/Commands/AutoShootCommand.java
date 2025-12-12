@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
-import static org.firstinspires.ftc.teamcode.Constants.PlatterConstants.SHOOT_POWER;
-import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.TURRET_KP;
-import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.TURRET_KD;
 import static org.firstinspires.ftc.teamcode.Constants.INTERPOLATOR;
+import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.TURRET_KD;
+import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.TURRET_KP;
 
 import com.seattlesolvers.solverslib.command.CommandBase;
 import com.seattlesolvers.solverslib.controller.PIDController;
@@ -16,18 +15,16 @@ import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
 public class AutoShootCommand extends CommandBase {
 
+    private static final int MAG_HIT_TARGET = 4;
     private final PlatterSubsystem platterSubsystem;
     private final ShooterSubsystem shooterSubsystem;
     private final TurretSubsystem turretSubsystem;
     private final LimelightSubsystem limelightSubsystem;
-
     private final PIDController pidController = new PIDController(TURRET_KP, 0.0, TURRET_KD);
-
     private int magsHit = 0;
     private boolean lastMagState = false;
     private boolean done = false;
-
-    private static final int MAG_HIT_TARGET = 4;
+    private double lastTargetRpm = Double.NaN;
 
     public AutoShootCommand(PlatterSubsystem platterSubsystem,
                             ShooterSubsystem shooterSubsystem,
@@ -38,7 +35,7 @@ public class AutoShootCommand extends CommandBase {
         this.turretSubsystem = turretSubsystem;
         this.limelightSubsystem = limelightSubsystem;
 
-        addRequirements(platterSubsystem);
+        addRequirements(platterSubsystem, shooterSubsystem, turretSubsystem);
     }
 
     @Override
@@ -48,9 +45,7 @@ public class AutoShootCommand extends CommandBase {
         done = false;
 
         pidController.reset();
-
-        platterSubsystem.launchableActivate();
-        platterSubsystem.launcherActivate();
+        lastTargetRpm = Double.NaN;
     }
 
     @Override
@@ -60,9 +55,12 @@ public class AutoShootCommand extends CommandBase {
         boolean readyToAdvance = shooterSubsystem.flywheelReady();
 
         if (readyToAdvance) {
-            platterSubsystem.spinPlatter(SHOOT_POWER);
+            platterSubsystem.launcherActivate();
+            platterSubsystem.launchableActivate();
+            platterSubsystem.spinPlatter(0.7);
         } else {
             platterSubsystem.stopPlatter();
+            platterSubsystem.launcherDeactivate();
         }
 
         boolean magNow = platterSubsystem.isMagnetTripped();
@@ -90,7 +88,9 @@ public class AutoShootCommand extends CommandBase {
         platterSubsystem.launcherDeactivate();
 
         turretSubsystem.stopTurret();
-        shooterSubsystem.setRPM(0);
+        if (!Double.isNaN(lastTargetRpm)) {
+            shooterSubsystem.setRPM(lastTargetRpm);
+        }
     }
 
     private void autoLockAndSpinup() {
@@ -100,17 +100,18 @@ public class AutoShootCommand extends CommandBase {
         if (!hasTarget || Double.isNaN(error)) {
             turretSubsystem.stopTurret();
         } else {
-            double output = pidController.calculate(error, 0.0);
+            double output = pidController.calculate(error, 2.0);
             turretSubsystem.setTurretPower(output);
         }
 
         double distance = limelightSubsystem.getDistance();
         if (!Double.isNaN(distance)) {
             LookupTableMath.ShootingSettings s = INTERPOLATOR.calculate(distance);
-            double targetRpm   = s.getVelocity();
-            double hoodAngle   = s.getPitch();
+            double targetRpm = s.getVelocity();
+            double hoodAngle = s.getPitch();
 
             shooterSubsystem.setRPM(targetRpm);
+            lastTargetRpm = targetRpm;
             turretSubsystem.setHoodAngle(hoodAngle);
         }
     }

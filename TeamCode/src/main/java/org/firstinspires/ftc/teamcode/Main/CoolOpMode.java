@@ -155,6 +155,17 @@ public class CoolOpMode extends CommandOpMode {
 
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
                 .whenPressed(() -> limelightSubsystem.pipelineSwitcher(RED_PIPELINE));
+
+        gamepad.getGamepadButton(GamepadKeys.Button.X)
+                .whenPressed(() -> turretSubsystem.setTurretPower(0.2))
+                .whenReleased(() -> turretSubsystem.setTurretPower(0));
+
+        gamepad.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(() -> turretSubsystem.setTurretPower(-0.2))
+                .whenReleased(() -> turretSubsystem.setTurretPower(0));
+
+        gamepad.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(() -> shooterSubsystem.setRPM(4500));
     }
 
     private void toggleDriveScale() {

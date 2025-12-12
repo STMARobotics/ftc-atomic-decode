@@ -27,15 +27,15 @@ public class ReeceMagic extends CommandBase {
     public void execute() {
         follower.followPath(
                 follower.pathBuilder()
-                        .addPath(new BezierLine(drivetrainSubsystem.getPose(), startingPose))
-                        .setLinearHeadingInterpolation(drivetrainSubsystem.getPose().getHeading(), startingPose.getHeading())
+                        .addPath(new BezierLine(drivetrainSubsystem.getCurrentPose(), startingPose))
+                        .setLinearHeadingInterpolation(drivetrainSubsystem.getCurrentPose().getHeading(), startingPose.getHeading())
                         .build()
         );
     }
 
     @Override
     public boolean isFinished() {
-        return drivetrainSubsystem.getPose() == startingPose;
+        return drivetrainSubsystem.getCurrentPose() == startingPose;
     }
 
     @Override

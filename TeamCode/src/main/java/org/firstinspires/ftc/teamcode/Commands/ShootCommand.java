@@ -30,9 +30,12 @@ public class ShootCommand extends CommandBase {
     public void execute() {
         double distance = limelightSubsystem.getDistance();
         boolean inRange = Math.abs(distance) <= 9.0;
-        if (shooterSubsystem.flywheelReady() && inRange) {
+        if (inRange) {
             platterSubsystem.launchableActivate();
             platterSubsystem.launcherActivate();
+        } else if (shooterSubsystem.flywheelReady() && Math.abs(distance) >= 9.0) {
+            platterSubsystem.launcherActivate();
+            platterSubsystem.launchableActivate();
         } else {
             platterSubsystem.launcherDeactivate();
             platterSubsystem.launchableDeactivate();
