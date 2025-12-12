@@ -24,7 +24,6 @@ public class TurretSubsystem extends SubsystemBase {
 
     private final DcMotorEx turretMotor;
     private final Servo hoodServo;
-    private final AnalogInput pot;
     private final LimelightSubsystem limelightSubsystem;
 
     private double lastAppliedPower = 0.0;
@@ -33,7 +32,6 @@ public class TurretSubsystem extends SubsystemBase {
 
     public TurretSubsystem(HardwareMap hardwareMap) {
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
-        pot = hardwareMap.get(AnalogInput.class, "turretPotentiometer");
         hoodServo = hardwareMap.get(Servo.class, "hoodServo");
         limelightSubsystem = new LimelightSubsystem(hardwareMap);
 
@@ -106,14 +104,14 @@ public class TurretSubsystem extends SubsystemBase {
     /**
      * Returns the turret position in degrees based on the potentiometer.
      */
-    public double getTurretPosition() {
-        double v = Math.max(POT_MIN_V, Math.min(pot.getVoltage(), POT_MAX_V));
-        double fraction = (v - POT_MIN_V) / (POT_MAX_V - POT_MIN_V);
-        return fraction * (SOFT_MAX_DEG - SOFT_MIN_DEG) + SOFT_MIN_DEG;
-    }
+//    public double getTurretPosition() {
+//        double v = Math.max(POT_MIN_V, Math.min(pot.getVoltage(), POT_MAX_V));
+//        double fraction = (v - POT_MIN_V) / (POT_MAX_V - POT_MIN_V);
+//        return fraction * (SOFT_MAX_DEG - SOFT_MIN_DEG) + SOFT_MIN_DEG;
+//    }
 
     public void telemetrize(Telemetry telemetry) {
-        telemetry.addData("Turret Position (deg) [BROKEN]", getTurretPosition());
+//        telemetry.addData("Turret Position (deg) [BROKEN]", getTurretPosition());
         telemetry.addData("Turret Applied Power", lastAppliedPower);
         telemetry.addData("Hood Servo Position", hoodServo.getPosition());
     }
