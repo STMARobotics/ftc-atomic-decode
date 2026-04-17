@@ -30,6 +30,11 @@ import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 @TeleOp(name = "cool op mode")
 public class CoolOpMode extends CommandOpMode {
 
+    private enum Mode {
+        DEMO,
+        SHOWOFF
+    }
+
     // Subsystems
     private DrivetrainSubsystem drivetrainSubsystem;
     private ShooterSubsystem shooterSubsystem;
@@ -39,11 +44,13 @@ public class CoolOpMode extends CommandOpMode {
     private LimelightSubsystem limelightSubsystem;
     private LookupTableMath lookupTable;
 
-    private GamepadEx gamepad;
+    private GamepadEx gamepad1Ex;
+    private GamepadEx gamepad2Ex;
     private TriggerReader leftTriggerReader;
     private TriggerReader rightTriggerReader;
 
     private double driveScale = NORMAL_DRIVE_SCALE;
+    private Mode mode = Mode.DEMO;
 
     @Override
     public void initialize() {
@@ -56,10 +63,11 @@ public class CoolOpMode extends CommandOpMode {
 
         NotShootCommand notShootCommand = new NotShootCommand(platterSubsystem, shooterSubsystem);
 
-        // Gamepad
-        gamepad = new GamepadEx(gamepad1);
-        leftTriggerReader  = new TriggerReader(gamepad, GamepadKeys.Trigger.LEFT_TRIGGER);
-        rightTriggerReader = new TriggerReader(gamepad, GamepadKeys.Trigger.RIGHT_TRIGGER);
+        // Gamepads
+        gamepad1Ex = new GamepadEx(gamepad1);
+        gamepad2Ex = new GamepadEx(gamepad2);
+        leftTriggerReader  = new TriggerReader(gamepad1Ex, GamepadKeys.Trigger.LEFT_TRIGGER);
+        rightTriggerReader = new TriggerReader(gamepad1Ex, GamepadKeys.Trigger.RIGHT_TRIGGER);
 
         // Drive command
         Drive teleopDriveCommand = new Drive(
@@ -105,67 +113,104 @@ public class CoolOpMode extends CommandOpMode {
     }
 
     private void configureButtonBindings() {
-        // Reset field-centric
-        gamepad.getGamepadButton(GamepadKeys.Button.START)
+        // Shared controls
+        gamepad1Ex.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(drivetrainSubsystem::resetLocalization);
 
-        // Intake forward
-        gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whileActiveContinuous(new IntakeCommand(platterSubsystem, intakeSubsystem));
+        if (mode == Mode.DEMO) {
+            // C2 safety feature
+            Trigger c2Enable = new Trigger(() -> gamepad2.left_trigger >= 0.1);
 
-        // Intake reverse
-        gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenHeld(new RunCommand(intakeSubsystem::outtake))
-                .whenReleased(intakeSubsystem::stop);
+            // C1 intake forward
+            c2Enable.and(new Trigger(() -> gamepad1.right_bumper))
+                    .whileActiveContinuous(new IntakeCommand(platterSubsystem, intakeSubsystem));
 
-        // -------- Auto Lock Cycle (LT) --------
-        Trigger autoLockTrigger = new Trigger(() -> {
-            leftTriggerReader.readValue();
-            return gamepad1.left_trigger >= 0.1;
-        });
+            // C1 intake reverse
+            c2Enable.and(new Trigger(() -> gamepad1.left_bumper))
+                    .whileActiveContinuous(new RunCommand(intakeSubsystem::outtake))
+                    .whenInactive(intakeSubsystem::stop);
 
-        // LT = AUTO-LOCK
-        autoLockTrigger
-                .whileActiveContinuous(
-                        new AutoLockTurretCommand(
-                                turretSubsystem,
-                                limelightSubsystem,
-                                shooterSubsystem
-                        ));
+            // C1 auto-lock and shoot
+            c2Enable.and(new Trigger(() -> gamepad1.left_trigger >= 0.1))
+                    .whileActiveContinuous(new AutoLockTurretCommand(
+                            turretSubsystem,
+                            limelightSubsystem,
+                            shooterSubsystem
+                    ))
+                    .whenInactive(new InstantCommand(turretSubsystem::hoodToHome, turretSubsystem));
 
-        autoLockTrigger
-                .whenInactive(
-                        new InstantCommand(turretSubsystem::hoodToHome, turretSubsystem)
-                );
+            c2Enable.and(new Trigger(() -> gamepad1.right_trigger >= 0.1))
+                    .whileActiveContinuous(new ShootCommand(platterSubsystem, shooterSubsystem, limelightSubsystem));
 
-        // -------- Shoot Cycle --------
-        Trigger shootTrigger = new Trigger(() -> {
-            rightTriggerReader.readValue();
-            return gamepad1.right_trigger >= 0.1;
-        });
+            // C2 controls: alliance selection, turret override, drive toggle
+            gamepad2Ex.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                    .whenPressed(() -> limelightSubsystem.pipelineSwitcher(BLUE_PIPELINE));
 
-        // RT = ALL
-        shootTrigger
-                .whileActiveContinuous(
-                        new ShootCommand(platterSubsystem, shooterSubsystem, limelightSubsystem));
+            gamepad2Ex.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                    .whenPressed(() -> limelightSubsystem.pipelineSwitcher(RED_PIPELINE));
 
-        // LL pipeline selection
-        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                .whenPressed(() -> limelightSubsystem.pipelineSwitcher(BLUE_PIPELINE));
+            gamepad2Ex.getGamepadButton(GamepadKeys.Button.X)
+                    .whenPressed(() -> turretSubsystem.setTurretPower(0.2))
+                    .whenReleased(() -> turretSubsystem.setTurretPower(0));
 
-        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(() -> limelightSubsystem.pipelineSwitcher(RED_PIPELINE));
+            gamepad2Ex.getGamepadButton(GamepadKeys.Button.B)
+                    .whenPressed(() -> turretSubsystem.setTurretPower(-0.2))
+                    .whenReleased(() -> turretSubsystem.setTurretPower(0));
 
-        gamepad.getGamepadButton(GamepadKeys.Button.X)
-                .whenPressed(() -> turretSubsystem.setTurretPower(0.2))
-                .whenReleased(() -> turretSubsystem.setTurretPower(0));
+            // never used
+            gamepad2Ex.getGamepadButton(GamepadKeys.Button.A)
+                    .whenPressed(() -> shooterSubsystem.setRPM(4500));
 
-        gamepad.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(() -> turretSubsystem.setTurretPower(-0.2))
-                .whenReleased(() -> turretSubsystem.setTurretPower(0));
+            gamepad2Ex.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
+                    .whenPressed(this::toggleDriveScale);
+        } else {
+            gamepad1Ex.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                    .whileActiveContinuous(new IntakeCommand(platterSubsystem, intakeSubsystem));
 
-        gamepad.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(() -> shooterSubsystem.setRPM(4500));
+            gamepad1Ex.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                    .whenHeld(new RunCommand(intakeSubsystem::outtake))
+                    .whenReleased(intakeSubsystem::stop);
+
+            Trigger autoLockTrigger = new Trigger(() -> {
+                leftTriggerReader.readValue();
+                return gamepad1.left_trigger >= 0.1;
+            });
+
+            autoLockTrigger
+                    .whileActiveContinuous(new AutoLockTurretCommand(
+                            turretSubsystem,
+                            limelightSubsystem,
+                            shooterSubsystem
+                    ));
+
+            autoLockTrigger
+                    .whenInactive(new InstantCommand(turretSubsystem::hoodToHome, turretSubsystem));
+
+            Trigger shootTrigger = new Trigger(() -> {
+                rightTriggerReader.readValue();
+                return gamepad1.right_trigger >= 0.1;
+            });
+
+            shootTrigger
+                    .whileActiveContinuous(new ShootCommand(platterSubsystem, shooterSubsystem, limelightSubsystem));
+
+            gamepad1Ex.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                    .whenPressed(() -> limelightSubsystem.pipelineSwitcher(BLUE_PIPELINE));
+
+            gamepad1Ex.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                    .whenPressed(() -> limelightSubsystem.pipelineSwitcher(RED_PIPELINE));
+
+            gamepad1Ex.getGamepadButton(GamepadKeys.Button.X)
+                    .whenPressed(() -> turretSubsystem.setTurretPower(0.2))
+                    .whenReleased(() -> turretSubsystem.setTurretPower(0));
+
+            gamepad1Ex.getGamepadButton(GamepadKeys.Button.B)
+                    .whenPressed(() -> turretSubsystem.setTurretPower(-0.2))
+                    .whenReleased(() -> turretSubsystem.setTurretPower(0));
+
+            gamepad1Ex.getGamepadButton(GamepadKeys.Button.A)
+                    .whenPressed(() -> shooterSubsystem.setRPM(4500));
+        }
     }
 
     private void toggleDriveScale() {
