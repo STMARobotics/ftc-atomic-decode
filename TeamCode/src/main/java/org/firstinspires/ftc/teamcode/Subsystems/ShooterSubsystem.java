@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -14,6 +16,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public ShooterSubsystem(HardwareMap hardwareMap) {
         flywheelMotor = hardwareMap.get(DcMotorEx.class, "flywheelMotor");
+        flywheelMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,
+                new PIDFCoefficients(600.0, 0.0, 0.0, 14.5));
     }
 
     /**
@@ -30,7 +34,6 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public void stop() {
         flywheelMotor.setPower(0);
-        targetRPM = 0;
     }
 
     /**
@@ -47,5 +50,6 @@ public class ShooterSubsystem extends SubsystemBase {
     public void telemetrize(Telemetry telemetry) {
         telemetry.addData("Flywheel RPM", flywheelMotor.getVelocity() / 28.0 * 60.0);
         telemetry.addData("Target RPM", targetRPM);
+        telemetry.addData("Flywheel motor applied power", flywheelMotor.getPower());
     }
 }
