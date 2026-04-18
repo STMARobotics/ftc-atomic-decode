@@ -150,7 +150,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         double yPower = yController.calculate(cur.getY(), targetPose.getY());
         double turnPower = headingController.calculate(cur.getHeading(), targetPose.getHeading());
 
-        follower.setTeleOpDrive(xPower, yPower, turnPower, false);
+        follower.setTeleOpDrive(xPower, yPower, turnPower, true);
     }
 
     /**
