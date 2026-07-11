@@ -110,46 +110,47 @@ public class CoolOpMode extends CommandOpMode {
         gamepad1Ex.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(drivetrainSubsystem::resetLocalization);
 
-        Trigger c2Enable = new Trigger(() -> gamepad2.left_trigger >= 0.1);
+        Trigger c1Enable = new Trigger(() -> gamepad1.left_trigger >= 0.1);
 
-        c2Enable.and(new Trigger(() -> gamepad1.left_trigger >= 0.1))
+        c1Enable.and(new Trigger(() -> gamepad2.left_trigger >= 0.1))
                 .whileActiveContinuous(new IntakeCommand(platterSubsystem, intakeSubsystem));
 
-        c2Enable.and(new Trigger(() -> gamepad2.left_bumper))
+        gamepad1Ex.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whileActiveContinuous(new RunCommand(intakeSubsystem::outtake))
                 .whenInactive(intakeSubsystem::stop);
 
-        c2Enable.and(new Trigger(() -> gamepad1.right_trigger >= 0.1))
+        c1Enable.and(new Trigger(() -> gamepad2.right_trigger >= 0.1))
                 .whileActiveContinuous(
-                        new ParallelCommandGroup(new AutoLockTurretCommand(
-                                turretSubsystem,
-                                limelightSubsystem,
-                                shooterSubsystem),
-                        new ShootCommand(platterSubsystem,
-                                shooterSubsystem,
-                                limelightSubsystem)))
-                .whenInactive(new InstantCommand(turretSubsystem::hoodToHome, turretSubsystem));
+                        new ParallelCommandGroup(
+                                new AutoLockTurretCommand(turretSubsystem,
+                                        limelightSubsystem,
+                                        shooterSubsystem),
+                                new ShootCommand(platterSubsystem,
+                                        shooterSubsystem,
+                                        limelightSubsystem)))
+                .whenInactive(
+                        new InstantCommand(turretSubsystem::hoodToHome, turretSubsystem));
 
-        gamepad2Ex.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+        gamepad1Ex.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
                 .whenPressed(() -> limelightSubsystem.pipelineSwitcher(BLUE_PIPELINE));
 
-        gamepad2Ex.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+        gamepad1Ex.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
                 .whenPressed(() -> limelightSubsystem.pipelineSwitcher(RED_PIPELINE));
 
-        gamepad2Ex.getGamepadButton(GamepadKeys.Button.X)
+        gamepad1Ex.getGamepadButton(GamepadKeys.Button.X)
                 .whileActiveContinuous(() -> turretSubsystem.setTurretPower(0.2));
-        gamepad2Ex.getGamepadButton(GamepadKeys.Button.X)
+        gamepad1Ex.getGamepadButton(GamepadKeys.Button.X)
                 .whenReleased(() -> turretSubsystem.setTurretPower(0.2));
 
-        gamepad2Ex.getGamepadButton(GamepadKeys.Button.B)
+        gamepad1Ex.getGamepadButton(GamepadKeys.Button.B)
                 .whileActiveContinuous(() -> turretSubsystem.setTurretPower(-0.2));
-        gamepad2Ex.getGamepadButton(GamepadKeys.Button.B)
+        gamepad1Ex.getGamepadButton(GamepadKeys.Button.B)
                 .whenReleased(() -> turretSubsystem.setTurretPower(0.0));
 
-        gamepad2Ex.getGamepadButton(GamepadKeys.Button.A)
+        gamepad1Ex.getGamepadButton(GamepadKeys.Button.A)
                 .whileActiveContinuous(() -> shooterSubsystem.setRPM(4500));
 
-        gamepad2Ex.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
+        gamepad1Ex.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
                 .whenPressed(this::toggleDriveScale);
     }
 
